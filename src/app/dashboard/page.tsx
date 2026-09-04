@@ -8,6 +8,7 @@ import { apiClient } from "@/lib/axios";
 import { useTranslation } from "@/i18n/LanguageContext";
 import LanguageToggle from "@/components/ui/LanguageToggle";
 import TechIcon, { AVAILABLE_TECH_ICONS, getTechIconInfo } from "@/components/ui/TechIcon";
+import { directSupabaseUpload } from "@/lib/supabase-client";
 import {
   FiLayout,
   FiFileText,
@@ -208,10 +209,20 @@ export default function DashboardPage() {
     setTimeout(() => setSaveStatus(null), 3000);
   };
 
-  // Upload Handler
+  // Fast Direct Supabase Upload Handler (Bypasses Vercel 4.5MB Serverless Limit)
   const uploadFile = async (file: File): Promise<string | null> => {
-    setUploadingStatus(isRtl ? "جاري رفع الملف سحابياً إلى Supabase Storage..." : "Uploading to Supabase Storage...");
+    setUploadingStatus(isRtl ? "جاري رفع الملف سحابياً إلى Supabase Storage..." : "Uploading directly to Supabase Storage...");
     try {
+      // 1. First attempt: Direct client upload to Supabase (Supports large files & fast)
+      const directResult = await directSupabaseUpload(file);
+      if (directResult.success && directResult.url) {
+        triggerToast(isRtl ? "تم الرفع والتخزين في Supabase بنجاح!" : "Uploaded to Supabase Storage!");
+        return directResult.url;
+      }
+
+      console.warn("[Upload] Direct upload notice, trying server route fallback...", directResult.error);
+
+      // 2. Fallback attempt via /api/upload
       const formData = new FormData();
       formData.append("file", file);
 
@@ -230,7 +241,7 @@ export default function DashboardPage() {
         );
         return res.url;
       } else {
-        throw new Error(res?.error || "Upload failed");
+        throw new Error(res?.error || directResult.error || "Upload failed");
       }
     } catch (error: any) {
       console.error("Upload failed:", error);
@@ -268,20 +279,26 @@ export default function DashboardPage() {
     }
   };
 
+  const [isSaving, setIsSaving] = useState(false);
+
   // 2. Save Site Config
   const handleSaveSiteConfig = async () => {
+    setIsSaving(true);
     try {
       await apiClient.post("/api/admin/site-config", siteConfig);
       triggerToast(isRtl ? "تم حفظ الإعدادات بنجاح!" : "Configuration saved successfully!");
       loadDashboardData();
     } catch (e) {
       triggerToast(isRtl ? "فشل حفظ الإعدادات" : "Failed to save configuration");
+    } finally {
+      setIsSaving(false);
     }
   };
 
   // 3. Save Experience
   const handleSaveExperience = async (e: React.FormEvent) => {
     e.preventDefault();
+    setIsSaving(true);
     try {
       await apiClient.post("/api/admin/experiences", editingExp);
       setIsExpModalOpen(false);
@@ -289,6 +306,8 @@ export default function DashboardPage() {
       loadDashboardData();
     } catch (e) {
       triggerToast(isRtl ? "فشل حفظ الخبرة" : "Failed to save experience");
+    } finally {
+      setIsSaving(false);
     }
   };
 
@@ -308,6 +327,7 @@ export default function DashboardPage() {
   // 4. Save Skill
   const handleSaveSkill = async (e: React.FormEvent) => {
     e.preventDefault();
+    setIsSaving(true);
     try {
       const payload = {
         ...editingSkill,
@@ -320,6 +340,8 @@ export default function DashboardPage() {
       loadDashboardData();
     } catch (e) {
       triggerToast(isRtl ? "فشل حفظ المهارة" : "Failed to save skill group");
+    } finally {
+      setIsSaving(false);
     }
   };
 
@@ -362,6 +384,7 @@ export default function DashboardPage() {
   // 5. Save Project
   const handleSaveProject = async (e: React.FormEvent) => {
     e.preventDefault();
+    setIsSaving(true);
     try {
       await apiClient.post("/api/admin/projects", editingProject);
       setIsProjectModalOpen(false);
@@ -369,6 +392,8 @@ export default function DashboardPage() {
       loadDashboardData();
     } catch (e) {
       triggerToast(isRtl ? "فشل حفظ المشروع" : "Failed to save project");
+    } finally {
+      setIsSaving(false);
     }
   };
 
@@ -388,6 +413,7 @@ export default function DashboardPage() {
   // 6. Save Blog
   const handleSaveBlog = async (e: React.FormEvent) => {
     e.preventDefault();
+    setIsSaving(true);
     try {
       await apiClient.post("/api/admin/blogs", editingBlog);
       setIsBlogModalOpen(false);
@@ -395,6 +421,8 @@ export default function DashboardPage() {
       loadDashboardData();
     } catch (e) {
       triggerToast(isRtl ? "فشل حفظ المقال" : "Failed to save blog post");
+    } finally {
+      setIsSaving(false);
     }
   };
 
@@ -407,6 +435,20 @@ export default function DashboardPage() {
       loadDashboardData();
     } catch (e) {
       triggerToast(isRtl ? "فشل حذف المقال" : "Failed to delete blog post");
+      loadDashboardData();
+    }
+  };
+
+  // 7. Delete Client Message
+  const handleDeleteMessage = async (id: string) => {
+    if (!confirm(isRtl ? "هل أنت متأكد من حذف هذه الرسالة؟" : "Are you sure you want to delete this message?")) return;
+    try {
+      setMessages((prev) => prev.filter((m) => m.id !== id));
+      await apiClient.delete(`/api/admin/messages?id=${id}`);
+      triggerToast(isRtl ? "تم حذف الرسالة بنجاح!" : "Message deleted successfully!");
+      loadDashboardData();
+    } catch (e) {
+      triggerToast(isRtl ? "فشل حذف الرسالة" : "Failed to delete message");
       loadDashboardData();
     }
   };
@@ -776,10 +818,15 @@ export default function DashboardPage() {
               <div className="pt-4 border-t border-white/10 flex justify-end">
                 <button
                   onClick={handleSaveSiteConfig}
-                  className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-medium text-xs transition-all shadow-md cursor-pointer"
+                  disabled={isSaving}
+                  className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-blue-600 hover:bg-blue-500 disabled:opacity-50 text-white font-medium text-xs transition-all shadow-md cursor-pointer"
                 >
-                  <FiSave className="w-4 h-4" />
-                  <span>{isRtl ? "حفظ التغييرات" : "Save Changes"}</span>
+                  {isSaving ? (
+                    <div className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                  ) : (
+                    <FiSave className="w-4 h-4" />
+                  )}
+                  <span>{isSaving ? (isRtl ? "جاري الحفظ..." : "Saving...") : (isRtl ? "حفظ التغييرات" : "Save Changes")}</span>
                 </button>
               </div>
             </motion.div>
@@ -823,10 +870,15 @@ export default function DashboardPage() {
               <div className="pt-4 border-t border-white/10 flex justify-end">
                 <button
                   onClick={handleSaveSiteConfig}
-                  className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-medium text-xs transition-all shadow-md cursor-pointer"
+                  disabled={isSaving}
+                  className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-blue-600 hover:bg-blue-500 disabled:opacity-50 text-white font-medium text-xs transition-all shadow-md cursor-pointer"
                 >
-                  <FiSave className="w-4 h-4" />
-                  <span>{isRtl ? "حفظ السيرة الذاتية" : "Save Changes"}</span>
+                  {isSaving ? (
+                    <div className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                  ) : (
+                    <FiSave className="w-4 h-4" />
+                  )}
+                  <span>{isSaving ? (isRtl ? "جاري الحفظ..." : "Saving...") : (isRtl ? "حفظ السيرة الذاتية" : "Save Changes")}</span>
                 </button>
               </div>
             </motion.div>
@@ -1328,10 +1380,15 @@ export default function DashboardPage() {
               <div className="pt-4 border-t border-white/10 flex justify-end">
                 <button
                   onClick={handleSaveSiteConfig}
-                  className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-medium text-xs transition-all shadow-md cursor-pointer"
+                  disabled={isSaving}
+                  className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-blue-600 hover:bg-blue-500 disabled:opacity-50 text-white font-medium text-xs transition-all shadow-md cursor-pointer"
                 >
-                  <FiSave className="w-4 h-4" />
-                  <span>{isRtl ? "حفظ التغييرات" : "Save Changes"}</span>
+                  {isSaving ? (
+                    <div className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                  ) : (
+                    <FiSave className="w-4 h-4" />
+                  )}
+                  <span>{isSaving ? (isRtl ? "جاري الحفظ..." : "Saving...") : (isRtl ? "حفظ التغييرات" : "Save Changes")}</span>
                 </button>
               </div>
             </motion.div>
@@ -1358,14 +1415,26 @@ export default function DashboardPage() {
                   messages.map((m) => (
                     <div
                       key={m.id}
-                      className="p-5 rounded-2xl bg-[#12141c] border border-white/10 flex flex-col gap-3 shadow-lg"
+                      className="p-5 rounded-2xl bg-[#12141c] border border-white/10 flex flex-col gap-3 shadow-lg group hover:border-white/20 transition-all"
                     >
                       <div className="flex items-center justify-between border-b border-white/5 pb-3">
                         <div className="flex items-center gap-2">
                           <span className="text-sm font-semibold text-white">{m.name || "Anonymous Client"}</span>
                           <span className="text-xs text-blue-400">({m.email})</span>
+                          {m.phone && (
+                            <span className="text-xs text-neutral-400 font-mono">| {m.phone}</span>
+                          )}
                         </div>
-                        <span className="text-[11px] text-neutral-500">{new Date(m.createdAt).toLocaleString()}</span>
+                        <div className="flex items-center gap-3">
+                          <span className="text-[11px] text-neutral-500">{new Date(m.createdAt).toLocaleString()}</span>
+                          <button
+                            onClick={() => handleDeleteMessage(m.id)}
+                            className="p-1.5 rounded-lg bg-red-500/10 hover:bg-red-500/20 text-red-400 transition-colors cursor-pointer"
+                            title="Delete Message"
+                          >
+                            <FiTrash2 className="w-3.5 h-3.5" />
+                          </button>
+                        </div>
                       </div>
                       <p className="text-xs text-neutral-300 leading-relaxed whitespace-pre-line">{m.message}</p>
                     </div>
@@ -1612,9 +1681,11 @@ export default function DashboardPage() {
                   </button>
                   <button
                     type="submit"
-                    className="px-6 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-medium text-xs shadow-md cursor-pointer"
+                    disabled={isSaving}
+                    className="px-6 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 disabled:opacity-50 text-white font-medium text-xs shadow-md cursor-pointer flex items-center gap-2"
                   >
-                    {isRtl ? "حفظ المهارة" : "Save Skill Group"}
+                    {isSaving && <div className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin" />}
+                    <span>{isSaving ? (isRtl ? "جاري الحفظ..." : "Saving...") : (isRtl ? "حفظ المهارة" : "Save Skill Group")}</span>
                   </button>
                 </div>
               </form>
@@ -1731,9 +1802,11 @@ export default function DashboardPage() {
                   </button>
                   <button
                     type="submit"
-                    className="px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-medium text-xs shadow-md cursor-pointer"
+                    disabled={isSaving}
+                    className="px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 disabled:opacity-50 text-white font-medium text-xs shadow-md cursor-pointer flex items-center gap-2"
                   >
-                    {isRtl ? "حفظ الخبرة" : "Save Experience"}
+                    {isSaving && <div className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin" />}
+                    <span>{isSaving ? (isRtl ? "جاري الحفظ..." : "Saving...") : (isRtl ? "حفظ الخبرة" : "Save Experience")}</span>
                   </button>
                 </div>
               </form>
@@ -1901,9 +1974,11 @@ export default function DashboardPage() {
                   </button>
                   <button
                     type="submit"
-                    className="px-6 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-medium text-xs shadow-md cursor-pointer"
+                    disabled={isSaving}
+                    className="px-6 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 disabled:opacity-50 text-white font-medium text-xs shadow-md cursor-pointer flex items-center gap-2"
                   >
-                    {isRtl ? "حفظ المشروع" : "Save Project"}
+                    {isSaving && <div className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin" />}
+                    <span>{isSaving ? (isRtl ? "جاري الحفظ..." : "Saving...") : (isRtl ? "حفظ المشروع" : "Save Project")}</span>
                   </button>
                 </div>
               </form>
@@ -2145,9 +2220,11 @@ export default function DashboardPage() {
                   </button>
                   <button
                     type="submit"
-                    className="px-6 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-medium text-xs shadow-md cursor-pointer"
+                    disabled={isSaving}
+                    className="px-6 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 disabled:opacity-50 text-white font-medium text-xs shadow-md cursor-pointer flex items-center gap-2"
                   >
-                    {isRtl ? "حفظ المقال" : "Save Blog Post"}
+                    {isSaving && <div className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin" />}
+                    <span>{isSaving ? (isRtl ? "جاري الحفظ..." : "Saving...") : (isRtl ? "حفظ المقال" : "Save Blog Post")}</span>
                   </button>
                 </div>
               </form>

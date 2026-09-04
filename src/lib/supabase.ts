@@ -10,16 +10,22 @@ export const supabase = (supabaseUrl && supabaseKey)
     })
   : null;
 
+let isBucketReady = false;
+
 /**
- * Ensures bucket exists in Supabase Storage.
+ * Ensures bucket exists in Supabase Storage (cached in memory).
  */
 export async function ensureStorageBucket(): Promise<boolean> {
   if (!supabase) return false;
+  if (isBucketReady) return true;
   try {
     const { data: buckets, error: listError } = await supabase.storage.listBuckets();
     if (!listError && buckets) {
       const exists = buckets.some((b) => b.name === BUCKET_NAME);
-      if (exists) return true;
+      if (exists) {
+        isBucketReady = true;
+        return true;
+      }
     }
 
     // Try creating public bucket
@@ -30,6 +36,7 @@ export async function ensureStorageBucket(): Promise<boolean> {
 
     if (!createError) {
       console.log(`[Supabase] Created bucket "${BUCKET_NAME}" successfully.`);
+      isBucketReady = true;
       return true;
     }
   } catch (err) {

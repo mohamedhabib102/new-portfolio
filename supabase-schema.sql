@@ -139,3 +139,17 @@ CREATE POLICY "Allow All Blog" ON public."Blog" FOR ALL USING (true) WITH CHECK 
 CREATE POLICY "Allow All Experience" ON public."Experience" FOR ALL USING (true) WITH CHECK (true);
 CREATE POLICY "Allow All Skill" ON public."Skill" FOR ALL USING (true) WITH CHECK (true);
 CREATE POLICY "Allow All ContactMessage" ON public."ContactMessage" FOR ALL USING (true) WITH CHECK (true);
+
+-- 10. Supabase Storage Bucket & Direct Upload Policy
+INSERT INTO storage.buckets (id, name, public)
+VALUES ('portfolio-media', 'portfolio-media', true)
+ON CONFLICT (id) DO UPDATE SET public = true;
+
+DROP POLICY IF EXISTS "Public Read Storage" ON storage.objects;
+DROP POLICY IF EXISTS "Public Upload Storage" ON storage.objects;
+DROP POLICY IF EXISTS "Public Update Storage" ON storage.objects;
+
+CREATE POLICY "Public Read Storage" ON storage.objects FOR SELECT USING (bucket_id = 'portfolio-media');
+CREATE POLICY "Public Upload Storage" ON storage.objects FOR INSERT WITH CHECK (bucket_id = 'portfolio-media');
+CREATE POLICY "Public Update Storage" ON storage.objects FOR UPDATE USING (bucket_id = 'portfolio-media');
+

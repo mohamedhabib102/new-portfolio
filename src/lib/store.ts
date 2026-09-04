@@ -746,4 +746,20 @@ export const portfolioStore = {
 
     return newMsg;
   },
+
+  deleteMessage: async (id: string): Promise<boolean> => {
+    const store = readLocalStore();
+    store.messages = store.messages.filter((m) => m.id !== id);
+    writeLocalStore(store);
+
+    if (supabase) {
+      try {
+        await supabase.from("ContactMessage").delete().eq("id", id);
+      } catch (err) {
+        console.warn("[Supabase] deleteMessage error:", err);
+      }
+    }
+    return true;
+  },
 };
+

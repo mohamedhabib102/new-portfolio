@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
-import { initialProjects } from "../route";
+import { portfolioStore } from "@/lib/store";
 
 export async function GET(
   request: NextRequest,
@@ -9,35 +8,27 @@ export async function GET(
   const { id } = await context.params;
 
   try {
-    const dbProject = await prisma.project.findFirst({
-      where: {
-        OR: [{ id }, { slug: id }],
-      },
-    });
+    const allProjects = await portfolioStore.getProjects();
+    const project = allProjects.find(
+      (p: any) => p.id === id || p.slug === id
+    );
 
-    if (dbProject) {
-      return NextResponse.json({
-        success: true,
-        data: dbProject,
-      });
+    if (!project) {
+      return NextResponse.json(
+        { success: false, message: "Project not found" },
+        { status: 404 }
+      );
     }
+
+    return NextResponse.json({
+      success: true,
+      data: project,
+    });
   } catch (error) {
-    console.warn("Prisma fallback for single project:", id);
-  }
-
-  const project = initialProjects.find(
-    (p) => p.id === id || p.slug === id
-  );
-
-  if (!project) {
+    console.error("Failed to fetch project detail:", error);
     return NextResponse.json(
-      { success: false, message: "Project not found" },
-      { status: 404 }
+      { success: false, message: "Failed to fetch project" },
+      { status: 500 }
     );
   }
-
-  return NextResponse.json({
-    success: true,
-    data: project,
-  });
 }
