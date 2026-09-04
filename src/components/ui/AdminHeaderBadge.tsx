@@ -26,13 +26,15 @@ export default function AdminHeaderBadge() {
       initial={{ opacity: 0, scale: 0.8 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 0.3 }}
+      className="shrink-0"
     >
       <Link
         href="/dashboard"
-        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-blue-600/20 hover:bg-blue-600/35 border border-blue-500/40 text-blue-300 hover:text-white text-xs font-medium transition-all shadow-[0_0_15px_rgba(59,130,246,0.3)] hover:scale-105 active:scale-95"
+        className="inline-flex items-center gap-1 px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-full bg-blue-600/30 hover:bg-blue-600/50 border border-blue-400/40 text-blue-200 hover:text-white text-[11px] sm:text-xs font-medium transition-all shadow-[0_0_12px_rgba(59,130,246,0.3)] backdrop-blur-md whitespace-nowrap"
       >
-        <FiShield className="w-3.5 h-3.5 text-blue-400" />
-        <span>{isRtl ? "لوحة التحكم" : "Dashboard"}</span>
+        <FiShield className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-blue-300 shrink-0" />
+        <span className="hidden xs:inline sm:inline">{isRtl ? "لوحة التحكم" : "Dashboard"}</span>
+        <span className="inline xs:hidden sm:hidden">{isRtl ? "لوحة" : "Dash"}</span>
       </Link>
     </motion.div>
   );

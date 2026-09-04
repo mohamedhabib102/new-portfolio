@@ -158,7 +158,7 @@ export default function ContactSection() {
             >
               <button
                 onClick={() => setIsModalOpen(false)}
-                className="absolute top-6 right-6 text-white/50 hover:text-white transition-colors"
+                className={`absolute top-6 ${isRtl ? "left-6" : "right-6"} text-white/50 hover:text-white transition-colors cursor-pointer p-1 rounded-lg hover:bg-white/10`}
                 aria-label="Close modal"
               >
                 <X className="w-5 h-5" />

@@ -52,31 +52,6 @@
   ],
   "projects": [
     {
-      "id": "proj-1788541272452",
-      "slug": "sohighla",
-      "titleEn": "sohighla",
-      "titleAr": "شغلة",
-      "descriptionEn": "Shogla is a modern on-demand digital marketplace designed to seamlessly connect homeowners and clients with qualified, trusted local craftsmen and technicians. The platform serves as a direct communication and job facilitation bridge, enabling clients to submit customized service requests and review technician profiles, while empowering craftsmen to review requirements and establish direct service agreements without platform financial friction. To ensure maximum safety and service reliability, craftsmen must undergo a thorough identity verification process before their profiles are published. The application features a comprehensive client dashboard with interaction history for quick re-hiring, alongside a verified rating and review engine that reflects authentic customer feedback. The frontend is engineered with Next.js, TypeScript, and Tailwind CSS, utilizing Zustand for lightweight client state management and integrated with an enterprise ASP.NET Core backend for high performance and scalability.",
-      "descriptionAr": "منصة شغلة هي منصة وساطة رقمية متطورة تهدف إلى تسهيل وصول العملاء إلى أمهر الحرفيين والفنيين الموثوقين في مجالات الصيانة والتشطيبات المنزلية. تعمل المنصة كحلقة وصل ذكية تتيح للعميل استعراض الحرفيين المعتمدين وإنشاء طلبات تواصل وشرح متطلبات العمل ليقوم الحرفي باستقبال الطلب والاتفاق على تفاصيل التعاقد بشكل مباشر وسلس دون تدخل المنصة في المعاملات المالية المباشرة. يتميز النظام بوجود آلية تحقق وتدقيق صارمة تمنع ظهور أي صنايعي في المنصة قبل فحص هويته واعتماده لضمان أعلى مستويات الأمان والموثوقية للعملاء، بالإضافة إلى لوحة تحكم تتيح للمستخدم الاحتفاظ بسجل كامل للصنايعية الذين تم التعامل معهم لسهولة الرجوع إليهم وإعادة طلبهم، مع نظام تقييمات ومراجعات شفافة يعكس جودة الخدمة المقدمة. تم بناء واجهات المشروع بالاعتماد على Next.js و TypeScript و Tailwind CSS مع إدارة الحالة عبر Zustand وربطها بباك إند قوي مبني بـ ASP.NET Core لتقديم تجربة استخدام فائقة السرعة والاستجابة.",
-      "videoUrl": "https://dibrssekkpsbyhvwwzln.supabase.co/storage/v1/object/public/portfolio-media/1788540982041_sohighla.mp4",
-      "liveUrl": "http://sohighla.vercel.app/",
-      "githubUrl": "https://github.com/mohamedhabib102/sohighla",
-      "tags": [
-        "Next.js",
-        "TypeScript",
-        "Tailwind CSS",
-        "Zustand",
-        "ASP.NET Core",
-        "REST APIs",
-        "UI/UX Design"
-      ],
-      "featured": true,
-      "order": 1,
-      "createdAt": "2026-09-04T17:01:13.127516+00:00",
-      "updatedAt": "2026-09-04T17:15:40.676+00:00",
-      "githubPrivate": false
-    },
-    {
       "id": "proj-serv5-optimization",
       "slug": "serv5-platform-optimization",
       "titleEn": "Serv5 Corporate Platform & Performance Revamp",
@@ -99,7 +74,7 @@
       "featured": true,
       "order": 1,
       "createdAt": "2026-09-04T19:03:36.84857+00:00",
-      "updatedAt": "2026-09-04T19:03:34.469+00:00",
+      "updatedAt": "2026-09-04T19:44:20.916+00:00",
       "githubPrivate": true,
       "featuresEn": [
         "Eliminated heavy loading bottlenecks and optimized scripts for instantaneous page delivery",
@@ -115,31 +90,6 @@
         "استخدام مكون Next.js Image المدمج لمعالجة الصور تلقائياً ومنع تذبذب وانزياح الواجهة (CLS)",
         "إضافة حركات وتفاعلات بصرية سلسة باستخدام Framer Motion وجافاسكريبت الحديثة"
       ]
-    },
-    {
-      "id": "proj-1788541485137",
-      "slug": "noor-alhuda",
-      "titleEn": "Noor Alhuda",
-      "titleAr": "نور الهدى",
-      "descriptionEn": "A comprehensive Islamic digital platform engineered with modern web technologies to deliver an enriching, spiritually focused user experience. The platform features Holy Qur’an reading with an intuitive interface, an integrated audio streaming player for listening to renowned Qur’an reciters, and a dedicated morning and evening adhkar section. The system implements seamless Google authentication via NextAuth, a vibrant Community hub allowing users to publish and share insightful religious articles across internal feeds and social media, and an interactive FAQ module addressing common user questions. Built using Next.js, TypeScript, and Tailwind CSS, the application leverages Framer Motion for smooth micro-interactions and Context API for synchronized audio playback and global state management.",
-      "descriptionAr": "\nمنصة إسلامية رقمية شاملة تم بناؤها بأحدث تقنيات الويب لتقديم تجربة إيمانية متكاملة وسلسة للمستخدمين. تتيح المنصة قراءة القرآن الكريم وتصفح الآيات بسهولة، مع مشغل صوتي متقدم للبث والاستماع للتلاوات القرآنية بأصوات نخبة من القراء، بالإضافة إلى قسم خاص لأذكار الصباح والمساء والأدعية المأثورة. يتضمن المشروع نظام تسجيل دخول آمن وسريع بحسابات Google عبر NextAuth، ومجتمعاً تفاعلياً يُمكّن الأعضاء من نشر المقالات الهادفة ومشاركتها داخلياً وعبر وسائل التواصل الاجتماعي لنشر العلم النافع، إلى جانب قسم متكامل للأسئلة الشائعة لدعم استفسارات الزوار. تم تطوير الواجهات باستخدام Next.js و TypeScript و Tailwind CSS، مع توظيف Framer Motion للحركات والتنقلات الانسيابية، و Context API لإدارة حالة التطبيق وتشغيل الصوتيات بكفاءة عالية.",
-      "videoUrl": "https://dibrssekkpsbyhvwwzln.supabase.co/storage/v1/object/public/portfolio-media/1788543258827_2026-09-04_20-08-03.mp4",
-      "liveUrl": "https://noor-alhuda-lyart.vercel.app/",
-      "githubUrl": "https://github.com/mohamedhabib102/noor-alhuda",
-      "tags": [
-        "Next.js",
-        "TypeScript",
-        "Tailwind CSS",
-        "NextAuth",
-        "Context API",
-        "Framer Motion",
-        "Audio Streaming"
-      ],
-      "featured": true,
-      "order": 2,
-      "createdAt": "2026-09-04T17:04:45.381158+00:00",
-      "updatedAt": "2026-09-04T17:35:37.867+00:00",
-      "githubPrivate": false
     },
     {
       "id": "proj-aqarat-online",
@@ -164,7 +114,7 @@
       "featured": true,
       "order": 2,
       "createdAt": "2026-09-04T19:03:37.423162+00:00",
-      "updatedAt": "2026-09-04T19:03:35.483+00:00",
+      "updatedAt": "2026-09-04T19:44:21.949+00:00",
       "githubPrivate": true,
       "featuresEn": [
         "Full Lifecycle Execution: Custom Figma UI/UX architecture translated into a modular Vue.js frontend",
@@ -182,80 +132,82 @@
       ]
     },
     {
-      "id": "proj-1",
-      "slug": "learnlogicify-landing-page",
-      "titleEn": "Learnlogicify Landing Page",
-      "titleAr": "صفحة هبوط Learnlogicify",
-      "descriptionEn": "Accelerate the tech career and build your future faster. A high-conversion landing page with smooth animations and interactive components.",
-      "descriptionAr": "منصة تعليمية لتسريع المسار المهني والبرمجي، مصممة بأحدث تقنيات الويب مع حركة سلسة وعناصر تفاعلية عالية الأداء.",
-      "videoUrl": "/test.mp4",
-      "liveUrl": "https://example.com/learnlogicify",
-      "githubUrl": "https://github.com/mowafy-dev",
+      "id": "proj-1788541272452",
+      "slug": "sohighla",
+      "titleEn": "Shogla - On-Demand Craftsmen Marketplace",
+      "titleAr": "منصة شغلة - وساطة رقمية للحرفيين والتشطيبات",
+      "descriptionEn": "Shogla is a modern on-demand digital marketplace designed to seamlessly connect homeowners and clients with qualified, trusted local craftsmen and technicians. The platform enables clients to submit customized service requests, review technician profiles, and establish direct service agreements. To ensure safety and service reliability, craftsmen undergo an identity verification process. Built with Next.js, TypeScript, and Tailwind CSS with Zustand state management.",
+      "descriptionAr": "منصة شغلة هي منصة وساطة رقمية متطورة تهدف إلى تسهيل وصول العملاء إلى أمهر الحرفيين والفنيين الموثوقين في مجالات الصيانة والتشطيبات المنزلية. تعمل المنصة كحلقة وصل ذكية تتيح للعميل استعراض الحرفيين المعتمدين وإنشاء طلبات تواصل وشرح متطلبات العمل ليقوم الحرفي باستقبال الطلب والاتفاق المباشر. تم بناء واجهات المشروع بالاعتماد على Next.js و TypeScript و Tailwind CSS مع إدارة الحالة عبر Zustand.",
+      "videoUrl": "https://dibrssekkpsbyhvwwzln.supabase.co/storage/v1/object/public/portfolio-media/1788540982041_sohighla.mp4",
+      "liveUrl": "http://sohighla.vercel.app/",
+      "githubUrl": "https://github.com/mohamedhabib102/sohighla",
       "tags": [
         "Next.js",
+        "TypeScript",
         "Tailwind CSS",
-        "Framer Motion",
-        "TypeScript"
+        "Zustand",
+        "ASP.NET Core",
+        "REST APIs",
+        "UI/UX Design"
       ],
       "featured": true,
-      "order": 3
-    },
-    {
-      "id": "proj-2",
-      "slug": "winzee-web-chat",
-      "titleEn": "Winzee Web Chat application",
-      "titleAr": "تطبيق الدردشة والمحادثة Winzee",
-      "descriptionEn": "Modern real-time web messaging platform with clean design, instant websocket delivery, and multimedia sharing capabilities.",
-      "descriptionAr": "تطبيق محادثة فورية عصري بتصميم جذاب واتصال آني بالويب سوكت ومشاركة الوسائط بأعلى درجات السرعة.",
-      "videoUrl": "/test.mp4",
-      "liveUrl": "https://example.com/winzee",
-      "githubUrl": "https://github.com/mowafy-dev",
-      "tags": [
-        "React",
-        "Node.js",
-        "Socket.io",
-        "Tailwind CSS"
+      "order": 3,
+      "createdAt": "2026-09-04T17:01:13.127516+00:00",
+      "updatedAt": "2026-09-04T19:44:24.153+00:00",
+      "githubPrivate": false,
+      "featuresEn": [
+        "Direct Craftsman Booking: Seamless service requests and communication between clients and verified technicians",
+        "Strict Identity Verification: Rigorous background verification workflows before technician profile publishing",
+        "Smart Re-hiring History: Client dashboard for tracking previous technicians and quick one-click re-hiring",
+        "Transparent Ratings Engine: Authentic user review system reflecting real customer service feedback",
+        "High-Performance UI: Fast Next.js frontend with lightweight Zustand client state management"
       ],
-      "featured": true,
-      "order": 4
+      "featuresAr": [
+        "حجز وتواصل مباشر مع الحرفيين: سهولة إنشاء طلبات الصيانة والتواصل مع الفنيين المعتمدين",
+        "نظام تحقق وتدقيق صارم للهوية: فحص واعتماد هويات الحرفيين لضمان أمان وموثوقية الخدمة",
+        "سجل تفاعلي لإعادة الطلب: لوحة تحكم تتيح الاحتفاظ بسجل الصنايعية وسهولة الرجوع إليهم",
+        "محرك تقييمات ومراجعات شفافة: نظام تقييم دقيق يعكس جودة الخدمة الحقيقية",
+        "أداء فائق واستجابة سريعة: واجهات Next.js سريعة مع إدارة خفيفة للحالة عبر Zustand"
+      ]
     },
     {
-      "id": "proj-3",
-      "slug": "chatgpt-clone",
-      "titleEn": "ChatGPT clone",
-      "titleAr": "منصة استنساخ ChatGPT المتطورة",
-      "descriptionEn": "Sleek AI conversational interface with streaming markdown responses, prompt caching, conversation trees, and dark mode.",
-      "descriptionAr": "واجهة محادثة ذكاء اصطناعي متكاملة مع ميزة التدفق الفوري للنصوص، سجل المحادثات والوضع الليلي الأنيق.",
-      "videoUrl": "/test.mp4",
-      "liveUrl": "https://example.com/chatgpt-clone",
-      "githubUrl": "https://github.com/mowafy-dev",
-      "tags": [
-        "Next.js",
-        "OpenAI API",
-        "Prisma",
-        "Tailwind CSS"
-      ],
-      "featured": true,
-      "order": 5
-    },
-    {
-      "id": "proj-4",
-      "slug": "gemini-clone",
-      "titleEn": "Gemini Clone",
-      "titleAr": "تطبيق Gemini Clone الذكي",
-      "descriptionEn": "Next-generation multimodal AI web app inspired by Google Gemini, featuring voice synthesis, image reasoning, and fluid animations.",
-      "descriptionAr": "تطبيق ويب للذكاء الاصطناعي متعدد الوسائط مستوحى من Google Gemini مع دعم تحليل الصور والتحريك التفاعلي.",
-      "videoUrl": "/test.mp4",
-      "liveUrl": "https://example.com/gemini-clone",
-      "githubUrl": "https://github.com/mowafy-dev",
+      "id": "proj-1788541485137",
+      "slug": "noor-alhuda",
+      "titleEn": "Noor Alhuda - Islamic Platform & Audio Streaming",
+      "titleAr": "منصة نور الهدى - منصة إسلامية وبث صوتي تفاعلي",
+      "descriptionEn": "A comprehensive Islamic digital platform engineered with modern web technologies. Features Holy Qur’an reading with an intuitive interface, audio streaming player for listening to renowned Qur’an reciters, morning/evening adhkar, Google authentication via NextAuth, and an interactive Community hub for publishing and sharing articles. Built using Next.js, TypeScript, Tailwind CSS, Framer Motion, and Context API.",
+      "descriptionAr": "منصة إسلامية رقمية شاملة تم بناؤها بأحدث تقنيات الويب لتقديم تجربة إيمانية متكاملة وسلسة. تتيح المنصة قراءة القرآن الكريم وتصفح الآيات بسهولة، مع مشغل صوتي متقدم للبث والاستماع للتلاوات القرآنية، وقسم خاص لأذكار الصباح والمساء، وتسجيل دخول آمن بحسابات Google عبر NextAuth، ومجتمع تفاعلي لنشر ومشاركة المقالات الهادفة. تم التطوير باستخدام Next.js و TypeScript و Tailwind CSS و Framer Motion و Context API.",
+      "videoUrl": "https://dibrssekkpsbyhvwwzln.supabase.co/storage/v1/object/public/portfolio-media/1788543258827_2026-09-04_20-08-03.mp4",
+      "liveUrl": "https://noor-alhuda-lyart.vercel.app/",
+      "githubUrl": "https://github.com/mohamedhabib102/noor-alhuda",
       "tags": [
         "Next.js",
-        "Gemini API",
+        "TypeScript",
+        "Tailwind CSS",
+        "NextAuth",
+        "Context API",
         "Framer Motion",
-        "Tailwind CSS"
+        "Audio Streaming"
       ],
       "featured": true,
-      "order": 6
+      "order": 4,
+      "createdAt": "2026-09-04T17:04:45.381158+00:00",
+      "updatedAt": "2026-09-04T19:44:25.056+00:00",
+      "githubPrivate": false,
+      "featuresEn": [
+        "Quran Reader & Typography: Clean, accessible Arabic font rendering and surah navigation",
+        "Synchronized Audio Streaming: Global audio playback with reciter selection and smooth streaming",
+        "Interactive Community Hub: User publishing and sharing of articles across social networks",
+        "Morning & Evening Adhkar: Dedicated daily remembrance section with counter interactions",
+        "Secure NextAuth Authentication: Google OAuth sign-in with personalized user bookmarking"
+      ],
+      "featuresAr": [
+        "مصحف إلكتروني بخطوط واضحة: تصفح سهل ومريح للآيات والسور القرآنية",
+        "مشغل صوتي متزامن للبث: استماع لتلاوات خاشعة بأصوات كبار القراء مع تحكم صوتي شامل",
+        "مجتمع ومقالات تفاعلية: إمكانية نشر ومشاركة المقالات الهادفة عبر شبكات التواصل",
+        "أذكار الصباح والمساء: قسم مخصص للأدعية والأذكار اليومية مع عداد تسبيح تفاعلي",
+        "تسجيل دخول آمن بـ NextAuth: دعم تسجيل الدخول بحسابات Google لحفظ المقالات والمفضلة"
+      ]
     }
   ],
   "blogs": [],

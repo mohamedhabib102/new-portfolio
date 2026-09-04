@@ -17,6 +17,20 @@ export const initialProjects: Project[] = [
     tags: ["Next.js", "Tailwind CSS", "JavaScript", "Framer Motion", "Performance Optimization", "Next Image", "Responsive Design", "Rich Text Blogs"],
     featured: true,
     order: 1,
+    featuresEn: [
+      "Eliminated heavy loading bottlenecks and optimized scripts for instantaneous page delivery",
+      "Overhauled blog typography with rich Word-style formatting for headings, lead paragraphs, styled quotes, and links",
+      "Fixed broken responsive design across all viewports from smartphones to 4K displays",
+      "Implemented Next.js built-in Image optimization with automatic WebP conversion and zero CLS",
+      "Engineered fluid UI animations, micro-interactions, and scroll effects with Framer Motion and modern JS"
+    ],
+    featuresAr: [
+      "معالجة مشاكل الأداء والتحميل الثقيل ورفع كفاءة سرعة استجابة الموقع ومؤشرات Core Web Vitals",
+      "تنسيق نظام المدونات والمقالات بتنسيقات غنية للعناوين والأوصاف والروابط على غرار محررات النصوص مثل Word",
+      "إصلاح وضبط التصميم المتجاوب (Responsive Design) لكافة الشاشات والهواتف والأجهزة اللوحية بدقة متناهية",
+      "استخدام مكون Next.js Image المدمج لمعالجة الصور تلقائياً ومنع تذبذب وانزياح الواجهة (CLS)",
+      "إضافة حركات وتفاعلات بصرية سلسة باستخدام Framer Motion وجافاسكريبت الحديثة"
+    ]
   },
   {
     id: "proj-aqarat-online",
@@ -32,63 +46,79 @@ export const initialProjects: Project[] = [
     tags: ["Vue.js", "UI/UX Design", "Figma", "Tailwind CSS", "JavaScript", "Real Estate Platform", "Multi-Role RBAC", "Super-Admin Dashboard"],
     featured: true,
     order: 2,
+    featuresEn: [
+      "Full Lifecycle Execution: Custom Figma UI/UX architecture translated into a modular Vue.js frontend",
+      "Multi-Role Permission Architecture: Dedicated portals for Buyers, Owners, Brokers, Companies, and Super-Admin",
+      "Compound & Unit Purchasing: Real estate firms can list compounds with unit-level inventory and specs",
+      "Super-Admin Governance: Granular control over all platform static & dynamic page contents and listings",
+      "Advanced Property Discovery: Interactive filters for location, budget, property types, and amenities"
+    ],
+    featuresAr: [
+      "تنفيذ كامل من الصفر: تصميم واجهات وتجربة المستخدم UI/UX في Figma وتحويلها لكود متكامل بـ Vue.js",
+      "نظام أدوار متعدد وصلاحيات: بوابات مخصصة لكل من المشتري، المالك، السمسار، المطورين، والسوبر أدمن",
+      "إدارة مشاريع الكومباوند والوحدات: رفع مشاريع عقارية كبرى مع تمكين المشترين من حجز وشراء الوحدات فردياً",
+      "لوحة تحكم Super-Admin متطورة: إدارة شاملة لكافة محتويات الصفحات والخدمات وإعدادات المنصة بالكامل",
+      "محرك بحث وفلترة عقارية متقدم: تصفية دقيقة بحسب المنطقة، نوع العقار، الأسعار، والمواصفات"
+    ]
   },
   {
-    id: "proj-1",
-    slug: "learnlogicify-landing-page",
-    titleEn: "Learnlogicify Landing Page",
-    titleAr: "صفحة هبوط Learnlogicify",
-    descriptionEn: "Accelerate the tech career and build your future faster. A high-conversion landing page with smooth animations and interactive components.",
-    descriptionAr: "منصة تعليمية لتسريع المسار المهني والبرمجي، مصممة بأحدث تقنيات الويب مع حركة سلسة وعناصر تفاعلية عالية الأداء.",
-    videoUrl: "/test.mp4",
-    liveUrl: "https://example.com/learnlogicify",
-    githubUrl: "https://github.com/mowafy-dev",
-    tags: ["Next.js", "Tailwind CSS", "Framer Motion", "TypeScript"],
+    id: "proj-1788541272452",
+    slug: "sohighla",
+    titleEn: "Shogla - On-Demand Craftsmen Marketplace",
+    titleAr: "منصة شغلة - وساطة رقمية للحرفيين والتشطيبات",
+    descriptionEn: "Shogla is a modern on-demand digital marketplace designed to seamlessly connect homeowners and clients with qualified, trusted local craftsmen and technicians. The platform enables clients to submit customized service requests, review technician profiles, and establish direct service agreements. To ensure safety and service reliability, craftsmen undergo an identity verification process. Built with Next.js, TypeScript, and Tailwind CSS with Zustand state management.",
+    descriptionAr: "منصة شغلة هي منصة وساطة رقمية متطورة تهدف إلى تسهيل وصول العملاء إلى أمهر الحرفيين والفنيين الموثوقين في مجالات الصيانة والتشطيبات المنزلية. تعمل المنصة كحلقة وصل ذكية تتيح للعميل استعراض الحرفيين المعتمدين وإنشاء طلبات تواصل وشرح متطلبات العمل ليقوم الحرفي باستقبال الطلب والاتفاق المباشر. تم بناء واجهات المشروع بالاعتماد على Next.js و TypeScript و Tailwind CSS مع إدارة الحالة عبر Zustand.",
+    videoUrl: "https://dibrssekkpsbyhvwwzln.supabase.co/storage/v1/object/public/portfolio-media/1788540982041_sohighla.mp4",
+    liveUrl: "http://sohighla.vercel.app/",
+    githubUrl: "https://github.com/mohamedhabib102/sohighla",
+    githubPrivate: false,
+    tags: ["Next.js", "TypeScript", "Tailwind CSS", "Zustand", "ASP.NET Core", "REST APIs", "UI/UX Design"],
     featured: true,
     order: 3,
+    featuresEn: [
+      "Direct Craftsman Booking: Seamless service requests and communication between clients and verified technicians",
+      "Strict Identity Verification: Rigorous background verification workflows before technician profile publishing",
+      "Smart Re-hiring History: Client dashboard for tracking previous technicians and quick one-click re-hiring",
+      "Transparent Ratings Engine: Authentic user review system reflecting real customer service feedback",
+      "High-Performance UI: Fast Next.js frontend with lightweight Zustand client state management"
+    ],
+    featuresAr: [
+      "حجز وتواصل مباشر مع الحرفيين: سهولة إنشاء طلبات الصيانة والتواصل مع الفنيين المعتمدين",
+      "نظام تحقق وتدقيق صارم للهوية: فحص واعتماد هويات الحرفيين لضمان أمان وموثوقية الخدمة",
+      "سجل تفاعلي لإعادة الطلب: لوحة تحكم تتيح الاحتفاظ بسجل الصنايعية وسهولة الرجوع إليهم",
+      "محرك تقييمات ومراجعات شفافة: نظام تقييم دقيق يعكس جودة الخدمة الحقيقية",
+      "أداء فائق واستجابة سريعة: واجهات Next.js سريعة مع إدارة خفيفة للحالة عبر Zustand"
+    ]
   },
   {
-    id: "proj-2",
-    slug: "winzee-web-chat",
-    titleEn: "Winzee Web Chat application",
-    titleAr: "تطبيق الدردشة والمحادثة Winzee",
-    descriptionEn: "Modern real-time web messaging platform with clean design, instant websocket delivery, and multimedia sharing capabilities.",
-    descriptionAr: "تطبيق محادثة فورية عصري بتصميم جذاب واتصال آني بالويب سوكت ومشاركة الوسائط بأعلى درجات السرعة.",
-    videoUrl: "/test.mp4",
-    liveUrl: "https://example.com/winzee",
-    githubUrl: "https://github.com/mowafy-dev",
-    tags: ["React", "Node.js", "Socket.io", "Tailwind CSS"],
+    id: "proj-1788541485137",
+    slug: "noor-alhuda",
+    titleEn: "Noor Alhuda - Islamic Platform & Audio Streaming",
+    titleAr: "منصة نور الهدى - منصة إسلامية وبث صوتي تفاعلي",
+    descriptionEn: "A comprehensive Islamic digital platform engineered with modern web technologies. Features Holy Qur’an reading with an intuitive interface, audio streaming player for listening to renowned Qur’an reciters, morning/evening adhkar, Google authentication via NextAuth, and an interactive Community hub for publishing and sharing articles. Built using Next.js, TypeScript, Tailwind CSS, Framer Motion, and Context API.",
+    descriptionAr: "منصة إسلامية رقمية شاملة تم بناؤها بأحدث تقنيات الويب لتقديم تجربة إيمانية متكاملة وسلسة. تتيح المنصة قراءة القرآن الكريم وتصفح الآيات بسهولة، مع مشغل صوتي متقدم للبث والاستماع للتلاوات القرآنية، وقسم خاص لأذكار الصباح والمساء، وتسجيل دخول آمن بحسابات Google عبر NextAuth، ومجتمع تفاعلي لنشر ومشاركة المقالات الهادفة. تم التطوير باستخدام Next.js و TypeScript و Tailwind CSS و Framer Motion و Context API.",
+    videoUrl: "https://dibrssekkpsbyhvwwzln.supabase.co/storage/v1/object/public/portfolio-media/1788543258827_2026-09-04_20-08-03.mp4",
+    liveUrl: "https://noor-alhuda-lyart.vercel.app/",
+    githubUrl: "https://github.com/mohamedhabib102/noor-alhuda",
+    githubPrivate: false,
+    tags: ["Next.js", "TypeScript", "Tailwind CSS", "NextAuth", "Context API", "Framer Motion", "Audio Streaming"],
     featured: true,
     order: 4,
-  },
-  {
-    id: "proj-3",
-    slug: "chatgpt-clone",
-    titleEn: "ChatGPT clone",
-    titleAr: "منصة استنساخ ChatGPT المتطورة",
-    descriptionEn: "Sleek AI conversational interface with streaming markdown responses, prompt caching, conversation trees, and dark mode.",
-    descriptionAr: "واجهة محادثة ذكاء اصطناعي متكاملة مع ميزة التدفق الفوري للنصوص، سجل المحادثات والوضع الليلي الأنيق.",
-    videoUrl: "/test.mp4",
-    liveUrl: "https://example.com/chatgpt-clone",
-    githubUrl: "https://github.com/mowafy-dev",
-    tags: ["Next.js", "OpenAI API", "Prisma", "Tailwind CSS"],
-    featured: true,
-    order: 5,
-  },
-  {
-    id: "proj-4",
-    slug: "gemini-clone",
-    titleEn: "Gemini Clone",
-    titleAr: "تطبيق Gemini Clone الذكي",
-    descriptionEn: "Next-generation multimodal AI web app inspired by Google Gemini, featuring voice synthesis, image reasoning, and fluid animations.",
-    descriptionAr: "تطبيق ويب للذكاء الاصطناعي متعدد الوسائط مستوحى من Google Gemini مع دعم تحليل الصور والتحريك التفاعلي.",
-    videoUrl: "/test.mp4",
-    liveUrl: "https://example.com/gemini-clone",
-    githubUrl: "https://github.com/mowafy-dev",
-    tags: ["Next.js", "Gemini API", "Framer Motion", "Tailwind CSS"],
-    featured: true,
-    order: 6,
-  },
+    featuresEn: [
+      "Quran Reader & Typography: Clean, accessible Arabic font rendering and surah navigation",
+      "Synchronized Audio Streaming: Global audio playback with reciter selection and smooth streaming",
+      "Interactive Community Hub: User publishing and sharing of articles across social networks",
+      "Morning & Evening Adhkar: Dedicated daily remembrance section with counter interactions",
+      "Secure NextAuth Authentication: Google OAuth sign-in with personalized user bookmarking"
+    ],
+    featuresAr: [
+      "مصحف إلكتروني بخطوط واضحة: تصفح سهل ومريح للآيات والسور القرآنية",
+      "مشغل صوتي متزامن للبث: استماع لتلاوات خاشعة بأصوات كبار القراء مع تحكم صوتي شامل",
+      "مجتمع ومقالات تفاعلية: إمكانية نشر ومشاركة المقالات الهادفة عبر شبكات التواصل",
+      "أذكار الصباح والمساء: قسم مخصص للأدعية والأذكار اليومية مع عداد تسبيح تفاعلي",
+      "تسجيل دخول آمن بـ NextAuth: دعم تسجيل الدخول بحسابات Google لحفظ المقالات والمفضلة"
+    ]
+  }
 ];
 
 import { portfolioStore } from "@/lib/store";

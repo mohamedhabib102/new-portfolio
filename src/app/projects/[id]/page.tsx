@@ -7,6 +7,7 @@ import { useProjectDetail } from "@/features/projects/hooks/useProjects";
 import { useTranslation } from "@/i18n/LanguageContext";
 import { useLoading } from "@/components/providers/LoadingContext";
 import LanguageToggle from "@/components/ui/LanguageToggle";
+import AdminHeaderBadge from "@/components/ui/AdminHeaderBadge";
 import FloatingDock from "@/components/ui/FloatingDock";
 import ContactSection from "@/features/contact/components/ContactSection";
 import FooterSection from "@/features/footer/components/FooterSection";
@@ -60,7 +61,10 @@ export default function ProjectDetailPage({
           <FiArrowLeft className={`w-4 h-4 ${isRtl ? "rotate-180" : ""}`} />
           <span>{t.backToHome}</span>
         </Link>
-        <LanguageToggle />
+        <div className="flex items-center gap-3">
+          <AdminHeaderBadge />
+          <LanguageToggle />
+        </div>
       </motion.header>
 
       {/* 2. Project Content with Mount Animations */}
