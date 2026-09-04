@@ -20,7 +20,7 @@ export async function POST(request: NextRequest) {
     const cleanName = file.name.replace(/[^a-zA-Z0-9.-]/g, "_");
     const uniqueFileName = `${timestamp}_${cleanName}`;
 
-    // 1. Try Uploading to Supabase Storage if configured
+    // 1. Upload directly to Supabase Storage
     if (supabase) {
       try {
         await ensureStorageBucket();
@@ -37,6 +37,7 @@ export async function POST(request: NextRequest) {
             .from(BUCKET_NAME)
             .getPublicUrl(uniqueFileName);
 
+          console.log("[Supabase Storage] Upload Success:", publicUrlData.publicUrl);
           return NextResponse.json({
             success: true,
             url: publicUrlData.publicUrl,
@@ -44,10 +45,18 @@ export async function POST(request: NextRequest) {
             fileName: uniqueFileName,
           });
         } else if (uploadError) {
-          console.warn("[Supabase Storage] Error, falling back to local storage:", uploadError.message);
+          console.error("[Supabase Storage] Upload Error:", uploadError);
+          return NextResponse.json({
+            success: false,
+            error: `Supabase Storage error: ${uploadError.message}`,
+          }, { status: 500 });
         }
-      } catch (supabaseErr) {
-        console.warn("[Supabase Storage] Exception, falling back to local storage:", supabaseErr);
+      } catch (supabaseErr: any) {
+        console.error("[Supabase Storage] Exception:", supabaseErr);
+        return NextResponse.json({
+          success: false,
+          error: `Supabase Storage error: ${supabaseErr.message || supabaseErr}`,
+        }, { status: 500 });
       }
     }
 

@@ -190,28 +190,33 @@ export default function DashboardPage() {
     setTimeout(() => setSaveStatus(null), 2500);
   };
 
-  // Generic File Upload Handler
+  // Generic File Upload Handler (Supabase Storage Direct)
   const uploadFile = async (file: File): Promise<string | null> => {
-    setUploadingStatus(isRtl ? "جاري رفع الملف إلى التخزين..." : "Uploading file to storage...");
+    setUploadingStatus(isRtl ? "جاري رفع الملف سحابياً إلى Supabase Storage..." : "Uploading to Supabase Storage...");
     try {
       const formData = new FormData();
       formData.append("file", file);
 
-      const res = await apiClient.post("/api/upload", formData, {
-        headers: { "Content-Type": "multipart/form-data" },
+      const response = await fetch("/api/upload", {
+        method: "POST",
+        body: formData,
       });
 
-      if (res.data?.success && res.data?.url) {
+      const res = await response.json();
+
+      if (res?.success && res?.url) {
         triggerToast(
-          res.data.storage === "supabase"
-            ? (isRtl ? "تم الرفع بنجاح إلى Supabase Storage!" : "Uploaded to Supabase Storage!")
+          res.storage === "supabase"
+            ? (isRtl ? "تم الرفع والتخزين في Supabase بنجاح!" : "Uploaded to Supabase Storage!")
             : (isRtl ? "تم حفظ الملف بنجاح!" : "File uploaded successfully!")
         );
-        return res.data.url;
+        return res.url;
+      } else {
+        throw new Error(res?.error || "Upload failed");
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error("Upload failed:", error);
-      triggerToast(isRtl ? "فشل رفع الملف" : "Failed to upload file");
+      triggerToast(isRtl ? "فشل رفع الملف إلى Supabase" : "Failed to upload file");
     } finally {
       setUploadingStatus(null);
     }
