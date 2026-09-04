@@ -34,6 +34,17 @@ export interface ExperienceData {
   skills: string[];
 }
 
+export interface SkillItemData {
+  id: string;
+  titleEn: string;
+  titleAr: string;
+  descEn: string;
+  descAr: string;
+  icons: string[]; // List of icon identifiers (e.g., 'SiHtml5', 'SiReact', 'SiTailwindcss')
+  badges: string[];
+  order?: number;
+}
+
 export interface ClientMessageData {
   id: string;
   name?: string | null;
@@ -70,6 +81,129 @@ const defaultExperiences: ExperienceData[] = [
   },
 ];
 
+const defaultSkills: SkillItemData[] = [
+  {
+    id: "frontend-core",
+    titleEn: "Front-End Core & Frameworks",
+    titleAr: "تطوير واجهات المستخدم وأطر العمل",
+    descEn: "Building fast, reactive, and user-friendly web interfaces using Next.js 16, React 19, TypeScript, and modern standards.",
+    descAr: "بناء واجهات ويب تفاعلية وسريعة وفائقة الاستجابة بالاعتماد على Next.js 16 و React 19 و TypeScript ومعايير الويب العالمية.",
+    icons: ["SiHtml5", "SiCss", "SiJavascript", "SiTypescript", "SiReact", "SiNextdotjs"],
+    badges: ["Next.js 16", "React 19", "TypeScript", "ES6+"],
+    order: 1,
+  },
+  {
+    id: "styling",
+    titleEn: "Styling & Design Systems",
+    titleAr: "التنسيق وأنظمة التصميم",
+    descEn: "Crafting visually appealing, pixel-perfect, and responsive layouts with Tailwind CSS, Sass, and modern UI component systems.",
+    descAr: "صياغة تصميمات عصرية فائقة الدقة متجاوبة مع كافة الشاشات باستخدام Tailwind CSS و Sass ونظم التصميم المتقدمة.",
+    icons: ["SiTailwindcss", "SiSass", "SiMui", "SiBootstrap"],
+    badges: ["Responsive Design", "Mobile-First", "Dark Mode", "Custom Themes"],
+    order: 2,
+  },
+  {
+    id: "animations",
+    titleEn: "Web Animations & Interactions",
+    titleAr: "التحريك وتفاعلات الويب المتقدمة",
+    descEn: "Creating 60FPS fluid animations, scroll-driven choreographies, and magnetic micro-interactions that elevate brand feel.",
+    descAr: "صناعة حركات انتقالية وتفاعلات حركية فائقة السلاسة بمعدل 60 إطار مع مؤثرات سكرول تجذب المستخدم وترفع قيمة البراند.",
+    icons: ["SiGreensock", "SiFramer"],
+    badges: ["ScrollTrigger", "Micro-Interactions", "Spring Physics", "Page Transitions"],
+    order: 3,
+  },
+  {
+    id: "ai-tools",
+    titleEn: "AI Tools & Modern Workflow",
+    titleAr: "أدوات الذكاء الاصطناعي والإنتاجية",
+    descEn: "Leveraging cutting-edge AI coding environments and models to accelerate component scaffolding, refactoring, and code review.",
+    descAr: "تسخير أحدث أدوات ومحررات الذكاء الاصطناعي لمضاعفة سرعة كتابة الكود، وإعادة الهيكلة ومراجعة الجودة البرمجية.",
+    icons: ["SiCursor", "SiGithubcopilot", "SiAnthropic", "SiChatbot"],
+    badges: ["Prompt Engineering", "Context-Aware Dev", "Smart Refactoring"],
+    order: 4,
+  },
+  {
+    id: "dev-tools",
+    titleEn: "Developer Environment & Tools",
+    titleAr: "بيئة التطوير وأدوات المطور",
+    descEn: "Proficient with industry-standard development software, debugging toolchains, and API exploration suites.",
+    descAr: "إتقان كامل لأدوات بيئة العمل الاحترافية، فحص وتصحيح الأخطاء، وتحليل استجابات الـ APIs.",
+    icons: ["VscCode", "SiGooglechrome", "SiPostman", "SiGit", "SiGithub"],
+    badges: ["VS Code", "DevTools", "Git Workflow"],
+    order: 5,
+  },
+  {
+    id: "state-management",
+    titleEn: "State Management & Data Fetching",
+    titleAr: "إدارة الحالة وجلب البيانات",
+    descEn: "Architecting predictable client/server state with modern cache invalidation, optimistic updates, and clean hooks.",
+    descAr: "بناء معمارية بيانات مستقرة وسريعة مع تحديثات متفائلة وتخزين مؤقت ذكي واستعلامات غير متزامنة.",
+    icons: ["SiRedux", "SiReactquery"],
+    badges: ["Zustand", "Context API", "Axios", "Optimistic UI", "SWR"],
+    order: 6,
+  },
+  {
+    id: "build-performance",
+    titleEn: "Build Tools & Web Performance",
+    titleAr: "أدوات البناء وتحسين الأداء",
+    descEn: "Optimizing bundle sizes, tree-shaking, and web vitals to consistently achieve a 95+ score on Google Lighthouse.",
+    descAr: "تحسين سرعة التحميل، وتقليص حجم حزم الكود، والوصول إلى تقييم 95+ على Google Lighthouse ومؤشرات الويب الحيوية.",
+    icons: ["SiVite", "SiWebpack", "SiLighthouse", "SiVercel"],
+    badges: ["95+ Lighthouse", "Core Web Vitals", "Code Splitting", "Lazy Loading"],
+    order: 7,
+  },
+  {
+    id: "testing",
+    titleEn: "Testing & Code Quality",
+    titleAr: "الاختبارات وضمان جودة الكود",
+    descEn: "Writing comprehensive unit, integration, and linting rules to maintain a bug-free, scalable codebase.",
+    descAr: "كتابة اختبارات شاملة وقواعد تدقيق قياسية للحفاظ على استقرار الكود البرمجي وسهولة صيانته.",
+    icons: ["SiJest", "SiTestinglibrary", "SiEslint", "SiPrettier"],
+    badges: ["Unit Testing", "Code Quality", "CI/CD Tests"],
+    order: 8,
+  },
+  {
+    id: "uiux-design",
+    titleEn: "UI/UX & Design Collaboration",
+    titleAr: "تصميم الواجهات وتجربة المستخدم",
+    descEn: "Translating complex Figma mockups into accessible, pixel-perfect digital experiences with high visual polish.",
+    descAr: "تحويل تصميمات فيجما المعقدة إلى واجهات برمجية حية تطابق التصميم بالبكسل مع مراعاة أدق التفاصيل الجمالية.",
+    icons: ["SiFigma"],
+    badges: ["Prototyping", "Wireframing", "Design Handoff", "Atomic Design"],
+    order: 9,
+  },
+  {
+    id: "mobile-crossplatform",
+    titleEn: "Mobile Web & Cross-Platform",
+    titleAr: "تطبيقات الهواتف والويب المتجاوب",
+    descEn: "Creating sleek cross-platform web and mobile experiences with touch gestures and adaptive viewports.",
+    descAr: "تطوير تطبيقات ويب وهواتف ذكية متوافقة مع شاشات اللمس والمنصات المختلفة بأعلى درجات الانسيابية.",
+    icons: ["TbBrandReactNative"],
+    badges: ["Progressive Web Apps (PWA)", "Touch Gestures", "Adaptive Layouts"],
+    order: 10,
+  },
+  {
+    id: "deployment-hosting",
+    titleEn: "Deployment & Modern Hosting",
+    titleAr: "النشر والاستضافة السحابية",
+    descEn: "Deploying high-availability frontend applications using Vercel, edge serverless functions, and CI/CD automation.",
+    descAr: "نشر تطبيقات الويب بسرعة فائقة عبر Vercel والشبكات الطرفية Edge مع أتمتة دورة البناء والنشر المستمر.",
+    icons: ["SiVercel", "SiGithub"],
+    badges: ["CI/CD", "Serverless Edge", "DNS & SSL", "Environment Management"],
+    order: 11,
+  },
+  {
+    id: "frontend-concepts",
+    titleEn: "Core Frontend Concepts",
+    titleAr: "المفاهيم البرمجية الأساسية للواجهات",
+    descEn: "Strong command of DOM mechanics, event loop, asynchronous JavaScript, Web Accessibility (a11y), and semantic HTML.",
+    descAr: "فهم عميق لآليات شجرة الـ DOM، دورة الأحداث البرمجية، إمكانية الوصول لذوي الاحتياجات الخاصة (a11y) والـ SEO المتقدم.",
+    icons: ["SiHtml5", "SiTypescript"],
+    badges: ["Accessibility (a11y)", "Technical SEO", "Event Loop", "DOM Tree Optimization"],
+    order: 12,
+  },
+];
+
 const defaultSiteConfig: SiteConfigData = {
   heroTitleEn: "Creative Developer &",
   heroTitleAr: "مطور",
@@ -94,6 +228,7 @@ interface LocalStoreData {
   experiences: ExperienceData[];
   projects: typeof initialProjects;
   blogs: typeof blogsData;
+  skills: SkillItemData[];
   messages: ClientMessageData[];
 }
 
@@ -104,10 +239,11 @@ function readLocalStore(): LocalStoreData {
       const parsed = JSON.parse(raw);
       return {
         siteConfig: { ...defaultSiteConfig, ...(parsed.siteConfig || {}) },
-        experiences: parsed.experiences && parsed.experiences.length > 0 ? parsed.experiences : defaultExperiences,
-        projects: parsed.projects && parsed.projects.length > 0 ? parsed.projects : initialProjects,
-        blogs: parsed.blogs && parsed.blogs.length > 0 ? parsed.blogs : blogsData,
-        messages: parsed.messages || [],
+        experiences: Array.isArray(parsed.experiences) ? parsed.experiences : defaultExperiences,
+        projects: Array.isArray(parsed.projects) ? parsed.projects : initialProjects,
+        blogs: Array.isArray(parsed.blogs) ? parsed.blogs : blogsData,
+        skills: Array.isArray(parsed.skills) ? parsed.skills : defaultSkills,
+        messages: Array.isArray(parsed.messages) ? parsed.messages : [],
       };
     }
   } catch (e) {
@@ -119,6 +255,7 @@ function readLocalStore(): LocalStoreData {
     experiences: defaultExperiences,
     projects: initialProjects,
     blogs: blogsData,
+    skills: defaultSkills,
     messages: [
       {
         id: "msg-welcome",
@@ -202,7 +339,7 @@ export const portfolioStore = {
     if (supabase) {
       try {
         const { data, error } = await supabase.from("Experience").select("*").order("createdAt", { ascending: false });
-        if (!error && data && data.length > 0) {
+        if (!error && Array.isArray(data)) {
           const formatted: ExperienceData[] = data.map((d) => ({
             id: d.id,
             period: d.period,
@@ -287,7 +424,7 @@ export const portfolioStore = {
     if (supabase) {
       try {
         const { data, error } = await supabase.from("Project").select("*").order("order", { ascending: true });
-        if (!error && data && data.length > 0) {
+        if (!error && Array.isArray(data)) {
           const store = readLocalStore();
           store.projects = data as any;
           writeLocalStore(store);
@@ -303,13 +440,15 @@ export const portfolioStore = {
   saveProject: async (projectData: any) => {
     const store = readLocalStore();
     const id = projectData.id || `proj-${Date.now()}`;
-    const slug = projectData.slug || projectData.titleEn.toLowerCase().replace(/[^a-z0-9]+/g, "-");
+    const slug = projectData.slug || (projectData.titleEn ? projectData.titleEn.toLowerCase().replace(/[^a-z0-9]+/g, "-") : `project-${Date.now()}`);
 
     const fullProject = {
       ...projectData,
       id,
       slug,
       tags: Array.isArray(projectData.tags) ? projectData.tags : (projectData.tags || "").split(",").map((s: string) => s.trim()).filter(Boolean),
+      featured: projectData.featured ?? true,
+      order: projectData.order ?? 0,
     };
 
     const existingIdx = store.projects.findIndex((p) => p.id === id);
@@ -333,8 +472,8 @@ export const portfolioStore = {
           liveUrl: fullProject.liveUrl || null,
           githubUrl: fullProject.githubUrl || null,
           tags: fullProject.tags,
-          featured: fullProject.featured ?? true,
-          order: fullProject.order ?? 0,
+          featured: fullProject.featured,
+          order: fullProject.order,
           updatedAt: new Date().toISOString(),
         });
       } catch (err) {
@@ -365,7 +504,7 @@ export const portfolioStore = {
     if (supabase) {
       try {
         const { data, error } = await supabase.from("Blog").select("*").order("createdAt", { ascending: false });
-        if (!error && data && data.length > 0) {
+        if (!error && Array.isArray(data)) {
           const formatted = data.map((b) => ({
             ...b,
             author: {
@@ -390,7 +529,7 @@ export const portfolioStore = {
   saveBlog: async (blogData: any) => {
     const store = readLocalStore();
     const id = blogData.id || `blog-${Date.now()}`;
-    const slug = blogData.slug || blogData.titleEn.toLowerCase().replace(/[^a-z0-9]+/g, "-");
+    const slug = blogData.slug || (blogData.titleEn ? blogData.titleEn.toLowerCase().replace(/[^a-z0-9]+/g, "-") : `blog-${Date.now()}`);
 
     const fullBlog = {
       ...blogData,
@@ -469,12 +608,105 @@ export const portfolioStore = {
     return true;
   },
 
-  // 5. Contact Messages
+  // 5. Skills
+  getSkills: async (): Promise<SkillItemData[]> => {
+    if (supabase) {
+      try {
+        const { data, error } = await supabase.from("Skill").select("*").order("order", { ascending: true });
+        if (!error && Array.isArray(data)) {
+          const formatted: SkillItemData[] = data.map((s) => ({
+            id: s.id,
+            titleEn: s.titleEn,
+            titleAr: s.titleAr,
+            descEn: s.descEn,
+            descAr: s.descAr,
+            icons: Array.isArray(s.icons) ? s.icons : [],
+            badges: Array.isArray(s.badges) ? s.badges : [],
+            order: s.order ?? 0,
+          }));
+          const store = readLocalStore();
+          store.skills = formatted;
+          writeLocalStore(store);
+          return formatted;
+        }
+      } catch (err) {
+        console.warn("[Supabase] getSkills fallback:", err);
+      }
+    }
+    return readLocalStore().skills;
+  },
+
+  saveSkill: async (skillData: any): Promise<SkillItemData> => {
+    const store = readLocalStore();
+    const id = skillData.id || `skill-${Date.now()}`;
+    const icons = Array.isArray(skillData.icons)
+      ? skillData.icons
+      : (skillData.icons || "").split(",").map((s: string) => s.trim()).filter(Boolean);
+    const badges = Array.isArray(skillData.badges)
+      ? skillData.badges
+      : (skillData.badges || "").split(",").map((s: string) => s.trim()).filter(Boolean);
+
+    const fullSkill: SkillItemData = {
+      id,
+      titleEn: skillData.titleEn || "",
+      titleAr: skillData.titleAr || "",
+      descEn: skillData.descEn || "",
+      descAr: skillData.descAr || "",
+      icons,
+      badges,
+      order: skillData.order ?? store.skills.length + 1,
+    };
+
+    const existingIdx = store.skills.findIndex((s) => s.id === id);
+    if (existingIdx >= 0) {
+      store.skills[existingIdx] = fullSkill;
+    } else {
+      store.skills.push(fullSkill);
+    }
+    writeLocalStore(store);
+
+    if (supabase) {
+      try {
+        await supabase.from("Skill").upsert({
+          id: fullSkill.id,
+          titleEn: fullSkill.titleEn,
+          titleAr: fullSkill.titleAr,
+          descEn: fullSkill.descEn,
+          descAr: fullSkill.descAr,
+          icons: fullSkill.icons,
+          badges: fullSkill.badges,
+          order: fullSkill.order,
+          updatedAt: new Date().toISOString(),
+        });
+      } catch (err) {
+        console.warn("[Supabase] saveSkill error:", err);
+      }
+    }
+
+    return fullSkill;
+  },
+
+  deleteSkill: async (id: string): Promise<boolean> => {
+    const store = readLocalStore();
+    store.skills = store.skills.filter((s) => s.id !== id);
+    writeLocalStore(store);
+
+    if (supabase) {
+      try {
+        await supabase.from("Skill").delete().eq("id", id);
+      } catch (err) {
+        console.warn("[Supabase] deleteSkill error:", err);
+      }
+    }
+    return true;
+  },
+
+  // 6. Contact Messages
   getMessages: async (): Promise<ClientMessageData[]> => {
     if (supabase) {
       try {
         const { data, error } = await supabase.from("ContactMessage").select("*").order("createdAt", { ascending: false });
-        if (!error && data && data.length > 0) {
+        if (!error && Array.isArray(data)) {
           return data;
         }
       } catch (err) {

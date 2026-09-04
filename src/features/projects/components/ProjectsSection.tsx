@@ -10,7 +10,10 @@ import { FiArrowUpRight } from "react-icons/fi";
 
 export default function ProjectsSection() {
   const { t, isRtl } = useTranslation();
-  const { data: projects, isLoading } = useProjects(true);
+  const { data: projects, isLoading } = useProjects(false);
+
+  // Exactly 4 projects on homepage as requested
+  const homeProjects = projects ? projects.slice(0, 4) : [];
 
   return (
     <section
@@ -63,13 +66,12 @@ export default function ProjectsSection() {
           <h2 className="text-4xl sm:text-5xl md:text-[56px] font-medium tracking-tight text-neutral-950 leading-tight">
             {t.impressiveWorks}
           </h2>
-          {/* User requested description */}
           <p className="text-sm sm:text-base text-neutral-600 font-normal max-w-2xl leading-relaxed">
             {t.projectsPersonalNote}
           </p>
         </motion.div>
 
-        {/* 3. Projects 2x2 Grid with pure Video Cards */}
+        {/* 3. Projects 2x2 Grid (Only 4 on Homepage) */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 sm:gap-10">
           {isLoading ? (
             Array.from({ length: 4 }).map((_, i) => (
@@ -78,34 +80,38 @@ export default function ProjectsSection() {
                 <div className="h-5 bg-neutral-100 rounded w-1/3" />
               </div>
             ))
-          ) : projects && projects.length > 0 ? (
-            projects.map((project, index) => (
+          ) : homeProjects.length > 0 ? (
+            homeProjects.map((project, index) => (
               <ProjectCard key={project.id} project={project} index={index} />
             ))
           ) : (
-            <div className="col-span-2 text-center py-8 text-neutral-400">
-              No projects available.
+            <div className="col-span-2 text-center py-16 px-4 bg-neutral-50 rounded-3xl border border-neutral-100">
+              <p className="text-neutral-500 text-base">
+                {isRtl ? "لا توجد مشاريع مضافة حالياً في قاعدة البيانات." : "No projects currently in database."}
+              </p>
             </div>
           )}
         </div>
 
-        {/* 4. 'Explore more' button matching Figma Image 5 exactly */}
-        <motion.div
-          initial={{ opacity: 0, y: 15 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
-          className="flex justify-center mt-12 sm:mt-14"
-        >
-          <Link
-            href="/projects"
-            id="explore-more-projects-btn"
-            className="inline-flex items-center gap-2 px-5 py-1.5 rounded-full border border-neutral-300 bg-white hover:bg-neutral-50 text-[12px] sm:text-[13px] font-normal text-neutral-800 transition-colors shadow-xs hover:scale-105 active:scale-95"
+        {/* 4. 'Explore more' button */}
+        {projects && projects.length > 4 && (
+          <motion.div
+            initial={{ opacity: 0, y: 15 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5 }}
+            className="flex justify-center mt-12 sm:mt-14"
           >
-            <span className="w-1.5 h-1.5 rounded-full bg-black inline-block" />
-            <span>{t.exploreMore}</span>
-          </Link>
-        </motion.div>
+            <Link
+              href="/projects"
+              id="explore-more-projects-btn"
+              className="inline-flex items-center gap-2 px-5 py-2 rounded-full border border-neutral-300 bg-white hover:bg-neutral-50 text-[13px] font-normal text-neutral-800 transition-colors shadow-xs hover:scale-105 active:scale-95"
+            >
+              <span className="w-1.5 h-1.5 rounded-full bg-black inline-block" />
+              <span>{t.exploreMore} ({projects.length})</span>
+            </Link>
+          </motion.div>
+        )}
       </div>
     </section>
   );

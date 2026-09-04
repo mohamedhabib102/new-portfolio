@@ -8,8 +8,8 @@ export function useProjects(featuredOnly: boolean = false) {
   return useQuery<Project[]>({
     queryKey: [...PROJECTS_QUERY_KEY, { featuredOnly }],
     queryFn: () => projectsApi.getProjects(featuredOnly),
-    staleTime: 5 * 60 * 1000, // 5 minutes stale time
-    gcTime: 10 * 60 * 1000,   // 10 minutes cache retention
+    staleTime: 0, // Immediately fetch latest data
+    refetchOnWindowFocus: true,
   });
 }
 
@@ -18,7 +18,6 @@ export function useProjectDetail(idOrSlug: string) {
     queryKey: [...PROJECTS_QUERY_KEY, "detail", idOrSlug],
     queryFn: () => projectsApi.getProjectById(idOrSlug),
     enabled: !!idOrSlug,
-    staleTime: 5 * 60 * 1000,
-    gcTime: 10 * 60 * 1000,
+    staleTime: 0,
   });
 }

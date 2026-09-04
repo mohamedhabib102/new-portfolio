@@ -7,6 +7,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { apiClient } from "@/lib/axios";
 import { useTranslation } from "@/i18n/LanguageContext";
 import LanguageToggle from "@/components/ui/LanguageToggle";
+import TechIcon, { AVAILABLE_TECH_ICONS, getTechIconInfo } from "@/components/ui/TechIcon";
 import {
   FiLayout,
   FiFileText,
@@ -29,13 +30,12 @@ import {
   FiGlobe,
   FiCode,
   FiMinus,
+  FiLayers,
+  FiSearch,
+  FiCheck,
+  FiX,
+  FiTag,
 } from "react-icons/fi";
-
-interface BlogSection {
-  heading: string;
-  body: string;
-  code?: string;
-}
 
 export default function DashboardPage() {
   const { isRtl } = useTranslation();
@@ -43,7 +43,7 @@ export default function DashboardPage() {
   const [passcode, setPasscode] = useState("");
   const [authError, setAuthError] = useState("");
   const [activeTab, setActiveTab] = useState<
-    "hero" | "about" | "experiences" | "projects" | "blogs" | "footer" | "messages"
+    "hero" | "about" | "skills" | "experiences" | "projects" | "blogs" | "footer" | "messages"
   >("hero");
 
   const [isLoading, setIsLoading] = useState(true);
@@ -57,14 +57,14 @@ export default function DashboardPage() {
 
   // Site Config State
   const [siteConfig, setSiteConfig] = useState({
-    heroTitleEn: "e Developer &",
+    heroTitleEn: "Developer &",
     heroTitleAr: "مطور",
     heroQuoteEn: "I'm trying to make something. Not just for you. Maybe not even for me.",
     heroQuoteAr: "أحاول أن أصنع شيئاً. ليس فقط من أجلك. وربما ليس حتى من أجلي.",
     heroImage: "/me.png",
     aboutBioEn: "",
     aboutBioAr: "",
-    githubUrl: "https://github.com/mowafy-dev",
+    githubUrl: "https://github.com/mohamedhabib102",
     linkedinUrl: "https://www.linkedin.com/in/habib-mowafy",
     whatsappNumber: "201027227796",
     footerHeadlineEn: "Let's build something great together",
@@ -76,6 +76,7 @@ export default function DashboardPage() {
   const [experiences, setExperiences] = useState<any[]>([]);
   const [projects, setProjects] = useState<any[]>([]);
   const [blogs, setBlogs] = useState<any[]>([]);
+  const [skills, setSkills] = useState<any[]>([]);
   const [messages, setMessages] = useState<any[]>([]);
 
   // Experience Modal State
@@ -91,7 +92,23 @@ export default function DashboardPage() {
     skills: "React, Next.js, TypeScript",
   });
 
-  // Project Modal State (With Rich Highlights & Architecture Sections)
+  // Skills Modal State
+  const [isSkillModalOpen, setIsSkillModalOpen] = useState(false);
+  const [skillIconSearch, setSkillIconSearch] = useState("");
+  const [skillCategoryFilter, setSkillCategoryFilter] = useState("All");
+  const [customIconInput, setCustomIconInput] = useState("");
+  const [editingSkill, setEditingSkill] = useState<any>({
+    id: "",
+    titleEn: "",
+    titleAr: "",
+    descEn: "",
+    descAr: "",
+    icons: ["SiHtml5", "SiCss", "SiJavascript", "SiReact"],
+    badges: "Responsive Design, Clean Code",
+    order: 1,
+  });
+
+  // Project Modal State
   const [isProjectModalOpen, setIsProjectModalOpen] = useState(false);
   const [editingProject, setEditingProject] = useState<any>({
     id: "",
@@ -99,17 +116,17 @@ export default function DashboardPage() {
     titleAr: "",
     descriptionEn: "",
     descriptionAr: "",
-    videoUrl: "", // Never force /test.mp4 on new projects
+    videoUrl: "",
     liveUrl: "",
     githubUrl: "",
     tags: "",
-    featuresEn: "",
-    featuresAr: "",
+    featured: true,
+    order: 0,
     sectionsEn: [{ heading: "", body: "", code: "" }],
     sectionsAr: [{ heading: "", body: "", code: "" }],
   });
 
-  // Blog Modal State (With Rich Sections and Code Blocks)
+  // Blog Modal State
   const [isBlogModalOpen, setIsBlogModalOpen] = useState(false);
   const [editingBlog, setEditingBlog] = useState<any>({
     id: "",
@@ -176,6 +193,7 @@ export default function DashboardPage() {
         setExperiences(res.data.data.experiences || []);
         setProjects(res.data.data.projects || []);
         setBlogs(res.data.data.blogs || []);
+        setSkills(res.data.data.skills || []);
         setMessages(res.data.data.messages || []);
       }
     } catch (e) {
@@ -187,10 +205,10 @@ export default function DashboardPage() {
 
   const triggerToast = (msg: string) => {
     setSaveStatus(msg);
-    setTimeout(() => setSaveStatus(null), 2500);
+    setTimeout(() => setSaveStatus(null), 3000);
   };
 
-  // Generic File Upload Handler (Supabase Storage Direct)
+  // Upload Handler
   const uploadFile = async (file: File): Promise<string | null> => {
     setUploadingStatus(isRtl ? "جاري رفع الملف سحابياً إلى Supabase Storage..." : "Uploading to Supabase Storage...");
     try {
@@ -223,7 +241,6 @@ export default function DashboardPage() {
     return null;
   };
 
-  // Upload Handlers
   const handleHeroImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -251,13 +268,14 @@ export default function DashboardPage() {
     }
   };
 
-  // 2. Save Site Config (Hero, About & Footer)
+  // 2. Save Site Config
   const handleSaveSiteConfig = async () => {
     try {
       await apiClient.post("/api/admin/site-config", siteConfig);
-      triggerToast(isRtl ? "تم حفظ الإعدادات بنجاح!" : "Configuration updated successfully!");
+      triggerToast(isRtl ? "تم حفظ الإعدادات بنجاح!" : "Configuration saved successfully!");
+      loadDashboardData();
     } catch (e) {
-      triggerToast(isRtl ? "فشل حفظ الإعدادات" : "Failed to update configuration");
+      triggerToast(isRtl ? "فشل حفظ الإعدادات" : "Failed to save configuration");
     }
   };
 
@@ -277,64 +295,97 @@ export default function DashboardPage() {
   const handleDeleteExperience = async (id: string) => {
     if (!confirm(isRtl ? "هل أنت متأكد من حذف هذه الخبرة؟" : "Are you sure you want to delete this experience?")) return;
     try {
+      setExperiences((prev) => prev.filter((e) => e.id !== id));
       await apiClient.delete(`/api/admin/experiences?id=${id}`);
-      triggerToast(isRtl ? "تم حذف الخبرة!" : "Experience deleted!");
+      triggerToast(isRtl ? "تم حذف الخبرة بنجاح!" : "Experience deleted successfully!");
       loadDashboardData();
     } catch (e) {
       triggerToast(isRtl ? "فشل حذف الخبرة" : "Failed to delete experience");
+      loadDashboardData();
     }
   };
 
-  // 4. Save Project (With Rich Features & Sections)
-  const handleSaveProject = async (e: React.FormEvent) => {
+  // 4. Save Skill
+  const handleSaveSkill = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
       const payload = {
-        ...editingProject,
-        featuresEn: typeof editingProject.featuresEn === "string"
-          ? editingProject.featuresEn.split("\n").map((s: string) => s.trim()).filter(Boolean)
-          : (editingProject.featuresEn || []),
-        featuresAr: typeof editingProject.featuresAr === "string"
-          ? editingProject.featuresAr.split("\n").map((s: string) => s.trim()).filter(Boolean)
-          : (editingProject.featuresAr || []),
+        ...editingSkill,
+        icons: Array.isArray(editingSkill.icons) ? editingSkill.icons : (editingSkill.icons || "").split(",").map((s: string) => s.trim()).filter(Boolean),
+        badges: typeof editingSkill.badges === "string" ? editingSkill.badges.split(",").map((s: string) => s.trim()).filter(Boolean) : editingSkill.badges,
       };
-      await apiClient.post("/api/admin/projects", payload);
+      await apiClient.post("/api/admin/skills", payload);
+      setIsSkillModalOpen(false);
+      triggerToast(isRtl ? "تم حفظ المهارة بنجاح!" : "Skill group saved successfully!");
+      loadDashboardData();
+    } catch (e) {
+      triggerToast(isRtl ? "فشل حفظ المهارة" : "Failed to save skill group");
+    }
+  };
+
+  const handleDeleteSkill = async (id: string) => {
+    if (!confirm(isRtl ? "هل أنت متأكد من حذف هذه المجموعة المهارية؟" : "Are you sure you want to delete this skill group?")) return;
+    try {
+      setSkills((prev) => prev.filter((s) => s.id !== id));
+      await apiClient.delete(`/api/admin/skills?id=${id}`);
+      triggerToast(isRtl ? "تم حذف المهارة بنجاح!" : "Skill group deleted successfully!");
+      loadDashboardData();
+    } catch (e) {
+      triggerToast(isRtl ? "فشل حذف المهارة" : "Failed to delete skill group");
+      loadDashboardData();
+    }
+  };
+
+  const toggleSkillIcon = (iconId: string) => {
+    setEditingSkill((prev: any) => {
+      const currentIcons: string[] = Array.isArray(prev.icons) ? prev.icons : [];
+      if (currentIcons.includes(iconId)) {
+        return { ...prev, icons: currentIcons.filter((i) => i !== iconId) };
+      } else {
+        return { ...prev, icons: [...currentIcons, iconId] };
+      }
+    });
+  };
+
+  const addCustomIcon = () => {
+    if (!customIconInput.trim()) return;
+    setEditingSkill((prev: any) => {
+      const currentIcons: string[] = Array.isArray(prev.icons) ? prev.icons : [];
+      if (!currentIcons.includes(customIconInput.trim())) {
+        return { ...prev, icons: [...currentIcons, customIconInput.trim()] };
+      }
+      return prev;
+    });
+    setCustomIconInput("");
+  };
+
+  // 5. Save Project
+  const handleSaveProject = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      await apiClient.post("/api/admin/projects", editingProject);
       setIsProjectModalOpen(false);
-      triggerToast(isRtl ? "تم حفظ المشروع وتفاصيله بنجاح!" : "Project and details saved successfully!");
+      triggerToast(isRtl ? "تم حفظ المشروع بنجاح!" : "Project saved successfully!");
       loadDashboardData();
     } catch (e) {
       triggerToast(isRtl ? "فشل حفظ المشروع" : "Failed to save project");
     }
   };
 
-  const addProjectSection = () => {
-    setEditingProject((prev: any) => ({
-      ...prev,
-      sectionsEn: [...(prev.sectionsEn || []), { heading: "", body: "", code: "" }],
-      sectionsAr: [...(prev.sectionsAr || []), { heading: "", body: "", code: "" }],
-    }));
-  };
-
-  const removeProjectSection = (idx: number) => {
-    setEditingProject((prev: any) => ({
-      ...prev,
-      sectionsEn: prev.sectionsEn.filter((_: any, i: number) => i !== idx),
-      sectionsAr: prev.sectionsAr.filter((_: any, i: number) => i !== idx),
-    }));
-  };
-
   const handleDeleteProject = async (id: string) => {
     if (!confirm(isRtl ? "هل أنت متأكد من حذف هذا المشروع؟" : "Are you sure you want to delete this project?")) return;
     try {
+      setProjects((prev) => prev.filter((p) => p.id !== id));
       await apiClient.delete(`/api/admin/projects?id=${id}`);
-      triggerToast(isRtl ? "تم حذف المشروع!" : "Project deleted!");
+      triggerToast(isRtl ? "تم حذف المشروع بنجاح!" : "Project deleted successfully!");
       loadDashboardData();
     } catch (e) {
       triggerToast(isRtl ? "فشل حذف المشروع" : "Failed to delete project");
+      loadDashboardData();
     }
   };
 
-  // 5. Save Blog
+  // 6. Save Blog
   const handleSaveBlog = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
@@ -350,11 +401,13 @@ export default function DashboardPage() {
   const handleDeleteBlog = async (id: string) => {
     if (!confirm(isRtl ? "هل أنت متأكد من حذف هذا المقال؟" : "Are you sure you want to delete this blog post?")) return;
     try {
+      setBlogs((prev) => prev.filter((b) => b.id !== id));
       await apiClient.delete(`/api/admin/blogs?id=${id}`);
-      triggerToast(isRtl ? "تم حذف المقال!" : "Blog post deleted!");
+      triggerToast(isRtl ? "تم حذف المقال بنجاح!" : "Blog post deleted successfully!");
       loadDashboardData();
     } catch (e) {
       triggerToast(isRtl ? "فشل حذف المقال" : "Failed to delete blog post");
+      loadDashboardData();
     }
   };
 
@@ -375,127 +428,130 @@ export default function DashboardPage() {
     }));
   };
 
-  // If not authenticated, show password challenge modal
+  // Auth Screen
   if (!isAuthenticated) {
     return (
-      <div className="min-h-screen bg-[#090b0e] text-white flex items-center justify-center p-6" dir={isRtl ? "rtl" : "ltr"}>
+      <main className="min-h-screen bg-[#0a0a0f] text-white flex flex-col items-center justify-center p-6 selection:bg-blue-600">
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
-          className="w-full max-w-md p-8 sm:p-10 rounded-3xl bg-[#13151c] border border-white/10 shadow-2xl flex flex-col gap-6 text-center"
+          className="w-full max-w-md p-8 rounded-3xl bg-[#12141c] border border-white/10 shadow-2xl flex flex-col items-center text-center"
         >
-          <div className="w-14 h-14 mx-auto rounded-full bg-blue-500/10 border border-blue-500/30 flex items-center justify-center text-blue-400">
-            <FiLock className="w-6 h-6" />
+          <div className="w-16 h-16 rounded-2xl bg-blue-600/10 border border-blue-500/20 flex items-center justify-center text-blue-400 mb-6">
+            <FiLock className="w-8 h-8" />
           </div>
 
-          <div>
-            <h1 className="text-2xl font-normal text-white mb-2">
-              {isRtl ? "لوحة التحكم الرئيسية" : "Admin Dashboard"}
-            </h1>
-            <p className="text-xs text-neutral-400">
-              {isRtl
-                ? "أدخل كلمة المرور السرية للمدير، أو يمكنك الدخول عبر كتابة كلمة المرور في رسالة نموذج Get in touch."
-                : "Enter admin passcode, or access via the website's 'Get in touch' contact form."}
-            </p>
-          </div>
+          <h1 className="text-2xl font-semibold tracking-tight text-white mb-2">
+            {isRtl ? "لوحة تحكم الموقع" : "Admin Dashboard"}
+          </h1>
+          <p className="text-xs text-neutral-400 mb-6 leading-relaxed">
+            {isRtl
+              ? "يرجى إدخال كلمة المرور السرية للإدارة والتعديل على قاعدة البيانات مباشرة."
+              : "Enter your admin security passcode to manage all portfolio database records."}
+          </p>
 
-          <form onSubmit={handleDirectLogin} className="flex flex-col gap-4 text-left">
+          <form onSubmit={handleDirectLogin} className="w-full flex flex-col gap-4">
             <div>
-              <label className="block text-xs text-neutral-400 mb-1 font-medium text-right sm:text-left">
-                {isRtl ? "كلمة المرور السرية" : "Admin Password"}
-              </label>
               <input
                 type="password"
+                required
                 value={passcode}
-                onChange={(e) => setPasscode(e.target.value)}
+                onChange={(e) => {
+                  setPasscode(e.target.value);
+                  setAuthError("");
+                }}
                 placeholder={isRtl ? "أدخل كلمة المرور..." : "Enter admin password..."}
-                className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-neutral-500 focus:outline-none focus:border-blue-500 text-sm"
+                className="w-full px-4 py-3.5 rounded-2xl bg-white/5 border border-white/10 text-white placeholder-neutral-500 text-sm focus:outline-none focus:border-blue-500 transition-colors text-center font-mono tracking-widest"
               />
-              {authError && <p className="text-xs text-red-400 mt-1">{authError}</p>}
+              {authError && <p className="text-xs text-red-400 mt-2">{authError}</p>}
             </div>
 
             <button
               type="submit"
-              className="w-full py-3 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-medium text-sm transition-all shadow-md mt-2 cursor-pointer"
+              className="w-full py-3.5 rounded-2xl bg-blue-600 hover:bg-blue-500 text-white font-medium text-sm transition-all shadow-lg hover:shadow-blue-600/25 cursor-pointer"
             >
-              {isRtl ? "تسجيل الدخول" : "Unlock Dashboard"}
+              {isRtl ? "تسجيل الدخول" : "Access Dashboard"}
             </button>
           </form>
 
-          <div className="pt-2 border-t border-white/5 flex items-center justify-between">
-            <Link href="/" className="text-xs text-neutral-400 hover:text-white transition-colors">
-              {isRtl ? "← العودة إلى الموقع" : "← Return to Portfolio"}
+          <div className="mt-8 pt-6 border-t border-white/5 w-full flex justify-between items-center text-xs text-neutral-400">
+            <Link href="/" className="hover:text-white transition-colors">
+              {isRtl ? "← العودة للرئيسية" : "← Back to Portfolio"}
             </Link>
             <LanguageToggle />
           </div>
         </motion.div>
-      </div>
+      </main>
     );
   }
 
+  // Filtered Tech Icons for the Skill Icon Picker
+  const filteredTechIcons = AVAILABLE_TECH_ICONS.filter((item) => {
+    const matchesSearch = item.name.toLowerCase().includes(skillIconSearch.toLowerCase()) ||
+                          item.id.toLowerCase().includes(skillIconSearch.toLowerCase());
+    const matchesCat = skillCategoryFilter === "All" || item.category === skillCategoryFilter;
+    return matchesSearch && matchesCat;
+  });
+
+  const iconCategories = ["All", "Frontend", "Styling", "AI & Productivity", "DevOps & Tools", "Testing & Performance", "Backend"];
+
   return (
-    <div className="min-h-screen bg-[#0a0c10] text-neutral-200 selection:bg-blue-600 selection:text-white dashboard-root" dir={isRtl ? "rtl" : "ltr"}>
-      {/* Toast Notifications */}
-      <AnimatePresence>
-        {(saveStatus || uploadingStatus) && (
-          <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            className={`fixed top-6 ${isRtl ? "left-6" : "right-6"} z-50 px-5 py-3 rounded-xl ${
-              uploadingStatus ? "bg-blue-600 text-white" : "bg-emerald-500 text-black"
-            } font-medium text-xs shadow-2xl flex items-center gap-2`}
-          >
-            <FiCheckCircle className="w-4 h-4" />
-            <span>{uploadingStatus || saveStatus}</span>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      {/* Top Admin Header Bar */}
-      <header className="w-full border-b border-white/10 bg-[#0e1017]/90 backdrop-blur-md sticky top-0 z-40 px-6 sm:px-10 py-4 flex items-center justify-between">
-        {/* Left: Complete Uncropped Avatar & Name */}
-        <div className="flex items-center gap-3.5">
-          <div className="w-11 h-11 rounded-full overflow-hidden border-2 border-cyan-400/50 bg-[#151821] shrink-0 relative shadow-md">
-            <Image
-              src="/me.png"
-              alt="Mohamed H. Mowafy"
-              fill
-              className="object-cover object-top"
-              sizes="44px"
-              priority
-            />
+    <div className="min-h-screen bg-[#090a0f] text-neutral-200 selection:bg-blue-600 selection:text-white">
+      {/* Top Admin Navigation */}
+      <header className="w-full border-b border-white/10 bg-[#0d0e15]/80 backdrop-blur-md sticky top-0 z-40">
+        <div className="max-w-7xl mx-auto px-6 sm:px-10 py-4 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="w-9 h-9 rounded-xl bg-blue-600 flex items-center justify-center text-white font-bold text-sm shadow-md">
+              H
+            </div>
+            <div>
+              <h2 className="text-sm font-semibold text-white">Habib Portfolio Dashboard</h2>
+              <span className="text-[11px] text-emerald-400 flex items-center gap-1.5 font-mono">
+                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                Live Supabase Connected
+              </span>
+            </div>
           </div>
-          <div className="flex flex-col">
-            <h2 className="text-sm sm:text-base font-medium text-white tracking-tight">
-              Mohamed H. Mowafy
-            </h2>
-            <p className="text-[11px] text-cyan-300 font-light">
-              {isRtl ? "لوحة التحكم والإدارة الفورية" : "Portfolio Control Center"}
-            </p>
+
+          {/* Quick Actions & Status */}
+          <div className="flex items-center gap-3">
+            {saveStatus && (
+              <motion.div
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-500/20 text-emerald-400 text-xs font-medium border border-emerald-500/30"
+              >
+                <FiCheckCircle className="w-4 h-4" />
+                <span>{saveStatus}</span>
+              </motion.div>
+            )}
+
+            {uploadingStatus && (
+              <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-blue-500/20 text-blue-400 text-xs font-medium border border-blue-500/30 animate-pulse">
+                <FiUploadCloud className="w-4 h-4 animate-bounce" />
+                <span>{uploadingStatus}</span>
+              </div>
+            )}
+
+            <Link
+              href="/"
+              target="_blank"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 text-xs text-neutral-300 transition-colors border border-white/10"
+            >
+              <FiExternalLink className="w-3.5 h-3.5" />
+              <span>{isRtl ? "معاينة الموقع" : "Live View"}</span>
+            </Link>
+
+            <LanguageToggle />
+
+            <button
+              onClick={handleLogout}
+              className="p-2 rounded-xl bg-red-500/10 hover:bg-red-500/20 text-red-400 transition-colors cursor-pointer"
+              title="Logout"
+            >
+              <FiLogOut className="w-4 h-4" />
+            </button>
           </div>
-        </div>
-
-        {/* Right: Language Toggle, Live Portfolio Link, and Logout */}
-        <div className="flex items-center gap-3">
-          <LanguageToggle />
-
-          <Link
-            href="/"
-            target="_blank"
-            className="hidden sm:inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 text-xs text-neutral-300 transition-colors"
-          >
-            <span>{isRtl ? "معاينة الموقع" : "Live Portfolio"}</span>
-            <FiExternalLink className="w-3.5 h-3.5" />
-          </Link>
-
-          <button
-            onClick={handleLogout}
-            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-red-500/10 hover:bg-red-500/20 border border-red-500/20 text-xs text-red-400 transition-colors cursor-pointer"
-          >
-            <FiLogOut className="w-3.5 h-3.5" />
-            <span>{isRtl ? "خروج" : "Logout"}</span>
-          </button>
         </div>
       </header>
 
@@ -521,6 +577,19 @@ export default function DashboardPage() {
           >
             <FiUser className="w-4 h-4" />
             <span>{isRtl ? "نبذة عني (About Me)" : "About Me Bio"}</span>
+          </button>
+
+          <button
+            onClick={() => setActiveTab("skills")}
+            className={`flex items-center justify-between px-4 py-3 rounded-2xl text-xs sm:text-sm font-medium transition-all cursor-pointer whitespace-nowrap ${
+              activeTab === "skills" ? "bg-white text-black shadow-lg scale-[1.02]" : "bg-white/5 text-neutral-400 hover:bg-white/10"
+            }`}
+          >
+            <div className="flex items-center gap-3">
+              <FiLayers className="w-4 h-4" />
+              <span>{isRtl ? "المهارات والتقنيات" : "Skills & Tech Stack"}</span>
+            </div>
+            <span className="text-[11px] opacity-70">({skills.length})</span>
           </button>
 
           <button
@@ -590,110 +659,116 @@ export default function DashboardPage() {
           </button>
         </aside>
 
-        {/* Content Pane */}
-        <main className="flex-1">
-          {/* TAB 1: HERO & IDENTITY */}
+        {/* Content Area */}
+        <main className="flex-1 min-w-0">
+          {/* TAB 1: HERO CONFIG */}
           {activeTab === "hero" && (
-            <motion.div
-              initial={{ opacity: 0, y: 15 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="p-6 sm:p-8 rounded-3xl bg-[#12141c] border border-white/10 shadow-xl flex flex-col gap-6"
-            >
+            <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col gap-6">
               <div>
-                <h3 className="text-xl font-medium text-white mb-1">
-                  {isRtl ? "إعدادات الهيرو والصورة" : "Hero Section Settings"}
-                </h3>
+                <h3 className="text-xl font-medium text-white mb-1">{isRtl ? "قسم الهيرو والصورة الشخصية" : "Hero Section & Profile"}</h3>
                 <p className="text-xs text-neutral-400">
                   {isRtl
-                    ? "تعديل نصوص الهيرو واقتباس الهيرو ورفع صورة الهيرو كملف مباشر."
-                    : "Update edge-to-edge headlines, top quote, and upload background hero photo."}
+                    ? "تعديل النصوص الرئيسية والصورة الشخصية التي تظهر في الصفحة الرئيسية."
+                    : "Update your main hero titles, quotes, and profile picture."}
                 </p>
               </div>
 
-              {/* Current Hero Image Preview & File Upload */}
-              <div className="p-5 rounded-2xl bg-white/[0.03] border border-white/10 flex flex-col sm:flex-row items-center gap-6">
-                <div className="relative w-28 h-28 rounded-2xl overflow-hidden border border-white/20 shrink-0 bg-black">
-                  <Image
-                    src={siteConfig.heroImage || "/me.png"}
-                    alt="Hero Preview"
-                    fill
-                    unoptimized
-                    className="object-cover object-top"
-                  />
+              {/* Hero Image Section */}
+              <div className="p-6 rounded-3xl bg-[#12141c] border border-white/10 flex flex-col sm:flex-row items-center gap-6 shadow-xl">
+                <div className="relative w-28 h-28 rounded-2xl overflow-hidden bg-neutral-900 border border-white/15 shrink-0">
+                  {siteConfig.heroImage ? (
+                    <Image
+                      src={siteConfig.heroImage}
+                      alt="Hero Profile"
+                      fill
+                      unoptimized
+                      className="object-cover"
+                    />
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center text-neutral-500">
+                      <FiImage className="w-8 h-8" />
+                    </div>
+                  )}
                 </div>
-                <div className="flex flex-col gap-2 text-center sm:text-left w-full">
-                  <span className="text-xs font-medium text-white">
-                    {isRtl ? "صورة الهيرو الحالية" : "Current Hero Image"}
-                  </span>
-                  <p className="text-[11px] text-neutral-400">
-                    {isRtl
-                      ? "يمكنك رفع صورة جديدة كملف مباشرة (PNG, JPG, WebP). سيتم رفعها وحفظها وتحديث الهيرو فوراً."
-                      : "Upload an image file directly (PNG, JPG, WebP). It will be saved and update the hero instantly."}
-                  </p>
 
-                  <div className="flex items-center gap-3 pt-2">
+                <div className="flex flex-col gap-3 flex-1 text-left">
+                  <div>
+                    <h4 className="text-sm font-medium text-white">{isRtl ? "صورة الهيرو الشخصية" : "Hero Profile Picture"}</h4>
+                    <p className="text-xs text-neutral-400">
+                      {isRtl
+                        ? "يمكنك رفع صورة جديدة مباشرة ليتم تخزينها في Supabase Storage."
+                        : "Upload a high-res image stored directly on Supabase Storage."}
+                    </p>
+                  </div>
+
+                  <div className="flex items-center gap-3">
                     <input
                       type="file"
                       ref={heroFileRef}
-                      accept="image/*"
                       onChange={handleHeroImageUpload}
+                      accept="image/*"
                       className="hidden"
                     />
                     <button
                       type="button"
                       onClick={() => heroFileRef.current?.click()}
-                      className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-white/10 hover:bg-white text-white hover:text-black border border-white/15 text-xs font-medium transition-all cursor-pointer"
+                      className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-white/10 hover:bg-white/15 text-white text-xs font-medium transition-colors cursor-pointer border border-white/10"
                     >
                       <FiUploadCloud className="w-4 h-4" />
-                      <span>{isRtl ? "اختر صورة لرفعها" : "Upload Image File"}</span>
+                      <span>{isRtl ? "رفع صورة جديدة" : "Upload New Image"}</span>
                     </button>
-                    <span className="text-[11px] text-neutral-500 truncate max-w-xs">{siteConfig.heroImage}</span>
+                    <input
+                      type="text"
+                      value={siteConfig.heroImage}
+                      onChange={(e) => setSiteConfig({ ...siteConfig, heroImage: e.target.value })}
+                      placeholder="/me.png or Supabase URL"
+                      className="flex-1 px-3.5 py-2 rounded-xl bg-white/5 border border-white/10 text-white text-xs focus:outline-none focus:border-blue-500"
+                    />
                   </div>
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                <div>
-                  <label className="block text-xs text-neutral-400 mb-1">{isRtl ? "عنوان الهيرو (إنجليزي)" : "Hero Title (English)"}</label>
+              {/* Titles & Quotes Inputs */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="p-5 rounded-2xl bg-[#12141c] border border-white/10 flex flex-col gap-2">
+                  <label className="text-xs font-medium text-neutral-400">{isRtl ? "العنوان الأول (إنجليزي)" : "Hero Title 1 (English)"}</label>
                   <input
                     type="text"
                     value={siteConfig.heroTitleEn}
                     onChange={(e) => setSiteConfig({ ...siteConfig, heroTitleEn: e.target.value })}
-                    className="w-full px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-sm focus:outline-none focus:border-blue-500"
+                    className="w-full px-3.5 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-xs focus:outline-none focus:border-blue-500"
                   />
-                  <p className="text-[11px] text-neutral-500 mt-1">{isRtl ? "النص يظهر كما هو في الهيرو تماماً" : "Text displays exactly as written across the hero"}</p>
                 </div>
 
-                <div>
-                  <label className="block text-xs text-neutral-400 mb-1">{isRtl ? "عنوان الهيرو (عربي)" : "Hero Title (Arabic)"}</label>
+                <div className="p-5 rounded-2xl bg-[#12141c] border border-white/10 flex flex-col gap-2">
+                  <label className="text-xs font-medium text-neutral-400">{isRtl ? "العنوان الأول (عربي)" : "Hero Title 1 (Arabic)"}</label>
                   <input
                     type="text"
                     dir="rtl"
                     value={siteConfig.heroTitleAr}
                     onChange={(e) => setSiteConfig({ ...siteConfig, heroTitleAr: e.target.value })}
-                    className="w-full px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-sm focus:outline-none focus:border-blue-500"
+                    className="w-full px-3.5 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-xs focus:outline-none focus:border-blue-500"
                   />
-                  <p className="text-[11px] text-neutral-500 mt-1">{isRtl ? "المعروض في وضع العربي كـ: مطور" : "Displayed in Arabic mode: مطور"}</p>
                 </div>
 
-                <div className="sm:col-span-2">
-                  <label className="block text-xs text-neutral-400 mb-1">{isRtl ? "اقتباس الهيرو العلوي (إنجليزي)" : "Top Right Quote (English)"}</label>
+                <div className="p-5 rounded-2xl bg-[#12141c] border border-white/10 flex flex-col gap-2">
+                  <label className="text-xs font-medium text-neutral-400">{isRtl ? "الاقتباس الملهم (إنجليزي)" : "Hero Quote (English)"}</label>
                   <textarea
-                    rows={2}
+                    rows={3}
                     value={siteConfig.heroQuoteEn}
                     onChange={(e) => setSiteConfig({ ...siteConfig, heroQuoteEn: e.target.value })}
-                    className="w-full px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-sm focus:outline-none focus:border-blue-500 resize-none"
+                    className="w-full px-3.5 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-xs focus:outline-none focus:border-blue-500 resize-none"
                   />
                 </div>
 
-                <div className="sm:col-span-2">
-                  <label className="block text-xs text-neutral-400 mb-1">{isRtl ? "اقتباس الهيرو العلوي (عربي)" : "Top Right Quote (Arabic)"}</label>
+                <div className="p-5 rounded-2xl bg-[#12141c] border border-white/10 flex flex-col gap-2">
+                  <label className="text-xs font-medium text-neutral-400">{isRtl ? "الاقتباس الملهم (عربي)" : "Hero Quote (Arabic)"}</label>
                   <textarea
-                    rows={2}
+                    rows={3}
                     dir="rtl"
                     value={siteConfig.heroQuoteAr}
                     onChange={(e) => setSiteConfig({ ...siteConfig, heroQuoteAr: e.target.value })}
-                    className="w-full px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-sm focus:outline-none focus:border-blue-500 resize-none"
+                    className="w-full px-3.5 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-xs focus:outline-none focus:border-blue-500 resize-none"
                   />
                 </div>
               </div>
@@ -710,43 +785,37 @@ export default function DashboardPage() {
             </motion.div>
           )}
 
-          {/* TAB 2: ABOUT ME BIO */}
+          {/* TAB 2: ABOUT BIO */}
           {activeTab === "about" && (
-            <motion.div
-              initial={{ opacity: 0, y: 15 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="p-6 sm:p-8 rounded-3xl bg-[#12141c] border border-white/10 shadow-xl flex flex-col gap-6"
-            >
+            <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col gap-6">
               <div>
-                <h3 className="text-xl font-medium text-white mb-1">
-                  {isRtl ? "وصف صفحة عني (About Me Bio)" : "About Me Description"}
-                </h3>
+                <h3 className="text-xl font-medium text-white mb-1">{isRtl ? "السيرة الذاتية (About Me Bio)" : "About Me Biography"}</h3>
                 <p className="text-xs text-neutral-400">
                   {isRtl
-                    ? "تعديل النص الشامل الموحد الذي يظهر في كارت صفحة About Me."
-                    : "Update your unified biography block displayed on the About Me page."}
+                    ? "تعديل محتوى صفحة /about باللغتين العربية والإنجليزية."
+                    : "Edit your detailed biography displayed on the About Me page."}
                 </p>
               </div>
 
-              <div className="flex flex-col gap-5">
-                <div>
-                  <label className="block text-xs text-neutral-400 mb-1">{isRtl ? "السيرة الذاتية (بالإنجليزية)" : "English Biography"}</label>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="p-5 rounded-2xl bg-[#12141c] border border-white/10 flex flex-col gap-2">
+                  <label className="text-xs font-medium text-neutral-400">{isRtl ? "النص التعريفي (إنجليزي)" : "About Bio (English)"}</label>
                   <textarea
-                    rows={7}
+                    rows={12}
                     value={siteConfig.aboutBioEn}
                     onChange={(e) => setSiteConfig({ ...siteConfig, aboutBioEn: e.target.value })}
-                    className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white text-sm focus:outline-none focus:border-blue-500 leading-relaxed font-light"
+                    className="w-full px-3.5 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-xs focus:outline-none focus:border-blue-500 leading-relaxed"
                   />
                 </div>
 
-                <div>
-                  <label className="block text-xs text-neutral-400 mb-1">{isRtl ? "السيرة الذاتية (بالعربية)" : "Arabic Biography"}</label>
+                <div className="p-5 rounded-2xl bg-[#12141c] border border-white/10 flex flex-col gap-2">
+                  <label className="text-xs font-medium text-neutral-400">{isRtl ? "النص التعريفي (عربي)" : "About Bio (Arabic)"}</label>
                   <textarea
-                    rows={7}
+                    rows={12}
                     dir="rtl"
                     value={siteConfig.aboutBioAr}
                     onChange={(e) => setSiteConfig({ ...siteConfig, aboutBioAr: e.target.value })}
-                    className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white text-sm focus:outline-none focus:border-blue-500 leading-relaxed font-light"
+                    className="w-full px-3.5 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-xs focus:outline-none focus:border-blue-500 leading-relaxed"
                   />
                 </div>
               </div>
@@ -763,13 +832,124 @@ export default function DashboardPage() {
             </motion.div>
           )}
 
-          {/* TAB 3: EXPERIENCES (الخبرات العملية) */}
+          {/* TAB 3: SKILLS MANAGEMENT (المهارات والتقنيات) */}
+          {activeTab === "skills" && (
+            <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col gap-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h3 className="text-xl font-medium text-white mb-1">
+                    {isRtl ? "إدارة المهارات والتقنيات" : "Skills & Tech Stack Management"}
+                  </h3>
+                  <p className="text-xs text-neutral-400">
+                    {isRtl
+                      ? "إضافة وتعديل وحذف مجموعات المهارات واختيار أيقونات التقنيات في قاعدة البيانات مباشرة."
+                      : "Add, edit, or delete skill groups and choose tech stack icons directly in the database."}
+                  </p>
+                </div>
+
+                <button
+                  onClick={() => {
+                    setEditingSkill({
+                      id: "",
+                      titleEn: "",
+                      titleAr: "",
+                      descEn: "",
+                      descAr: "",
+                      icons: ["SiReact", "SiNextdotjs", "SiTypescript", "SiTailwindcss"],
+                      badges: "Responsive Design, Clean Code",
+                      order: skills.length + 1,
+                    });
+                    setIsSkillModalOpen(true);
+                  }}
+                  className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white text-black font-semibold text-xs hover:bg-neutral-200 transition-all cursor-pointer shadow-lg"
+                >
+                  <FiPlus className="w-4 h-4" />
+                  <span>{isRtl ? "إضافة مجموعة مهارات جديدة" : "Add Skill Group"}</span>
+                </button>
+              </div>
+
+              {/* Skills Grid */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {skills.map((skill) => (
+                  <div
+                    key={skill.id}
+                    className="p-5 rounded-3xl bg-[#12141c] border border-white/10 flex flex-col justify-between gap-4 shadow-xl group hover:border-white/20 transition-all"
+                  >
+                    <div className="flex flex-col gap-3">
+                      {/* Tech Icons Preview Row */}
+                      {skill.icons && skill.icons.length > 0 && (
+                        <div className="flex flex-wrap items-center gap-2">
+                          {skill.icons.map((iconId: string, idx: number) => {
+                            const info = getTechIconInfo(iconId);
+                            return (
+                              <div
+                                key={idx}
+                                className="w-8 h-8 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center"
+                                title={info.name}
+                              >
+                                <TechIcon nameOrId={iconId} className="w-4 h-4" />
+                              </div>
+                            );
+                          })}
+                        </div>
+                      )}
+
+                      <div>
+                        <h4 className="text-base font-semibold text-white">
+                          {isRtl ? skill.titleAr || skill.titleEn : skill.titleEn}
+                        </h4>
+                        <p className="text-xs text-neutral-400 mt-1 line-clamp-2 leading-relaxed">
+                          {isRtl ? skill.descAr || skill.descEn : skill.descEn}
+                        </p>
+                      </div>
+
+                      {/* Badges */}
+                      {skill.badges && skill.badges.length > 0 && (
+                        <div className="flex flex-wrap gap-1 pt-2">
+                          {(Array.isArray(skill.badges) ? skill.badges : (skill.badges || "").split(",")).map((b: string, i: number) => (
+                            <span key={i} className="text-[10px] px-2 py-0.5 rounded-full bg-white/5 border border-white/10 text-neutral-300">
+                              {b.trim()}
+                            </span>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+
+                    <div className="flex items-center justify-between pt-3 border-t border-white/5 text-xs text-neutral-500">
+                      <span>Order: #{skill.order ?? 0}</span>
+                      <div className="flex items-center gap-2">
+                        <button
+                          onClick={() => {
+                            setEditingSkill({
+                              ...skill,
+                              badges: Array.isArray(skill.badges) ? skill.badges.join(", ") : skill.badges,
+                              icons: Array.isArray(skill.icons) ? skill.icons : [],
+                            });
+                            setIsSkillModalOpen(true);
+                          }}
+                          className="p-2 rounded-lg bg-white/5 hover:bg-white/10 text-neutral-300 transition-colors cursor-pointer"
+                          title="Edit"
+                        >
+                          <FiEdit className="w-4 h-4" />
+                        </button>
+                        <button
+                          onClick={() => handleDeleteSkill(skill.id)}
+                          className="p-2 rounded-lg bg-red-500/10 hover:bg-red-500/20 text-red-400 transition-colors cursor-pointer"
+                          title="Delete"
+                        >
+                          <FiTrash2 className="w-4 h-4" />
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </motion.div>
+          )}
+
+          {/* TAB 4: EXPERIENCES (الخبرات العملية) */}
           {activeTab === "experiences" && (
-            <motion.div
-              initial={{ opacity: 0, y: 15 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="flex flex-col gap-6"
-            >
+            <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col gap-6">
               <div className="flex items-center justify-between">
                 <div>
                   <h3 className="text-xl font-medium text-white mb-1">
@@ -859,20 +1039,16 @@ export default function DashboardPage() {
             </motion.div>
           )}
 
-          {/* TAB 4: PROJECTS (Wider Modal, Smooth Mouse Wheel Scroll, Empty videoUrl on new) */}
+          {/* TAB 5: PROJECTS */}
           {activeTab === "projects" && (
-            <motion.div
-              initial={{ opacity: 0, y: 15 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="flex flex-col gap-6"
-            >
+            <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col gap-6">
               <div className="flex items-center justify-between">
                 <div>
                   <h3 className="text-xl font-medium text-white mb-1">{isRtl ? "إدارة المشاريع" : "Projects Showcase"}</h3>
                   <p className="text-xs text-neutral-400">
                     {isRtl
-                      ? "استعراض الفيديو الحالي لكل مشروع ورفع فيديوهات جديدة كملفات."
-                      : "Preview current videos and upload new MP4/WebM video files directly."}
+                      ? "إضافة وتعديل وحذف المشاريع ورفع الفيديوهات وروابط المعاينة."
+                      : "Preview, edit, or delete projects and upload videos/links."}
                   </p>
                 </div>
 
@@ -884,14 +1060,12 @@ export default function DashboardPage() {
                       titleAr: "",
                       descriptionEn: "",
                       descriptionAr: "",
-                      videoUrl: "", // EMPTY BY DEFAULT - NO FORCED VIDEO!
+                      videoUrl: "",
                       liveUrl: "",
                       githubUrl: "",
                       tags: "",
-                      featuresEn: "",
-                      featuresAr: "",
-                      sectionsEn: [{ heading: "", body: "", code: "" }],
-                      sectionsAr: [{ heading: "", body: "", code: "" }],
+                      featured: true,
+                      order: projects.length + 1,
                     });
                     setIsProjectModalOpen(true);
                   }}
@@ -902,14 +1076,13 @@ export default function DashboardPage() {
                 </button>
               </div>
 
-              {/* Projects Grid with Video Player Previews */}
+              {/* Projects Grid */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 {projects.map((proj) => (
                   <div
                     key={proj.id}
                     className="p-5 rounded-3xl bg-[#12141c] border border-white/10 flex flex-col justify-between gap-4 shadow-xl"
                   >
-                    {/* Current Video Preview */}
                     <div className="relative w-full aspect-video rounded-2xl overflow-hidden bg-black border border-white/10">
                       {proj.videoUrl ? (
                         <video
@@ -946,14 +1119,6 @@ export default function DashboardPage() {
                             setEditingProject({
                               ...proj,
                               tags: Array.isArray(proj.tags) ? proj.tags.join(", ") : (proj.tags || ""),
-                              featuresEn: Array.isArray(proj.featuresEn) ? proj.featuresEn.join("\n") : (proj.featuresEn || ""),
-                              featuresAr: Array.isArray(proj.featuresAr) ? proj.featuresAr.join("\n") : (proj.featuresAr || ""),
-                              sectionsEn: proj.sectionsEn && proj.sectionsEn.length > 0 
-                                ? proj.sectionsEn.map((s: any) => ({ heading: s.heading || "", body: s.body || "", code: s.code || "" }))
-                                : [{ heading: "", body: "", code: "" }],
-                              sectionsAr: proj.sectionsAr && proj.sectionsAr.length > 0 
-                                ? proj.sectionsAr.map((s: any) => ({ heading: s.heading || "", body: s.body || "", code: s.code || "" }))
-                                : [{ heading: "", body: "", code: "" }],
                             });
                             setIsProjectModalOpen(true);
                           }}
@@ -977,20 +1142,16 @@ export default function DashboardPage() {
             </motion.div>
           )}
 
-          {/* TAB 5: BLOGS (Rich Sections, Headings, Paragraphs & Code Blocks) */}
+          {/* TAB 6: BLOGS */}
           {activeTab === "blogs" && (
-            <motion.div
-              initial={{ opacity: 0, y: 15 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="flex flex-col gap-6"
-            >
+            <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col gap-6">
               <div className="flex items-center justify-between">
                 <div>
                   <h3 className="text-xl font-medium text-white mb-1">{isRtl ? "إدارة المدونة والمقالات" : "Articles & Blogs"}</h3>
                   <p className="text-xs text-neutral-400">
                     {isRtl
-                      ? "اسم الكاتب محدد باسم Mohamed H. Mowafy مع إمكانية إضافة أقسام وعناوين وفقرات وكود برمجي."
-                      : "Author is set to Mohamed H. Mowafy with rich section builder, headings, paragraphs, and code snippets."}
+                      ? "إضافة وتعديل وحذف المقالات البرمجية مع أكواد ومقتطفات تفاعلية."
+                      : "Add, edit, or delete articles and technical tutorials."}
                   </p>
                 </div>
 
@@ -1003,9 +1164,9 @@ export default function DashboardPage() {
                       excerptEn: "",
                       excerptAr: "",
                       coverImage: "",
-                      categoryEn: "Frontend",
-                      categoryAr: "واجهات أمامية",
-                      tags: "",
+                      categoryEn: "Next.js",
+                      categoryAr: "نكست جي إس",
+                      tags: "Next.js, TypeScript",
                       introEn: "",
                       introAr: "",
                       conclusionEn: "",
@@ -1018,22 +1179,22 @@ export default function DashboardPage() {
                   className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white text-black font-semibold text-xs hover:bg-neutral-200 transition-all cursor-pointer shadow-lg"
                 >
                   <FiPlus className="w-4 h-4" />
-                  <span>{isRtl ? "كتابة مقال جديد" : "Write Article"}</span>
+                  <span>{isRtl ? "إضافة مقال جديد" : "Add Article"}</span>
                 </button>
               </div>
 
-              {/* Blogs Grid with Image Previews */}
+              {/* Blogs Grid */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 {blogs.map((b) => (
                   <div
                     key={b.id}
                     className="p-5 rounded-3xl bg-[#12141c] border border-white/10 flex flex-col justify-between gap-4 shadow-xl"
                   >
-                    <div className="relative w-full aspect-video rounded-2xl overflow-hidden bg-black border border-white/10">
+                    <div className="relative w-full aspect-[16/9] rounded-2xl overflow-hidden bg-black border border-white/10">
                       {b.coverImage ? (
                         <Image
                           src={b.coverImage}
-                          alt={b.titleEn}
+                          alt={b.titleEn || "Blog cover"}
                           fill
                           unoptimized
                           className="object-cover"
@@ -1043,13 +1204,13 @@ export default function DashboardPage() {
                           {isRtl ? "لا توجد صورة غلاف" : "No cover image"}
                         </div>
                       )}
-                      <span className="absolute top-3 left-3 px-2.5 py-0.5 rounded-full text-[10px] bg-black/80 text-white border border-white/10">
-                        {isRtl ? b.categoryAr : b.categoryEn}
-                      </span>
                     </div>
 
                     <div>
-                      <h4 className="text-lg font-medium text-white mb-1 leading-snug">
+                      <span className="text-[10px] px-2.5 py-0.5 rounded-full bg-white/5 border border-white/10 text-neutral-400">
+                        {isRtl ? b.categoryAr : b.categoryEn}
+                      </span>
+                      <h4 className="text-lg font-medium text-white mt-2 mb-1">
                         {isRtl ? b.titleAr : b.titleEn}
                       </h4>
                       <p className="text-xs text-neutral-400 line-clamp-2">
@@ -1058,25 +1219,23 @@ export default function DashboardPage() {
                     </div>
 
                     <div className="flex items-center justify-between pt-3 border-t border-white/5">
-                      <span className="text-[11px] text-cyan-300 font-medium">Mohamed H. Mowafy</span>
+                      <span className="text-[11px] text-neutral-500">{b.publishedAt}</span>
                       <div className="flex items-center gap-2">
                         <button
                           onClick={() => {
-                            const rawSecsEn = b.contentEn?.sections || [];
-                            const rawSecsAr = b.contentAr?.sections || [];
                             setEditingBlog({
                               ...b,
-                              tags: Array.isArray(b.tags) ? b.tags.join(", ") : b.tags,
-                              sectionsEn: rawSecsEn.length > 0 
-                                ? rawSecsEn.map((s: any) => ({ heading: s.heading || "", body: s.body || "", code: s.code || s.codeSnippet || "" }))
-                                : [{ heading: "", body: "", code: "" }],
-                              sectionsAr: rawSecsAr.length > 0 
-                                ? rawSecsAr.map((s: any) => ({ heading: s.heading || "", body: s.body || "", code: s.code || s.codeSnippet || "" }))
-                                : [{ heading: "", body: "", code: "" }],
-                              introEn: b.contentEn?.intro || b.excerptEn || "",
-                              introAr: b.contentAr?.intro || b.excerptAr || "",
+                              tags: Array.isArray(b.tags) ? b.tags.join(", ") : (b.tags || ""),
+                              introEn: b.contentEn?.intro || "",
+                              introAr: b.contentAr?.intro || "",
                               conclusionEn: b.contentEn?.conclusion || "",
                               conclusionAr: b.contentAr?.conclusion || "",
+                              sectionsEn: b.contentEn?.sections && b.contentEn.sections.length > 0 
+                                ? b.contentEn.sections 
+                                : [{ heading: "", body: "", code: "" }],
+                              sectionsAr: b.contentAr?.sections && b.contentAr.sections.length > 0 
+                                ? b.contentAr.sections 
+                                : [{ heading: "", body: "", code: "" }],
                             });
                             setIsBlogModalOpen(true);
                           }}
@@ -1100,98 +1259,68 @@ export default function DashboardPage() {
             </motion.div>
           )}
 
-          {/* TAB 6: FOOTER & SOCIAL LINKS */}
+          {/* TAB 7: FOOTER & SOCIALS */}
           {activeTab === "footer" && (
-            <motion.div
-              initial={{ opacity: 0, y: 15 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="p-6 sm:p-8 rounded-3xl bg-[#12141c] border border-white/10 shadow-xl flex flex-col gap-6"
-            >
+            <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col gap-6">
               <div>
-                <h3 className="text-xl font-medium text-white mb-1">
-                  {isRtl ? "إعدادات الفوتر وروابط التواصل" : "Footer & Social Media Settings"}
-                </h3>
+                <h3 className="text-xl font-medium text-white mb-1">{isRtl ? "الفوتر وروابط التواصل الاجتماعي" : "Footer & Social Links"}</h3>
                 <p className="text-xs text-neutral-400">
                   {isRtl
-                    ? "تعديل روابط GitHub و LinkedIn ورقم الواتساب وعناوين الفوتر التي تظهر في جميع الصفحات."
-                    : "Update your GitHub, LinkedIn, WhatsApp number, and footer CTA headlines."}
+                    ? "تعديل عناوين الفوتر وروابط حساباتك على GitHub و LinkedIn ورقم WhatsApp."
+                    : "Update your social media links and footer banner text."}
                 </p>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                <div>
-                  <label className="block text-xs text-neutral-400 mb-1">GitHub Profile URL</label>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="p-5 rounded-2xl bg-[#12141c] border border-white/10 flex flex-col gap-2">
+                  <label className="text-xs font-medium text-neutral-400">GitHub URL</label>
                   <input
-                    type="text"
+                    type="url"
                     value={siteConfig.githubUrl}
                     onChange={(e) => setSiteConfig({ ...siteConfig, githubUrl: e.target.value })}
-                    placeholder="https://github.com/..."
-                    className="w-full px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-sm focus:outline-none focus:border-blue-500"
+                    className="w-full px-3.5 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-xs focus:outline-none focus:border-blue-500"
                   />
                 </div>
 
-                <div>
-                  <label className="block text-xs text-neutral-400 mb-1">LinkedIn Profile URL</label>
+                <div className="p-5 rounded-2xl bg-[#12141c] border border-white/10 flex flex-col gap-2">
+                  <label className="text-xs font-medium text-neutral-400">LinkedIn URL</label>
                   <input
-                    type="text"
+                    type="url"
                     value={siteConfig.linkedinUrl}
                     onChange={(e) => setSiteConfig({ ...siteConfig, linkedinUrl: e.target.value })}
-                    placeholder="https://www.linkedin.com/in/..."
-                    className="w-full px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-sm focus:outline-none focus:border-blue-500"
+                    className="w-full px-3.5 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-xs focus:outline-none focus:border-blue-500"
                   />
                 </div>
 
-                <div className="sm:col-span-2">
-                  <label className="block text-xs text-neutral-400 mb-1">{isRtl ? "رقم الواتساب (مع كود الدولة)" : "WhatsApp Phone Number (with country code)"}</label>
+                <div className="p-5 rounded-2xl bg-[#12141c] border border-white/10 flex flex-col gap-2 sm:col-span-2">
+                  <label className="text-xs font-medium text-neutral-400">{isRtl ? "رقم الواتساب (مع كود الدولة دون علامة +)" : "WhatsApp Number (with country code, no +)"}</label>
                   <input
                     type="text"
                     value={siteConfig.whatsappNumber}
                     onChange={(e) => setSiteConfig({ ...siteConfig, whatsappNumber: e.target.value })}
                     placeholder="201027227796"
-                    className="w-full px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-sm focus:outline-none focus:border-blue-500"
+                    className="w-full px-3.5 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-xs focus:outline-none focus:border-blue-500 font-mono"
                   />
-                  <p className="text-[11px] text-neutral-500 mt-1">{isRtl ? "مثال: 201027227796 بدون علامة +" : "e.g. 201027227796 without +"}</p>
                 </div>
 
-                <div>
-                  <label className="block text-xs text-neutral-400 mb-1">{isRtl ? "عنوان الفوتر الكبير (إنجليزي)" : "Footer Headline (English)"}</label>
+                <div className="p-5 rounded-2xl bg-[#12141c] border border-white/10 flex flex-col gap-2">
+                  <label className="text-xs font-medium text-neutral-400">{isRtl ? "عنوان الفوتر الرئيسي (إنجليزي)" : "Footer Headline (English)"}</label>
                   <input
                     type="text"
                     value={siteConfig.footerHeadlineEn}
                     onChange={(e) => setSiteConfig({ ...siteConfig, footerHeadlineEn: e.target.value })}
-                    className="w-full px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-sm focus:outline-none focus:border-blue-500"
+                    className="w-full px-3.5 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-xs focus:outline-none focus:border-blue-500"
                   />
                 </div>
 
-                <div>
-                  <label className="block text-xs text-neutral-400 mb-1">{isRtl ? "عنوان الفوتر الكبير (عربي)" : "Footer Headline (Arabic)"}</label>
+                <div className="p-5 rounded-2xl bg-[#12141c] border border-white/10 flex flex-col gap-2">
+                  <label className="text-xs font-medium text-neutral-400">{isRtl ? "عنوان الفوتر الرئيسي (عربي)" : "Footer Headline (Arabic)"}</label>
                   <input
                     type="text"
                     dir="rtl"
                     value={siteConfig.footerHeadlineAr}
                     onChange={(e) => setSiteConfig({ ...siteConfig, footerHeadlineAr: e.target.value })}
-                    className="w-full px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-sm focus:outline-none focus:border-blue-500"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-xs text-neutral-400 mb-1">{isRtl ? "النص الفرعي للفوتر (إنجليزي)" : "Footer Subtitle (English)"}</label>
-                  <textarea
-                    rows={2}
-                    value={siteConfig.footerSubEn}
-                    onChange={(e) => setSiteConfig({ ...siteConfig, footerSubEn: e.target.value })}
-                    className="w-full px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-sm focus:outline-none focus:border-blue-500 resize-none"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-xs text-neutral-400 mb-1">{isRtl ? "النص الفرعي للفوتر (عربي)" : "Footer Subtitle (Arabic)"}</label>
-                  <textarea
-                    rows={2}
-                    dir="rtl"
-                    value={siteConfig.footerSubAr}
-                    onChange={(e) => setSiteConfig({ ...siteConfig, footerSubAr: e.target.value })}
-                    className="w-full px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-sm focus:outline-none focus:border-blue-500 resize-none"
+                    className="w-full px-3.5 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-xs focus:outline-none focus:border-blue-500"
                   />
                 </div>
               </div>
@@ -1202,62 +1331,297 @@ export default function DashboardPage() {
                   className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-medium text-xs transition-all shadow-md cursor-pointer"
                 >
                   <FiSave className="w-4 h-4" />
-                  <span>{isRtl ? "حفظ الفوتر والروابط" : "Save Footer Settings"}</span>
+                  <span>{isRtl ? "حفظ التغييرات" : "Save Changes"}</span>
                 </button>
               </div>
             </motion.div>
           )}
 
-          {/* TAB 7: CLIENT MESSAGES */}
+          {/* TAB 8: MESSAGES */}
           {activeTab === "messages" && (
-            <motion.div
-              initial={{ opacity: 0, y: 15 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="flex flex-col gap-6"
-            >
+            <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col gap-6">
               <div>
-                <h3 className="text-xl font-medium text-white mb-1">{isRtl ? "رسائل واستفسارات العملاء" : "Inquiries & Messages"}</h3>
+                <h3 className="text-xl font-medium text-white mb-1">{isRtl ? "رسائل واستفسارات العملاء" : "Client Messages"}</h3>
                 <p className="text-xs text-neutral-400">
                   {isRtl
-                    ? "الرسائل المستلمة من زوار وعملاء الموقع عبر نموذج 'Get in touch'."
-                    : "Client messages submitted through the 'Get in touch' contact modal."}
+                    ? "جميع الرسائل المرسلة من زوار الموقع عبر نموذج التواصل."
+                    : "Messages submitted via the contact form on your portfolio."}
                 </p>
               </div>
 
-              {messages.length === 0 ? (
-                <div className="p-12 text-center rounded-3xl bg-[#12141c] border border-white/10 text-neutral-400 text-sm">
-                  {isRtl ? "لا توجد رسائل واردة حتى الآن." : "No messages yet."}
-                </div>
-              ) : (
-                <div className="flex flex-col gap-4">
-                  {messages.map((m) => (
+              <div className="flex flex-col gap-4">
+                {messages.length === 0 ? (
+                  <div className="p-8 rounded-2xl bg-[#12141c] border border-white/10 text-center text-xs text-neutral-400">
+                    {isRtl ? "لا توجد رسائل جديدة." : "No messages received yet."}
+                  </div>
+                ) : (
+                  messages.map((m) => (
                     <div
                       key={m.id}
-                      className="p-6 rounded-2xl bg-[#12141c] border border-white/10 shadow-lg flex flex-col gap-3"
+                      className="p-5 rounded-2xl bg-[#12141c] border border-white/10 flex flex-col gap-3 shadow-lg"
                     >
-                      <div className="flex flex-wrap items-center justify-between gap-2 border-b border-white/5 pb-3">
-                        <div className="flex items-center gap-3">
-                          <span className="font-medium text-white text-sm">{m.name || "Anonymous Client"}</span>
-                          <span className="text-xs text-blue-400">{m.email}</span>
-                          {m.phone && <span className="text-xs text-neutral-400">{m.phone}</span>}
+                      <div className="flex items-center justify-between border-b border-white/5 pb-3">
+                        <div className="flex items-center gap-2">
+                          <span className="text-sm font-semibold text-white">{m.name || "Anonymous Client"}</span>
+                          <span className="text-xs text-blue-400">({m.email})</span>
                         </div>
-                        <div className="flex items-center gap-1.5 text-xs text-neutral-500">
-                          <FiClock className="w-3 h-3" />
-                          <span>{new Date(m.createdAt).toLocaleString()}</span>
-                        </div>
+                        <span className="text-[11px] text-neutral-500">{new Date(m.createdAt).toLocaleString()}</span>
                       </div>
-
-                      <p className="text-sm text-neutral-300 font-light leading-relaxed whitespace-pre-line">
-                        {m.message}
-                      </p>
+                      <p className="text-xs text-neutral-300 leading-relaxed whitespace-pre-line">{m.message}</p>
                     </div>
-                  ))}
-                </div>
-              )}
+                  ))
+                )}
+              </div>
             </motion.div>
           )}
         </main>
       </div>
+
+      {/* ===================== SKILL ADD / EDIT MODAL (With Interactive Icon Picker) ===================== */}
+      <AnimatePresence>
+        {isSkillModalOpen && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-black/85 backdrop-blur-md">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.96 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.96 }}
+              className="w-full max-w-4xl p-6 sm:p-8 rounded-3xl bg-[#141622] border border-white/15 shadow-2xl flex flex-col gap-6 max-h-[90vh] overflow-y-auto overscroll-contain"
+            >
+              <div className="flex items-center justify-between pb-4 border-b border-white/10">
+                <div>
+                  <h3 className="text-xl font-semibold text-white">
+                    {editingSkill.id ? (isRtl ? "تعديل مجموعة المهارات" : "Edit Skill Group") : (isRtl ? "إضافة مجموعة مهارات جديدة" : "Add New Skill Group")}
+                  </h3>
+                  <p className="text-xs text-neutral-400 mt-1">
+                    {isRtl ? "اختر الأيقونات التقنية واكتب العناوين والشارات." : "Select tech stack icons, enter descriptions and badges."}
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setIsSkillModalOpen(false)}
+                  className="p-2 rounded-xl bg-white/5 hover:bg-white/10 text-neutral-400 hover:text-white"
+                >
+                  <FiX className="w-5 h-5" />
+                </button>
+              </div>
+
+              <form onSubmit={handleSaveSkill} className="flex flex-col gap-5 text-left">
+                {/* Titles */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-xs text-neutral-400 mb-1">{isRtl ? "عنوان المجموعة (إنجليزي)" : "Group Title (English)"}</label>
+                    <input
+                      type="text"
+                      required
+                      value={editingSkill.titleEn}
+                      onChange={(e) => setEditingSkill({ ...editingSkill, titleEn: e.target.value })}
+                      placeholder="Front-End Core & Frameworks"
+                      className="w-full px-3.5 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-xs focus:outline-none focus:border-blue-500"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs text-neutral-400 mb-1">{isRtl ? "عنوان المجموعة (عربي)" : "Group Title (Arabic)"}</label>
+                    <input
+                      type="text"
+                      dir="rtl"
+                      required
+                      value={editingSkill.titleAr}
+                      onChange={(e) => setEditingSkill({ ...editingSkill, titleAr: e.target.value })}
+                      placeholder="تطوير واجهات المستخدم وأطر العمل"
+                      className="w-full px-3.5 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-xs focus:outline-none focus:border-blue-500"
+                    />
+                  </div>
+                </div>
+
+                {/* Descriptions */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-xs text-neutral-400 mb-1">{isRtl ? "الوصف (إنجليزي)" : "Description (English)"}</label>
+                    <textarea
+                      rows={3}
+                      value={editingSkill.descEn}
+                      onChange={(e) => setEditingSkill({ ...editingSkill, descEn: e.target.value })}
+                      placeholder="Building fast, reactive, and user-friendly web interfaces..."
+                      className="w-full px-3.5 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-xs focus:outline-none focus:border-blue-500 resize-none"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs text-neutral-400 mb-1">{isRtl ? "الوصف (عربي)" : "Description (Arabic)"}</label>
+                    <textarea
+                      rows={3}
+                      dir="rtl"
+                      value={editingSkill.descAr}
+                      onChange={(e) => setEditingSkill({ ...editingSkill, descAr: e.target.value })}
+                      placeholder="بناء واجهات ويب تفاعلية وسريعة وفائقة الاستجابة..."
+                      className="w-full px-3.5 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-xs focus:outline-none focus:border-blue-500 resize-none"
+                    />
+                  </div>
+                </div>
+
+                {/* Selected Icons Area */}
+                <div className="p-4 rounded-2xl bg-white/[0.03] border border-white/10 flex flex-col gap-3">
+                  <div className="flex items-center justify-between">
+                    <label className="text-xs font-medium text-white flex items-center gap-2">
+                      <FiLayers className="w-4 h-4 text-blue-400" />
+                      <span>{isRtl ? "الأيقونات المختارة لهذه المجموعة" : "Selected Tech Icons"} ({editingSkill.icons?.length || 0})</span>
+                    </label>
+                    <span className="text-[11px] text-neutral-500">
+                      {isRtl ? "انقر على أيقونة لحذفها" : "Click icon to remove"}
+                    </span>
+                  </div>
+
+                  <div className="flex flex-wrap items-center gap-2 min-h-[44px] p-2 rounded-xl bg-black/40 border border-white/5">
+                    {editingSkill.icons && editingSkill.icons.length > 0 ? (
+                      editingSkill.icons.map((iconId: string, idx: number) => {
+                        const info = getTechIconInfo(iconId);
+                        return (
+                          <button
+                            key={idx}
+                            type="button"
+                            onClick={() => toggleSkillIcon(iconId)}
+                            className="group flex items-center gap-2 px-3 py-1.5 rounded-xl bg-white/10 hover:bg-red-500/20 border border-white/15 hover:border-red-500/40 transition-all cursor-pointer text-xs text-white"
+                            title="Click to remove"
+                          >
+                            <TechIcon nameOrId={iconId} className="w-4 h-4" />
+                            <span>{info.name}</span>
+                            <FiX className="w-3 h-3 opacity-60 group-hover:opacity-100 group-hover:text-red-400" />
+                          </button>
+                        );
+                      })
+                    ) : (
+                      <span className="text-xs text-neutral-500 px-2">
+                        {isRtl ? "لم يتم اختيار أي أيقونة بعد. اختر من القائمة بالأسفل." : "No icons selected yet. Pick from the grid below."}
+                      </span>
+                    )}
+                  </div>
+                </div>
+
+                {/* Searchable Tech Icon Picker */}
+                <div className="p-4 rounded-2xl bg-white/[0.02] border border-white/10 flex flex-col gap-3">
+                  <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+                    <label className="text-xs font-medium text-white flex items-center gap-2">
+                      <FiSearch className="w-4 h-4 text-blue-400" />
+                      <span>{isRtl ? "مكتبة أيقونات التقنيات والبرمجة" : "Choose Icons from Library"}</span>
+                    </label>
+
+                    <div className="flex items-center gap-2 w-full sm:w-auto">
+                      <input
+                        type="text"
+                        value={skillIconSearch}
+                        onChange={(e) => setSkillIconSearch(e.target.value)}
+                        placeholder={isRtl ? "بحث عن تقنية (React, Tailwind...)" : "Search tech (React, Next...)"}
+                        className="px-3 py-1.5 rounded-xl bg-white/5 border border-white/10 text-white text-xs focus:outline-none focus:border-blue-500 w-full sm:w-48"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Category Filter Pills */}
+                  <div className="flex flex-wrap items-center gap-1.5">
+                    {iconCategories.map((cat) => (
+                      <button
+                        key={cat}
+                        type="button"
+                        onClick={() => setSkillCategoryFilter(cat)}
+                        className={`px-3 py-1 rounded-lg text-[11px] font-medium transition-all cursor-pointer ${
+                          skillCategoryFilter === cat
+                            ? "bg-blue-600 text-white shadow-sm"
+                            : "bg-white/5 hover:bg-white/10 text-neutral-400"
+                        }`}
+                      >
+                        {cat}
+                      </button>
+                    ))}
+                  </div>
+
+                  {/* Visual Grid of Tech Icons */}
+                  <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 gap-2 max-h-56 overflow-y-auto p-2 bg-black/50 rounded-xl border border-white/5">
+                    {filteredTechIcons.map((item) => {
+                      const isSelected = editingSkill.icons?.includes(item.id);
+                      return (
+                        <button
+                          key={item.id}
+                          type="button"
+                          onClick={() => toggleSkillIcon(item.id)}
+                          className={`flex items-center gap-2 p-2 rounded-xl text-left text-xs transition-all cursor-pointer border ${
+                            isSelected
+                              ? "bg-blue-600/20 border-blue-500 text-white font-medium scale-[1.02]"
+                              : "bg-white/5 hover:bg-white/10 border-white/5 text-neutral-300"
+                          }`}
+                        >
+                          <TechIcon nameOrId={item.id} className="w-4 h-4 shrink-0" />
+                          <span className="truncate flex-1">{item.name}</span>
+                          {isSelected && <FiCheck className="w-3.5 h-3.5 text-blue-400 shrink-0" />}
+                        </button>
+                      );
+                    })}
+                  </div>
+
+                  {/* Custom Tech Icon write-in */}
+                  <div className="flex items-center gap-2 pt-2 border-t border-white/5">
+                    <input
+                      type="text"
+                      value={customIconInput}
+                      onChange={(e) => setCustomIconInput(e.target.value)}
+                      placeholder={isRtl ? "أو اكتب اسم تقنية مخصصة..." : "Or type custom tech name..."}
+                      className="flex-1 px-3 py-1.5 rounded-xl bg-white/5 border border-white/10 text-white text-xs focus:outline-none focus:border-blue-500"
+                    />
+                    <button
+                      type="button"
+                      onClick={addCustomIcon}
+                      className="px-3 py-1.5 rounded-xl bg-white/10 hover:bg-white/15 text-white text-xs font-medium cursor-pointer"
+                    >
+                      {isRtl ? "إضافة" : "Add"}
+                    </button>
+                  </div>
+                </div>
+
+                {/* Badges & Order */}
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                  <div className="sm:col-span-2">
+                    <label className="block text-xs text-neutral-400 mb-1">{isRtl ? "الشارات والوسوم (مفصولة بفواصل)" : "Badges & Tags (comma separated)"}</label>
+                    <input
+                      type="text"
+                      value={editingSkill.badges}
+                      onChange={(e) => setEditingSkill({ ...editingSkill, badges: e.target.value })}
+                      placeholder="Responsive Design, Mobile-First, Dark Mode"
+                      className="w-full px-3.5 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-xs focus:outline-none focus:border-blue-500"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs text-neutral-400 mb-1">{isRtl ? "الترتيب (Order)" : "Order Number"}</label>
+                    <input
+                      type="number"
+                      value={editingSkill.order || 1}
+                      onChange={(e) => setEditingSkill({ ...editingSkill, order: parseInt(e.target.value) || 1 })}
+                      className="w-full px-3.5 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-xs focus:outline-none focus:border-blue-500"
+                    />
+                  </div>
+                </div>
+
+                {/* Actions */}
+                <div className="flex items-center justify-end gap-3 pt-4 border-t border-white/10">
+                  <button
+                    type="button"
+                    onClick={() => setIsSkillModalOpen(false)}
+                    className="px-4 py-2 rounded-xl text-xs text-neutral-400 hover:text-white cursor-pointer"
+                  >
+                    {isRtl ? "إلغاء" : "Cancel"}
+                  </button>
+                  <button
+                    type="submit"
+                    className="px-6 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-medium text-xs shadow-md cursor-pointer"
+                  >
+                    {isRtl ? "حفظ المهارة" : "Save Skill Group"}
+                  </button>
+                </div>
+              </form>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
 
       {/* ===================== EXPERIENCE ADD / EDIT MODAL ===================== */}
       <AnimatePresence>
@@ -1267,7 +1631,7 @@ export default function DashboardPage() {
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.95 }}
-              className="w-full max-w-2xl p-6 sm:p-8 rounded-3xl bg-[#14161f] border border-white/15 shadow-2xl flex flex-col gap-4 max-h-[88vh] overflow-y-auto overscroll-contain [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-thumb]:bg-white/20"
+              className="w-full max-w-2xl p-6 sm:p-8 rounded-3xl bg-[#14161f] border border-white/15 shadow-2xl flex flex-col gap-4 max-h-[88vh] overflow-y-auto overscroll-contain"
             >
               <h3 className="text-lg font-medium text-white">
                 {editingExp.id ? (isRtl ? "تعديل الخبرة" : "Edit Experience") : (isRtl ? "إضافة خبرة جديدة" : "Add New Experience")}
@@ -1326,7 +1690,7 @@ export default function DashboardPage() {
                 </div>
 
                 <div>
-                  <label className="block text-xs text-neutral-400 mb-1">{isRtl ? "تفاصيل الخبرة والمسؤوليات (إنجليزي)" : "Responsibilities & Impact (English)"}</label>
+                  <label className="block text-xs text-neutral-400 mb-1">{isRtl ? "تفاصيل الخبرة والمسؤوليات (إنجليزي)" : "Responsibilities (English)"}</label>
                   <textarea
                     rows={3}
                     value={editingExp.descEn}
@@ -1336,7 +1700,7 @@ export default function DashboardPage() {
                 </div>
 
                 <div>
-                  <label className="block text-xs text-neutral-400 mb-1">{isRtl ? "تفاصيل الخبرة والمسؤوليات (عربي)" : "Responsibilities & Impact (Arabic)"}</label>
+                  <label className="block text-xs text-neutral-400 mb-1">{isRtl ? "تفاصيل الخبرة والمسؤوليات (عربي)" : "Responsibilities (Arabic)"}</label>
                   <textarea
                     rows={3}
                     dir="rtl"
@@ -1378,19 +1742,15 @@ export default function DashboardPage() {
         )}
       </AnimatePresence>
 
-      {/* ===================== PROJECT EDIT / ADD MODAL (Wide 2-Column, Mouse Wheel Scroll, data-lenis-prevent) ===================== */}
+      {/* ===================== PROJECT EDIT / ADD MODAL ===================== */}
       <AnimatePresence>
         {isProjectModalOpen && (
-          <div 
-            className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-black/85 backdrop-blur-md"
-            data-lenis-prevent="true"
-          >
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-black/85 backdrop-blur-md">
             <motion.div
               initial={{ opacity: 0, scale: 0.96 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.96 }}
-              data-lenis-prevent="true"
-              className="w-full max-w-5xl p-6 sm:p-8 rounded-3xl bg-[#141622] border border-white/15 shadow-2xl flex flex-col gap-6 max-h-[88vh] overflow-y-auto overscroll-contain"
+              className="w-full max-w-4xl p-6 sm:p-8 rounded-3xl bg-[#141622] border border-white/15 shadow-2xl flex flex-col gap-6 max-h-[88vh] overflow-y-auto overscroll-contain"
             >
               <div className="flex items-center justify-between pb-4 border-b border-white/10">
                 <div>
@@ -1398,369 +1758,152 @@ export default function DashboardPage() {
                     {editingProject.id ? (isRtl ? "تعديل تفاصيل المشروع" : "Edit Project Details") : (isRtl ? "إضافة مشروع جديد" : "Add New Project")}
                   </h3>
                   <p className="text-xs text-neutral-400 mt-1">
-                    {isRtl ? "تحكم في كل تفاصيل المشروع، الروابط، وفيديو العرض المباشر." : "Customize all project fields, live URLs, repository, and media showcase."}
+                    {isRtl ? "أدخل بيانات المشروع والفيديو وروابط GitHub و Live Demo." : "Enter project metadata, video preview, and links."}
                   </p>
                 </div>
                 <button
                   type="button"
                   onClick={() => setIsProjectModalOpen(false)}
-                  className="p-2 rounded-xl text-neutral-400 hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
+                  className="p-2 rounded-xl bg-white/5 hover:bg-white/10 text-neutral-400 hover:text-white"
                 >
-                  ✕
+                  <FiX className="w-5 h-5" />
                 </button>
               </div>
 
-              <form onSubmit={handleSaveProject} className="flex flex-col gap-6 text-left" data-lenis-prevent="true">
-                {/* 2-Column Desktop Grid */}
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-                  {/* Left Column (7 cols): Titles, Descriptions, Links, Tags */}
-                  <div className="lg:col-span-7 flex flex-col gap-4">
-                    {/* Titles */}
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                      <div>
-                        <label className="block text-xs font-medium text-neutral-300 mb-1.5">{isRtl ? "العنوان (إنجليزي)" : "Title (English)"}</label>
-                        <input
-                          type="text"
-                          required
-                          value={editingProject.titleEn}
-                          onChange={(e) => setEditingProject({ ...editingProject, titleEn: e.target.value })}
-                          placeholder="e.g. Next-Gen Dashboard"
-                          className="w-full px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-xs focus:outline-none focus:border-blue-500 transition-colors"
-                        />
-                      </div>
-
-                      <div>
-                        <label className="block text-xs font-medium text-neutral-300 mb-1.5">{isRtl ? "العنوان (عربي)" : "Title (Arabic)"}</label>
-                        <input
-                          type="text"
-                          dir="rtl"
-                          required
-                          value={editingProject.titleAr}
-                          onChange={(e) => setEditingProject({ ...editingProject, titleAr: e.target.value })}
-                          placeholder="مثال: لوحة تحكم عصرية"
-                          className="w-full px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-xs focus:outline-none focus:border-blue-500 transition-colors"
-                        />
-                      </div>
-                    </div>
-
-                    {/* Descriptions */}
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                      <div>
-                        <label className="block text-xs font-medium text-neutral-300 mb-1.5">{isRtl ? "الوصف (إنجليزي)" : "Description (English)"}</label>
-                        <textarea
-                          rows={4}
-                          value={editingProject.descriptionEn}
-                          onChange={(e) => setEditingProject({ ...editingProject, descriptionEn: e.target.value })}
-                          placeholder="Full project description in English..."
-                          className="w-full px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-xs focus:outline-none focus:border-blue-500 transition-colors resize-none font-light leading-relaxed"
-                        />
-                      </div>
-
-                      <div>
-                        <label className="block text-xs font-medium text-neutral-300 mb-1.5">{isRtl ? "الوصف (عربي)" : "Description (Arabic)"}</label>
-                        <textarea
-                          rows={4}
-                          dir="rtl"
-                          value={editingProject.descriptionAr}
-                          onChange={(e) => setEditingProject({ ...editingProject, descriptionAr: e.target.value })}
-                          placeholder="وصف تفصيلي كامل للمشروع بالعربية..."
-                          className="w-full px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-xs focus:outline-none focus:border-blue-500 transition-colors resize-none font-light leading-relaxed"
-                        />
-                      </div>
-                    </div>
-
-                    {/* Links */}
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                      <div>
-                        <label className="block text-xs font-medium text-neutral-300 mb-1.5">{isRtl ? "رابط المعاينة المباشرة" : "Live Demo URL"}</label>
-                        <input
-                          type="text"
-                          value={editingProject.liveUrl}
-                          onChange={(e) => setEditingProject({ ...editingProject, liveUrl: e.target.value })}
-                          placeholder="https://example.com"
-                          className="w-full px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-xs focus:outline-none focus:border-blue-500"
-                        />
-                      </div>
-
-                      <div>
-                        <label className="block text-xs font-medium text-neutral-300 mb-1.5">{isRtl ? "رابط الكود على GitHub" : "GitHub Repository URL"}</label>
-                        <input
-                          type="text"
-                          value={editingProject.githubUrl}
-                          onChange={(e) => setEditingProject({ ...editingProject, githubUrl: e.target.value })}
-                          placeholder="https://github.com/..."
-                          className="w-full px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-xs focus:outline-none focus:border-blue-500"
-                        />
-                      </div>
-                    </div>
-
-                    {/* Tags */}
-                    <div>
-                      <label className="block text-xs font-medium text-neutral-300 mb-1.5">{isRtl ? "التقنيات والوسوم (مفصولة بفواصل)" : "Tags / Technologies (Comma Separated)"}</label>
-                      <input
-                        type="text"
-                        value={editingProject.tags}
-                        onChange={(e) => setEditingProject({ ...editingProject, tags: e.target.value })}
-                        placeholder="React, Next.js, Tailwind CSS, TypeScript, Socket.io"
-                        className="w-full px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-xs focus:outline-none focus:border-blue-500"
-                      />
-                    </div>
-                  </div>
-
-                  {/* Right Column (5 cols): Media & Direct Video File Upload */}
-                  <div className="lg:col-span-5 p-5 rounded-2xl bg-white/[0.03] border border-white/10 flex flex-col justify-between gap-4">
-                    <div className="flex flex-col gap-3">
-                      <div className="flex items-center justify-between">
-                        <label className="text-xs text-neutral-200 font-semibold flex items-center gap-2">
-                          <FiVideo className="w-4 h-4 text-cyan-400" />
-                          <span>{isRtl ? "فيديو المشروع (رفع ملف مباشر)" : "Project Video Showcase"}</span>
-                        </label>
-                        <span className="text-[11px] text-neutral-400 font-mono">MP4, WebM</span>
-                      </div>
-
-                      {/* Video Player or Empty State */}
-                      {editingProject.videoUrl ? (
-                        <div className="relative w-full aspect-video rounded-2xl overflow-hidden bg-black border border-white/15 shadow-xl">
-                          <video
-                            src={editingProject.videoUrl}
-                            controls
-                            className="w-full h-full object-cover"
-                          />
-                        </div>
-                      ) : (
-                        <div className="w-full aspect-video rounded-2xl bg-black/40 border border-dashed border-white/15 flex flex-col items-center justify-center p-6 text-center text-xs text-neutral-400 gap-2">
-                          <FiUploadCloud className="w-8 h-8 text-neutral-500" />
-                          <p>{isRtl ? "لم يتم رفع فيديو بعد لهذا المشروع" : "No video uploaded yet for this project"}</p>
-                          <span className="text-[10px] text-neutral-500">{isRtl ? "اختر ملف فيديو لرفعه مباشرة من جهازك" : "Upload an MP4/WebM file directly"}</span>
-                        </div>
-                      )}
-
-                      <input
-                        type="file"
-                        ref={projectVideoFileRef}
-                        accept="video/*"
-                        onChange={handleProjectVideoUpload}
-                        className="hidden"
-                      />
-
-                      <div className="flex items-center gap-2 mt-1">
-                        <button
-                          type="button"
-                          onClick={() => projectVideoFileRef.current?.click()}
-                          className="flex-1 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-medium text-xs transition-all flex items-center justify-center gap-2 cursor-pointer shadow-lg"
-                        >
-                          <FiUploadCloud className="w-4 h-4" />
-                          <span>{isRtl ? "رفع ملف فيديو من الجهاز" : "Upload Video File"}</span>
-                        </button>
-                        {editingProject.videoUrl && (
-                          <button
-                            type="button"
-                            onClick={() => setEditingProject((prev: any) => ({ ...prev, videoUrl: "" }))}
-                            className="px-3.5 py-2.5 rounded-xl bg-red-500/10 text-red-400 hover:bg-red-500/20 text-xs transition-colors cursor-pointer border border-red-500/20"
-                          >
-                            {isRtl ? "إزالة" : "Clear"}
-                          </button>
-                        )}
-                      </div>
-
-                      <div className="mt-2">
-                        <label className="block text-[11px] text-neutral-500 mb-1">{isRtl ? "مسار الفيديو أو الرابط المباشر:" : "Direct Video Path / URL:"}</label>
-                        <input
-                          type="text"
-                          value={editingProject.videoUrl}
-                          onChange={(e) => setEditingProject({ ...editingProject, videoUrl: e.target.value })}
-                          placeholder={isRtl ? "رابط الفيديو المرفوع يظهر هنا تلقائياً" : "Uploaded video URL appears here automatically"}
-                          className="w-full px-3.5 py-2 rounded-xl bg-white/5 border border-white/10 text-[11px] text-neutral-300 font-mono focus:outline-none"
-                        />
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* 3. Project Highlights / Core Features (Bullet Points) */}
-                <div className="p-4 rounded-2xl bg-white/[0.02] border border-white/10 flex flex-col gap-3">
+              <form onSubmit={handleSaveProject} className="flex flex-col gap-4 text-left">
+                {/* Titles */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label className="text-xs font-semibold text-white flex items-center gap-2">
-                      <FiCheckCircle className="w-4 h-4 text-emerald-400" />
-                      <span>{isRtl ? "أبرز الميزات والخصائص التقنية (ميزة في كل سطر)" : "Key Highlights & Core Features (One feature per line)"}</span>
-                    </label>
-                    <p className="text-[11px] text-neutral-400 mt-0.5">
-                      {isRtl ? "اكتب كل ميزة في سطر منفصل لتظهر كبطاقات ونقاط بارزة في صفحة المشروع." : "Type each highlight on a new line to display as key feature cards on the project page."}
-                    </p>
+                    <label className="block text-xs text-neutral-400 mb-1">{isRtl ? "عنوان المشروع (إنجليزي)" : "Project Title (English)"}</label>
+                    <input
+                      type="text"
+                      required
+                      value={editingProject.titleEn}
+                      onChange={(e) => setEditingProject({ ...editingProject, titleEn: e.target.value })}
+                      placeholder="Learnlogicify Landing Page"
+                      className="w-full px-3.5 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-xs focus:outline-none focus:border-blue-500"
+                    />
                   </div>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-[11px] text-neutral-400 mb-1">{isRtl ? "الميزات (إنجليزي - سطر لكل نقطة)" : "Highlights (EN - one per line)"}</label>
-                      <textarea
-                        rows={3}
-                        value={editingProject.featuresEn}
-                        onChange={(e) => setEditingProject({ ...editingProject, featuresEn: e.target.value })}
-                        placeholder={`Real-time WebSocket bidirectional messaging\nZero CLS layout architecture\nOptimized 60FPS micro-interactions`}
-                        className="w-full px-3.5 py-2 rounded-xl bg-white/5 border border-white/10 text-white text-xs focus:outline-none focus:border-blue-500 font-mono resize-none leading-relaxed"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-[11px] text-neutral-400 mb-1">{isRtl ? "الميزات (عربي - سطر لكل نقطة)" : "Highlights (AR - one per line)"}</label>
-                      <textarea
-                        rows={3}
-                        dir="rtl"
-                        value={editingProject.featuresAr}
-                        onChange={(e) => setEditingProject({ ...editingProject, featuresAr: e.target.value })}
-                        placeholder={`اتصال لحظي ثنائي الاتجاه عبر WebSocket\nهندسة واجهات تمنع تذبذب العناصر\nتحريك سلس بمعدل 60 إطار بالثانية`}
-                        className="w-full px-3.5 py-2 rounded-xl bg-white/5 border border-white/10 text-white text-xs focus:outline-none focus:border-blue-500 font-mono resize-none leading-relaxed"
-                      />
-                    </div>
+                  <div>
+                    <label className="block text-xs text-neutral-400 mb-1">{isRtl ? "عنوان المشروع (عربي)" : "Project Title (Arabic)"}</label>
+                    <input
+                      type="text"
+                      dir="rtl"
+                      required
+                      value={editingProject.titleAr}
+                      onChange={(e) => setEditingProject({ ...editingProject, titleAr: e.target.value })}
+                      placeholder="صفحة هبوط Learnlogicify"
+                      className="w-full px-3.5 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-xs focus:outline-none focus:border-blue-500"
+                    />
                   </div>
                 </div>
 
-                {/* 4. Structured Technical Sections & Code Architecture */}
-                <div className="p-4 rounded-2xl bg-white/[0.02] border border-white/10 flex flex-col gap-4">
+                {/* Video Upload & URL */}
+                <div className="p-4 rounded-2xl bg-white/[0.03] border border-white/10 flex flex-col gap-3">
                   <div className="flex items-center justify-between">
-                    <div>
-                      <h4 className="text-sm font-semibold text-white flex items-center gap-2">
-                        <FiCode className="w-4 h-4 text-cyan-400" />
-                        <span>{isRtl ? "أقسام تفاصيل المشروع والمعمارية البرمجية" : "Project Technical Deep-Dive & Architecture Sections"}</span>
-                      </h4>
-                      <p className="text-[11px] text-neutral-400 mt-0.5">
-                        {isRtl ? "أضف عناوين، فقرات شرح، وأكواد برمجية تظهر داخل صفحة تفاصيل المشروع." : "Add formatted headings, explanations, and code snippets to showcase in the project case study."}
-                      </p>
-                    </div>
-
+                    <label className="text-xs font-medium text-white flex items-center gap-2">
+                      <FiVideo className="w-4 h-4 text-blue-400" />
+                      <span>{isRtl ? "فيديو استعراض المشروع" : "Project Preview Video"}</span>
+                    </label>
+                    <input
+                      type="file"
+                      ref={projectVideoFileRef}
+                      onChange={handleProjectVideoUpload}
+                      accept="video/mp4,video/webm"
+                      className="hidden"
+                    />
                     <button
                       type="button"
-                      onClick={addProjectSection}
-                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-blue-600/30 hover:bg-blue-600 text-blue-300 hover:text-white border border-blue-500/30 text-xs transition-all cursor-pointer"
+                      onClick={() => projectVideoFileRef.current?.click()}
+                      className="px-3 py-1.5 rounded-xl bg-white/10 hover:bg-white/15 text-white text-xs font-medium transition-colors cursor-pointer border border-white/10"
                     >
-                      <FiPlus className="w-3.5 h-3.5" />
-                      <span>{isRtl ? "إضافة قسم تفصيلي" : "Add Section"}</span>
+                      {isRtl ? "رفع فيديو من جهازك" : "Upload MP4 File"}
                     </button>
                   </div>
 
-                  {editingProject.sectionsEn?.map((sec: any, idx: number) => (
-                    <div
-                      key={idx}
-                      className="p-4 rounded-2xl bg-[#10121a] border border-white/10 flex flex-col gap-3 relative"
-                    >
-                      <div className="flex items-center justify-between pb-2 border-b border-white/5">
-                        <span className="text-xs font-semibold text-cyan-300">
-                          {isRtl ? `القسم التفصيلي #${idx + 1}` : `Technical Section #${idx + 1}`}
-                        </span>
-                        {editingProject.sectionsEn.length > 1 && (
-                          <button
-                            type="button"
-                            onClick={() => removeProjectSection(idx)}
-                            className="p-1 rounded-lg text-red-400 hover:bg-red-500/10 text-xs flex items-center gap-1 transition-colors cursor-pointer"
-                          >
-                            <FiTrash2 className="w-3.5 h-3.5" />
-                            <span>{isRtl ? "حذف القسم" : "Remove"}</span>
-                          </button>
-                        )}
-                      </div>
-
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                        <div>
-                          <label className="block text-[11px] text-neutral-400 mb-1">{isRtl ? "عنوان القسم (إنجليزي)" : "Section Heading (EN)"}</label>
-                          <input
-                            type="text"
-                            value={sec.heading}
-                            onChange={(e) => {
-                              const newSecs = [...editingProject.sectionsEn];
-                              newSecs[idx].heading = e.target.value;
-                              setEditingProject({ ...editingProject, sectionsEn: newSecs });
-                            }}
-                            placeholder="e.g. 1. High-Performance WebSocket Architecture"
-                            className="w-full px-3 py-2 rounded-xl bg-white/5 border border-white/10 text-white text-xs focus:outline-none focus:border-blue-500"
-                          />
-                        </div>
-
-                        <div>
-                          <label className="block text-[11px] text-neutral-400 mb-1">{isRtl ? "عنوان القسم (عربي)" : "Section Heading (AR)"}</label>
-                          <input
-                            type="text"
-                            dir="rtl"
-                            value={editingProject.sectionsAr?.[idx]?.heading || ""}
-                            onChange={(e) => {
-                              const newSecs = [...(editingProject.sectionsAr || [])];
-                              if (!newSecs[idx]) newSecs[idx] = { heading: "", body: "", code: "" };
-                              newSecs[idx].heading = e.target.value;
-                              setEditingProject({ ...editingProject, sectionsAr: newSecs });
-                            }}
-                            placeholder="مثال: ١. معمارية اتصال WebSocket الفوري عالي الأداء"
-                            className="w-full px-3 py-2 rounded-xl bg-white/5 border border-white/10 text-white text-xs focus:outline-none focus:border-blue-500"
-                          />
-                        </div>
-
-                        <div>
-                          <label className="block text-[11px] text-neutral-400 mb-1">{isRtl ? "شرح تفاصيل القسم (إنجليزي)" : "Section Details (EN)"}</label>
-                          <textarea
-                            rows={3}
-                            value={sec.body}
-                            onChange={(e) => {
-                              const newSecs = [...editingProject.sectionsEn];
-                              newSecs[idx].body = e.target.value;
-                              setEditingProject({ ...editingProject, sectionsEn: newSecs });
-                            }}
-                            placeholder="Technical description and engineering tradeoffs..."
-                            className="w-full px-3 py-2 rounded-xl bg-white/5 border border-white/10 text-white text-xs focus:outline-none focus:border-blue-500 resize-none font-light"
-                          />
-                        </div>
-
-                        <div>
-                          <label className="block text-[11px] text-neutral-400 mb-1">{isRtl ? "شرح تفاصيل القسم (عربي)" : "Section Details (AR)"}</label>
-                          <textarea
-                            rows={3}
-                            dir="rtl"
-                            value={editingProject.sectionsAr?.[idx]?.body || ""}
-                            onChange={(e) => {
-                              const newSecs = [...(editingProject.sectionsAr || [])];
-                              if (!newSecs[idx]) newSecs[idx] = { heading: "", body: "", code: "" };
-                              newSecs[idx].body = e.target.value;
-                              setEditingProject({ ...editingProject, sectionsAr: newSecs });
-                            }}
-                            placeholder="شرح تقني للحلول البرمجية وتحديات البناء..."
-                            className="w-full px-3 py-2 rounded-xl bg-white/5 border border-white/10 text-white text-xs focus:outline-none focus:border-blue-500 resize-none font-light"
-                          />
-                        </div>
-                      </div>
-
-                      {/* Code Snippet for this section */}
-                      <div>
-                        <label className="block text-[11px] text-neutral-400 mb-1 flex items-center gap-1.5">
-                          <FiCode className="w-3 h-3 text-cyan-400" />
-                          <span>{isRtl ? "كود برمجي اختياري لهذا القسم (TS, JSX, SQL, Docker)" : "Optional Architecture Code Snippet (TS, JSX, SQL, Docker)"}</span>
-                        </label>
-                        <textarea
-                          rows={3}
-                          dir="ltr"
-                          value={sec.code || ""}
-                          onChange={(e) => {
-                            const newSecs = [...editingProject.sectionsEn];
-                            newSecs[idx].code = e.target.value;
-                            setEditingProject({ ...editingProject, sectionsEn: newSecs });
-                          }}
-                          placeholder={`// Core logic or implementation snippet:\nexport const streamHandler = async (req, res) => { ... }`}
-                          className="w-full px-3.5 py-2 rounded-xl bg-black/50 border border-white/10 text-cyan-300 font-mono text-xs focus:outline-none focus:border-cyan-400 resize-none"
-                        />
-                      </div>
-                    </div>
-                  ))}
+                  <input
+                    type="text"
+                    value={editingProject.videoUrl || ""}
+                    onChange={(e) => setEditingProject({ ...editingProject, videoUrl: e.target.value })}
+                    placeholder="/test.mp4 or Supabase video URL"
+                    className="w-full px-3.5 py-2 rounded-xl bg-white/5 border border-white/10 text-white text-xs focus:outline-none focus:border-blue-500 font-mono"
+                  />
                 </div>
 
-                {/* Modal Footer Actions */}
+                {/* Descriptions */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-xs text-neutral-400 mb-1">{isRtl ? "الوصف (إنجليزي)" : "Description (English)"}</label>
+                    <textarea
+                      rows={3}
+                      value={editingProject.descriptionEn}
+                      onChange={(e) => setEditingProject({ ...editingProject, descriptionEn: e.target.value })}
+                      className="w-full px-3.5 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-xs focus:outline-none focus:border-blue-500 resize-none"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs text-neutral-400 mb-1">{isRtl ? "الوصف (عربي)" : "Description (Arabic)"}</label>
+                    <textarea
+                      rows={3}
+                      dir="rtl"
+                      value={editingProject.descriptionAr}
+                      onChange={(e) => setEditingProject({ ...editingProject, descriptionAr: e.target.value })}
+                      className="w-full px-3.5 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-xs focus:outline-none focus:border-blue-500 resize-none"
+                    />
+                  </div>
+                </div>
+
+                {/* URLs & Tags */}
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                  <div>
+                    <label className="block text-xs text-neutral-400 mb-1">Live URL</label>
+                    <input
+                      type="url"
+                      value={editingProject.liveUrl || ""}
+                      onChange={(e) => setEditingProject({ ...editingProject, liveUrl: e.target.value })}
+                      placeholder="https://example.com"
+                      className="w-full px-3.5 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-xs focus:outline-none focus:border-blue-500"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs text-neutral-400 mb-1">GitHub Repo</label>
+                    <input
+                      type="url"
+                      value={editingProject.githubUrl || ""}
+                      onChange={(e) => setEditingProject({ ...editingProject, githubUrl: e.target.value })}
+                      placeholder="https://github.com/..."
+                      className="w-full px-3.5 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-xs focus:outline-none focus:border-blue-500"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs text-neutral-400 mb-1">{isRtl ? "التقنيات المستخدمة (مفصولة بفواصل)" : "Tags / Tech (comma separated)"}</label>
+                    <input
+                      type="text"
+                      value={editingProject.tags}
+                      onChange={(e) => setEditingProject({ ...editingProject, tags: e.target.value })}
+                      placeholder="Next.js, Tailwind CSS, Framer Motion"
+                      className="w-full px-3.5 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-xs focus:outline-none focus:border-blue-500"
+                    />
+                  </div>
+                </div>
+
                 <div className="flex items-center justify-end gap-3 pt-4 border-t border-white/10">
                   <button
                     type="button"
                     onClick={() => setIsProjectModalOpen(false)}
-                    className="px-5 py-2.5 rounded-xl text-xs text-neutral-400 hover:text-white hover:bg-white/5 transition-colors cursor-pointer"
+                    className="px-4 py-2 rounded-xl text-xs text-neutral-400 hover:text-white cursor-pointer"
                   >
                     {isRtl ? "إلغاء" : "Cancel"}
                   </button>
                   <button
                     type="submit"
-                    className="px-6 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-medium text-xs shadow-lg transition-all cursor-pointer"
+                    className="px-6 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-medium text-xs shadow-md cursor-pointer"
                   >
-                    {isRtl ? "حفظ المشروع وتحديثه" : "Save Project"}
+                    {isRtl ? "حفظ المشروع" : "Save Project"}
                   </button>
                 </div>
               </form>
@@ -1769,189 +1912,136 @@ export default function DashboardPage() {
         )}
       </AnimatePresence>
 
-      {/* ===================== BLOG EDIT / ADD MODAL (Rich Sections & Code Blocks) ===================== */}
+      {/* ===================== BLOG EDIT / ADD MODAL ===================== */}
       <AnimatePresence>
         {isBlogModalOpen && (
-          <div 
-            className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-black/85 backdrop-blur-md"
-            data-lenis-prevent="true"
-          >
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-black/85 backdrop-blur-md">
             <motion.div
               initial={{ opacity: 0, scale: 0.96 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.96 }}
-              data-lenis-prevent="true"
-              className="w-full max-w-5xl p-6 sm:p-8 rounded-3xl bg-[#141622] border border-white/15 shadow-2xl flex flex-col gap-6 max-h-[88vh] overflow-y-auto overscroll-contain"
+              className="w-full max-w-4xl p-6 sm:p-8 rounded-3xl bg-[#141622] border border-white/15 shadow-2xl flex flex-col gap-6 max-h-[88vh] overflow-y-auto overscroll-contain"
             >
               <div className="flex items-center justify-between pb-4 border-b border-white/10">
                 <div>
                   <h3 className="text-xl font-semibold text-white">
-                    {editingBlog.id ? (isRtl ? "تعديل تفاصيل المقال" : "Edit Blog Article") : (isRtl ? "كتابة مقال جديد" : "Write New Article")}
+                    {editingBlog.id ? (isRtl ? "تعديل المقال" : "Edit Article") : (isRtl ? "إضافة مقال جديد" : "Add New Article")}
                   </h3>
                   <p className="text-xs text-neutral-400 mt-1">
-                    {isRtl ? "تحكم في أقسام المقال، الأكواد البرمجية، العناوين، والترقيم." : "Manage structured sections, headings, formatted code snippets, and explanations."}
+                    {isRtl ? "أدخل تفاصيل المقال وصورة الغلاف وأقسام الشرح والأكواد البرمجية." : "Enter blog details, cover image, and code blocks."}
                   </p>
                 </div>
                 <button
                   type="button"
                   onClick={() => setIsBlogModalOpen(false)}
-                  className="p-2 rounded-xl text-neutral-400 hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
+                  className="p-2 rounded-xl bg-white/5 hover:bg-white/10 text-neutral-400 hover:text-white"
                 >
-                  ✕
+                  <FiX className="w-5 h-5" />
                 </button>
               </div>
 
-              <form onSubmit={handleSaveBlog} className="flex flex-col gap-6 text-left" data-lenis-prevent="true">
+              <form onSubmit={handleSaveBlog} className="flex flex-col gap-4 text-left">
                 {/* Titles */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-xs text-neutral-400 mb-1">{isRtl ? "العنوان (إنجليزي)" : "Title (English)"}</label>
+                    <label className="block text-xs text-neutral-400 mb-1">{isRtl ? "عنوان المقال (إنجليزي)" : "Article Title (English)"}</label>
                     <input
                       type="text"
                       required
                       value={editingBlog.titleEn}
                       onChange={(e) => setEditingBlog({ ...editingBlog, titleEn: e.target.value })}
+                      placeholder="Building Fluid Web Animations with GSAP..."
                       className="w-full px-3.5 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-xs focus:outline-none focus:border-blue-500"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-xs text-neutral-400 mb-1">{isRtl ? "العنوان (عربي)" : "Title (Arabic)"}</label>
+                    <label className="block text-xs text-neutral-400 mb-1">{isRtl ? "عنوان المقال (عربي)" : "Article Title (Arabic)"}</label>
                     <input
                       type="text"
                       dir="rtl"
                       required
                       value={editingBlog.titleAr}
                       onChange={(e) => setEditingBlog({ ...editingBlog, titleAr: e.target.value })}
+                      placeholder="بناء تحريكات ويب فائقة السلاسة مع GSAP..."
                       className="w-full px-3.5 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-xs focus:outline-none focus:border-blue-500"
                     />
                   </div>
+                </div>
 
+                {/* Excerpt */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-xs text-neutral-400 mb-1">{isRtl ? "الموجز (إنجليزي)" : "Excerpt (English)"}</label>
+                    <label className="block text-xs text-neutral-400 mb-1">{isRtl ? "المقتطف القصير (إنجليزي)" : "Excerpt (English)"}</label>
                     <textarea
                       rows={2}
                       value={editingBlog.excerptEn}
                       onChange={(e) => setEditingBlog({ ...editingBlog, excerptEn: e.target.value })}
-                      className="w-full px-3.5 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-xs focus:outline-none focus:border-blue-500 resize-none"
+                      className="w-full px-3.5 py-2 rounded-xl bg-white/5 border border-white/10 text-white text-xs focus:outline-none focus:border-blue-500 resize-none"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-xs text-neutral-400 mb-1">{isRtl ? "الموجز (عربي)" : "Excerpt (Arabic)"}</label>
+                    <label className="block text-xs text-neutral-400 mb-1">{isRtl ? "المقتطف القصير (عربي)" : "Excerpt (Arabic)"}</label>
                     <textarea
                       rows={2}
                       dir="rtl"
                       value={editingBlog.excerptAr}
                       onChange={(e) => setEditingBlog({ ...editingBlog, excerptAr: e.target.value })}
-                      className="w-full px-3.5 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-xs focus:outline-none focus:border-blue-500 resize-none"
+                      className="w-full px-3.5 py-2 rounded-xl bg-white/5 border border-white/10 text-white text-xs focus:outline-none focus:border-blue-500 resize-none"
                     />
                   </div>
                 </div>
 
-                {/* Cover Image Upload */}
-                <div className="p-3.5 rounded-2xl bg-white/[0.03] border border-white/10 flex flex-col gap-3">
-                  <label className="text-xs text-neutral-200 font-medium">
-                    {isRtl ? "صورة غلاف المقال (رفع ملف مباشر)" : "Cover Image (Direct File Upload)"}
-                  </label>
-
-                  {editingBlog.coverImage && (
-                    <div className="relative w-full aspect-[21/9] rounded-xl overflow-hidden bg-black border border-white/10">
-                      <Image
-                        src={editingBlog.coverImage}
-                        alt="Preview"
-                        fill
-                        unoptimized
-                        className="object-cover"
+                {/* Cover Image & Category */}
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                  <div className="sm:col-span-2 p-3 rounded-2xl bg-white/[0.03] border border-white/10 flex flex-col gap-2">
+                    <div className="flex items-center justify-between">
+                      <label className="text-xs font-medium text-white">{isRtl ? "صورة الغلاف" : "Cover Image"}</label>
+                      <input
+                        type="file"
+                        ref={blogCoverFileRef}
+                        onChange={handleBlogCoverUpload}
+                        accept="image/*"
+                        className="hidden"
                       />
-                    </div>
-                  )}
-
-                  <input
-                    type="file"
-                    ref={blogCoverFileRef}
-                    accept="image/*"
-                    onChange={handleBlogCoverUpload}
-                    className="hidden"
-                  />
-                  <div className="flex items-center gap-3">
-                    <button
-                      type="button"
-                      onClick={() => blogCoverFileRef.current?.click()}
-                      className="flex-1 py-2.5 rounded-xl bg-white/10 hover:bg-white text-white hover:text-black border border-white/15 text-xs font-medium transition-all flex items-center justify-center gap-2 cursor-pointer"
-                    >
-                      <FiImage className="w-4 h-4" />
-                      <span>{isRtl ? "اختر صورة الغلاف لرفعها" : "Choose Cover Image File"}</span>
-                    </button>
-                    {editingBlog.coverImage && (
                       <button
                         type="button"
-                        onClick={() => setEditingBlog((prev: any) => ({ ...prev, coverImage: "" }))}
-                        className="px-3 py-2.5 rounded-xl bg-red-500/10 text-red-400 hover:bg-red-500/20 text-xs transition-colors cursor-pointer"
+                        onClick={() => blogCoverFileRef.current?.click()}
+                        className="px-3 py-1 rounded-lg bg-white/10 hover:bg-white/15 text-white text-xs cursor-pointer"
                       >
-                        {isRtl ? "إزالة الصورة" : "Clear"}
+                        {isRtl ? "رفع صورة" : "Upload File"}
                       </button>
-                    )}
+                    </div>
+                    <input
+                      type="text"
+                      value={editingBlog.coverImage || ""}
+                      onChange={(e) => setEditingBlog({ ...editingBlog, coverImage: e.target.value })}
+                      placeholder="/images/blog.png or Supabase URL"
+                      className="w-full px-3 py-1.5 rounded-xl bg-white/5 border border-white/10 text-white text-xs focus:outline-none focus:border-blue-500"
+                    />
                   </div>
-                  <input
-                    type="text"
-                    value={editingBlog.coverImage}
-                    onChange={(e) => setEditingBlog({ ...editingBlog, coverImage: e.target.value })}
-                    placeholder="Cover image url"
-                    className="w-full px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-[11px] text-neutral-400 focus:outline-none"
-                  />
-                </div>
 
-                {/* Categories & Tags */}
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                  <div>
-                    <label className="block text-xs text-neutral-400 mb-1">{isRtl ? "التصنيف (إنجليزي)" : "Category (English)"}</label>
+                  <div className="flex flex-col gap-2">
+                    <label className="text-xs font-medium text-neutral-400">{isRtl ? "التصنيف (إنجليزي)" : "Category (English)"}</label>
                     <input
                       type="text"
                       value={editingBlog.categoryEn}
                       onChange={(e) => setEditingBlog({ ...editingBlog, categoryEn: e.target.value })}
-                      className="w-full px-3.5 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-xs focus:outline-none focus:border-blue-500"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-xs text-neutral-400 mb-1">{isRtl ? "التصنيف (عربي)" : "Category (Arabic)"}</label>
-                    <input
-                      type="text"
-                      dir="rtl"
-                      value={editingBlog.categoryAr}
-                      onChange={(e) => setEditingBlog({ ...editingBlog, categoryAr: e.target.value })}
-                      className="w-full px-3.5 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-xs focus:outline-none focus:border-blue-500"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-xs text-neutral-400 mb-1">Tags</label>
-                    <input
-                      type="text"
-                      value={editingBlog.tags}
-                      onChange={(e) => setEditingBlog({ ...editingBlog, tags: e.target.value })}
-                      placeholder="React, Next.js, Performance"
-                      className="w-full px-3.5 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-xs focus:outline-none focus:border-blue-500"
+                      placeholder="Web Animations"
+                      className="w-full px-3.5 py-2 rounded-xl bg-white/5 border border-white/10 text-white text-xs focus:outline-none focus:border-blue-500"
                     />
                   </div>
                 </div>
 
-                {/* Rich Sections Builder (Headings, Paragraphs, Code Blocks) */}
+                {/* Dynamic Content Sections with Code Blocks */}
                 <div className="p-4 rounded-2xl bg-white/[0.02] border border-white/10 flex flex-col gap-4">
                   <div className="flex items-center justify-between">
-                    <div>
-                      <h4 className="text-sm font-medium text-white flex items-center gap-2">
-                        <FiCode className="w-4 h-4 text-cyan-400" />
-                        <span>{isRtl ? "أقسام المقال، الفقرات والأكواد البرمجية" : "Article Sections, Paragraphs & Code Blocks"}</span>
-                      </h4>
-                      <p className="text-[11px] text-neutral-400 mt-0.5">
-                        {isRtl ? "يمكنك إضافة عناوين وفقرات وأكواد كود برمجي منسقة تظهر داخل المقال." : "Add formatted headings, explanatory text, and code snippets."}
-                      </p>
-                    </div>
-
+                    <h4 className="text-xs font-semibold text-white">{isRtl ? "أقسام المقال والأكواد البرمجية" : "Article Body Sections & Code Blocks"}</h4>
                     <button
                       type="button"
                       onClick={addBlogSection}
-                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-blue-600/30 hover:bg-blue-600 text-blue-300 hover:text-white border border-blue-500/30 text-xs transition-all cursor-pointer"
+                      className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-xs cursor-pointer font-medium"
                     >
                       <FiPlus className="w-3.5 h-3.5" />
                       <span>{isRtl ? "إضافة قسم" : "Add Section"}</span>
@@ -1959,109 +2049,86 @@ export default function DashboardPage() {
                   </div>
 
                   {editingBlog.sectionsEn?.map((sec: any, idx: number) => (
-                    <div
-                      key={idx}
-                      className="p-4 rounded-2xl bg-[#10121a] border border-white/10 flex flex-col gap-3 relative"
-                    >
-                      <div className="flex items-center justify-between pb-2 border-b border-white/5">
-                        <span className="text-xs font-semibold text-cyan-300">
-                          {isRtl ? `القسم #${idx + 1}` : `Section #${idx + 1}`}
-                        </span>
+                    <div key={idx} className="p-4 rounded-xl bg-black/40 border border-white/10 flex flex-col gap-3">
+                      <div className="flex items-center justify-between border-b border-white/5 pb-2">
+                        <span className="text-xs font-medium text-blue-400">Section #{idx + 1}</span>
                         {editingBlog.sectionsEn.length > 1 && (
                           <button
                             type="button"
                             onClick={() => removeBlogSection(idx)}
-                            className="p-1 rounded-lg text-red-400 hover:bg-red-500/10 text-xs flex items-center gap-1 transition-colors cursor-pointer"
+                            className="text-red-400 hover:text-red-300 text-xs p-1"
                           >
                             <FiTrash2 className="w-3.5 h-3.5" />
-                            <span>{isRtl ? "حذف القسم" : "Remove"}</span>
                           </button>
                         )}
                       </div>
 
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                        <div>
-                          <label className="block text-[11px] text-neutral-400 mb-1">{isRtl ? "عنوان القسم (إنجليزي)" : "Section Heading (EN)"}</label>
-                          <input
-                            type="text"
-                            value={sec.heading}
-                            onChange={(e) => {
-                              const newSecs = [...editingBlog.sectionsEn];
-                              newSecs[idx].heading = e.target.value;
-                              setEditingBlog({ ...editingBlog, sectionsEn: newSecs });
-                            }}
-                            placeholder="e.g. 1. Optimizing React Re-renders"
-                            className="w-full px-3 py-2 rounded-xl bg-white/5 border border-white/10 text-white text-xs focus:outline-none focus:border-blue-500"
-                          />
-                        </div>
-
-                        <div>
-                          <label className="block text-[11px] text-neutral-400 mb-1">{isRtl ? "عنوان القسم (عربي)" : "Section Heading (AR)"}</label>
-                          <input
-                            type="text"
-                            dir="rtl"
-                            value={editingBlog.sectionsAr?.[idx]?.heading || ""}
-                            onChange={(e) => {
-                              const newSecs = [...(editingBlog.sectionsAr || [])];
-                              if (!newSecs[idx]) newSecs[idx] = { heading: "", body: "", code: "" };
-                              newSecs[idx].heading = e.target.value;
-                              setEditingBlog({ ...editingBlog, sectionsAr: newSecs });
-                            }}
-                            placeholder="مثال: ١. تحسين عمليات إعادة الرسم في React"
-                            className="w-full px-3 py-2 rounded-xl bg-white/5 border border-white/10 text-white text-xs focus:outline-none focus:border-blue-500"
-                          />
-                        </div>
-
-                        <div>
-                          <label className="block text-[11px] text-neutral-400 mb-1">{isRtl ? "نص الشرح (إنجليزي)" : "Section Paragraph (EN)"}</label>
-                          <textarea
-                            rows={3}
-                            value={sec.body}
-                            onChange={(e) => {
-                              const newSecs = [...editingBlog.sectionsEn];
-                              newSecs[idx].body = e.target.value;
-                              setEditingBlog({ ...editingBlog, sectionsEn: newSecs });
-                            }}
-                            placeholder="Detailed technical explanation..."
-                            className="w-full px-3 py-2 rounded-xl bg-white/5 border border-white/10 text-white text-xs focus:outline-none focus:border-blue-500 resize-none font-light"
-                          />
-                        </div>
-
-                        <div>
-                          <label className="block text-[11px] text-neutral-400 mb-1">{isRtl ? "نص الشرح (عربي)" : "Section Paragraph (AR)"}</label>
-                          <textarea
-                            rows={3}
-                            dir="rtl"
-                            value={editingBlog.sectionsAr?.[idx]?.body || ""}
-                            onChange={(e) => {
-                              const newSecs = [...(editingBlog.sectionsAr || [])];
-                              if (!newSecs[idx]) newSecs[idx] = { heading: "", body: "", code: "" };
-                              newSecs[idx].body = e.target.value;
-                              setEditingBlog({ ...editingBlog, sectionsAr: newSecs });
-                            }}
-                            placeholder="شرح تقني مفصل بالعربية..."
-                            className="w-full px-3 py-2 rounded-xl bg-white/5 border border-white/10 text-white text-xs focus:outline-none focus:border-blue-500 resize-none font-light"
-                          />
-                        </div>
+                        <input
+                          type="text"
+                          value={sec.heading}
+                          onChange={(e) => {
+                            const newSecs = [...editingBlog.sectionsEn];
+                            newSecs[idx].heading = e.target.value;
+                            setEditingBlog({ ...editingBlog, sectionsEn: newSecs });
+                          }}
+                          placeholder="Section Heading (English)"
+                          className="w-full px-3 py-2 rounded-xl bg-white/5 border border-white/10 text-white text-xs"
+                        />
+                        <input
+                          type="text"
+                          dir="rtl"
+                          value={editingBlog.sectionsAr?.[idx]?.heading || ""}
+                          onChange={(e) => {
+                            const newSecs = [...(editingBlog.sectionsAr || [])];
+                            if (!newSecs[idx]) newSecs[idx] = { heading: "", body: "", code: "" };
+                            newSecs[idx].heading = e.target.value;
+                            setEditingBlog({ ...editingBlog, sectionsAr: newSecs });
+                          }}
+                          placeholder="عنوان القسم (عربي)"
+                          className="w-full px-3 py-2 rounded-xl bg-white/5 border border-white/10 text-white text-xs"
+                        />
                       </div>
 
-                      {/* Code Block Snippet */}
-                      <div>
-                        <label className="block text-[11px] text-neutral-400 mb-1 flex items-center gap-1.5">
-                          <FiCode className="w-3 h-3 text-cyan-400" />
-                          <span>{isRtl ? "كود برمجي اختياري لهذا القسم (JSX, TS, CSS)" : "Optional Code Snippet for this section (JSX, TS, CSS)"}</span>
-                        </label>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                         <textarea
                           rows={3}
-                          dir="ltr"
+                          value={sec.body}
+                          onChange={(e) => {
+                            const newSecs = [...editingBlog.sectionsEn];
+                            newSecs[idx].body = e.target.value;
+                            setEditingBlog({ ...editingBlog, sectionsEn: newSecs });
+                          }}
+                          placeholder="Section Body text (English)"
+                          className="w-full px-3 py-2 rounded-xl bg-white/5 border border-white/10 text-white text-xs resize-none"
+                        />
+                        <textarea
+                          rows={3}
+                          dir="rtl"
+                          value={editingBlog.sectionsAr?.[idx]?.body || ""}
+                          onChange={(e) => {
+                            const newSecs = [...(editingBlog.sectionsAr || [])];
+                            if (!newSecs[idx]) newSecs[idx] = { heading: "", body: "", code: "" };
+                            newSecs[idx].body = e.target.value;
+                            setEditingBlog({ ...editingBlog, sectionsAr: newSecs });
+                          }}
+                          placeholder="نص القسم وشرحه (عربي)"
+                          className="w-full px-3 py-2 rounded-xl bg-white/5 border border-white/10 text-white text-xs resize-none"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="block text-[11px] text-cyan-400 mb-1 font-mono">Code Snippet (Optional / اختياري)</label>
+                        <textarea
+                          rows={3}
                           value={sec.code || ""}
                           onChange={(e) => {
                             const newSecs = [...editingBlog.sectionsEn];
                             newSecs[idx].code = e.target.value;
                             setEditingBlog({ ...editingBlog, sectionsEn: newSecs });
                           }}
-                          placeholder={`// Example Code Snippet:\nconst memoizedValue = useMemo(() => computeHeavyValue(a, b), [a, b]);`}
-                          className="w-full px-3.5 py-2 rounded-xl bg-black/50 border border-white/10 text-cyan-300 font-mono text-xs focus:outline-none focus:border-cyan-400 resize-none"
+                          placeholder="// Paste JavaScript, TypeScript or CSS code snippet here..."
+                          className="w-full px-3 py-2 rounded-xl bg-black/60 border border-white/15 text-cyan-300 text-xs font-mono resize-none"
                         />
                       </div>
                     </div>
@@ -2078,9 +2145,9 @@ export default function DashboardPage() {
                   </button>
                   <button
                     type="submit"
-                    className="px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-medium text-xs shadow-md cursor-pointer"
+                    className="px-6 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-medium text-xs shadow-md cursor-pointer"
                   >
-                    {isRtl ? "نشر المقال" : "Publish Article"}
+                    {isRtl ? "حفظ المقال" : "Save Blog Post"}
                   </button>
                 </div>
               </form>

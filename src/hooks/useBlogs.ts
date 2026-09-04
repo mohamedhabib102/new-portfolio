@@ -1,33 +1,33 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { apiClient } from "@/lib/axios";
-import { blogsData } from "@/features/blogs/data/blogsData";
 import { BlogPost } from "@/features/blogs/types";
 
 export function useBlogs() {
-  const [blogs, setBlogs] = useState<BlogPost[]>(blogsData);
+  const [blogs, setBlogs] = useState<BlogPost[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    let isMounted = true;
-    async function fetchBlogs() {
-      try {
-        const res = await apiClient.get<{ success: boolean; data: BlogPost[] }>("/api/blogs");
-        if (isMounted && res.data?.data && res.data.data.length > 0) {
-          setBlogs(res.data.data);
-        }
-      } catch (e) {
-        // Fallback
-      } finally {
-        if (isMounted) setIsLoading(false);
+  const fetchBlogs = useCallback(async () => {
+    try {
+      setIsLoading(true);
+      const res = await apiClient.get<{ success: boolean; data: BlogPost[] }>("/api/blogs");
+      if (res.data?.data) {
+        setBlogs(res.data.data);
+      } else {
+        setBlogs([]);
       }
+    } catch (e) {
+      console.warn("Could not fetch blogs:", e);
+      setBlogs([]);
+    } finally {
+      setIsLoading(false);
     }
-    fetchBlogs();
-    return () => {
-      isMounted = false;
-    };
   }, []);
 
-  return { blogs, isLoading };
+  useEffect(() => {
+    fetchBlogs();
+  }, [fetchBlogs]);
+
+  return { blogs, isLoading, refetch: fetchBlogs };
 }

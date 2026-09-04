@@ -11,14 +11,12 @@ import FloatingDock from "@/components/ui/FloatingDock";
 import ContactSection from "@/features/contact/components/ContactSection";
 import FooterSection from "@/features/footer/components/FooterSection";
 import BlogCard from "@/features/blogs/components/BlogCard";
-import { blogsData } from "@/features/blogs/data/blogsData";
-
 import { useBlogs } from "@/hooks/useBlogs";
 
 export default function BlogsPage() {
   const { t, isRtl, language } = useTranslation();
   const { isLoaded } = useLoading();
-  const { blogs } = useBlogs();
+  const { blogs, isLoading } = useBlogs();
   const [activeCategory, setActiveCategory] = useState<string>("all");
 
   const categories = [
@@ -125,9 +123,25 @@ export default function BlogsPage() {
 
           {/* Posts Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 sm:gap-10">
-            {filteredBlogs.map((blog, idx) => (
-              <BlogCard key={blog.id} blog={blog} index={idx} />
-            ))}
+            {isLoading ? (
+              Array.from({ length: 4 }).map((_, i) => (
+                <div key={i} className="flex flex-col gap-4 animate-pulse bg-[#14151a] p-6 rounded-3xl border border-white/5">
+                  <div className="w-full aspect-[16/9] bg-white/5 rounded-2xl" />
+                  <div className="h-6 bg-white/5 rounded w-3/4" />
+                  <div className="h-4 bg-white/5 rounded w-full" />
+                </div>
+              ))
+            ) : filteredBlogs && filteredBlogs.length > 0 ? (
+              filteredBlogs.map((blog, idx) => (
+                <BlogCard key={blog.id} blog={blog} index={idx} />
+              ))
+            ) : (
+              <div className="col-span-2 text-center py-20 px-4 bg-[#14151a]/40 border border-white/5 rounded-3xl">
+                <p className="text-neutral-400 text-base">
+                  {language === "ar" ? "لا توجد مقالات مضافة حالياً في قاعدة البيانات." : "No articles currently in database."}
+                </p>
+              </div>
+            )}
           </div>
         </div>
       </section>

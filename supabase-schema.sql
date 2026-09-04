@@ -1,12 +1,13 @@
 -- =========================================================================
 -- Supabase SQL Schema for Mohamed H. Mowafy Portfolio & Admin Dashboard
 -- Run this script in your Supabase SQL Editor (the >_ icon on the left menu)
+-- 100% Idempotent: Can be run multiple times safely without throwing errors.
 -- =========================================================================
 
 -- 1. Site Configuration Table
 CREATE TABLE IF NOT EXISTS public."SiteConfig" (
     "id" TEXT PRIMARY KEY DEFAULT 'default',
-    "heroTitleEn" TEXT NOT NULL DEFAULT 'Creative Developer &',
+    "heroTitleEn" TEXT NOT NULL DEFAULT 'Developer &',
     "heroTitleAr" TEXT NOT NULL DEFAULT 'مطور',
     "heroQuoteEn" TEXT NOT NULL DEFAULT 'I''m trying to make something. Not just for you. Maybe not even for me.',
     "heroQuoteAr" TEXT NOT NULL DEFAULT 'أحاول أن أصنع شيئاً. ليس فقط من أجلك. وربما ليس حتى من أجلي.',
@@ -79,7 +80,21 @@ CREATE TABLE IF NOT EXISTS public."Experience" (
     "updatedAt" TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
 );
 
--- 5. Contact Messages Table
+-- 5. Skills Table
+CREATE TABLE IF NOT EXISTS public."Skill" (
+    "id" TEXT PRIMARY KEY,
+    "titleEn" TEXT NOT NULL,
+    "titleAr" TEXT NOT NULL,
+    "descEn" TEXT NOT NULL,
+    "descAr" TEXT NOT NULL,
+    "icons" JSONB DEFAULT '[]'::jsonb,
+    "badges" TEXT[] DEFAULT ARRAY[]::TEXT[],
+    "order" INTEGER DEFAULT 0,
+    "createdAt" TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL,
+    "updatedAt" TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
+);
+
+-- 6. Contact Messages Table
 CREATE TABLE IF NOT EXISTS public."ContactMessage" (
     "id" TEXT PRIMARY KEY,
     "name" TEXT,
@@ -89,22 +104,38 @@ CREATE TABLE IF NOT EXISTS public."ContactMessage" (
     "createdAt" TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
 );
 
--- 6. Enable Row Level Security (RLS) and Public Read Access
+-- 7. Enable Row Level Security (RLS)
 ALTER TABLE public."SiteConfig" ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public."Project" ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public."Blog" ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public."Experience" ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public."Skill" ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public."ContactMessage" ENABLE ROW LEVEL SECURITY;
 
--- Allow public read
+-- 8. Drop Existing Policies (if any) to prevent duplicate errors
+DROP POLICY IF EXISTS "Public Read SiteConfig" ON public."SiteConfig";
+DROP POLICY IF EXISTS "Public Read Project" ON public."Project";
+DROP POLICY IF EXISTS "Public Read Blog" ON public."Blog";
+DROP POLICY IF EXISTS "Public Read Experience" ON public."Experience";
+DROP POLICY IF EXISTS "Public Read Skill" ON public."Skill";
+
+DROP POLICY IF EXISTS "Allow All SiteConfig" ON public."SiteConfig";
+DROP POLICY IF EXISTS "Allow All Project" ON public."Project";
+DROP POLICY IF EXISTS "Allow All Blog" ON public."Blog";
+DROP POLICY IF EXISTS "Allow All Experience" ON public."Experience";
+DROP POLICY IF EXISTS "Allow All Skill" ON public."Skill";
+DROP POLICY IF EXISTS "Allow All ContactMessage" ON public."ContactMessage";
+
+-- 9. Create Policies safely
 CREATE POLICY "Public Read SiteConfig" ON public."SiteConfig" FOR SELECT USING (true);
 CREATE POLICY "Public Read Project" ON public."Project" FOR SELECT USING (true);
 CREATE POLICY "Public Read Blog" ON public."Blog" FOR SELECT USING (true);
 CREATE POLICY "Public Read Experience" ON public."Experience" FOR SELECT USING (true);
+CREATE POLICY "Public Read Skill" ON public."Skill" FOR SELECT USING (true);
 
--- Allow full access for service role and anon insert for contact
 CREATE POLICY "Allow All SiteConfig" ON public."SiteConfig" FOR ALL USING (true) WITH CHECK (true);
 CREATE POLICY "Allow All Project" ON public."Project" FOR ALL USING (true) WITH CHECK (true);
 CREATE POLICY "Allow All Blog" ON public."Blog" FOR ALL USING (true) WITH CHECK (true);
 CREATE POLICY "Allow All Experience" ON public."Experience" FOR ALL USING (true) WITH CHECK (true);
+CREATE POLICY "Allow All Skill" ON public."Skill" FOR ALL USING (true) WITH CHECK (true);
 CREATE POLICY "Allow All ContactMessage" ON public."ContactMessage" FOR ALL USING (true) WITH CHECK (true);

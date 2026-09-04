@@ -20,7 +20,7 @@ export default function AllProjectsPage() {
   const { data: projects, isLoading } = useProjects(false);
 
   return (
-    <main className="min-h-screen bg-white text-neutral-900">
+    <main className="min-h-screen bg-white text-neutral-900 selection:bg-blue-600 selection:text-white">
       {/* Top Navigation */}
       <motion.header
         initial={{ opacity: 0, y: -20 }}
@@ -71,8 +71,10 @@ export default function AllProjectsPage() {
               <ProjectCard key={project.id} project={project} index={index} />
             ))
           ) : (
-            <div className="col-span-2 text-center py-8 text-neutral-400">
-              No projects available.
+            <div className="col-span-2 text-center py-20 px-4 bg-neutral-50 rounded-3xl border border-neutral-100">
+              <p className="text-neutral-500 text-base">
+                {isRtl ? "لا توجد مشاريع مضافة حالياً في قاعدة البيانات." : "No projects found in database."}
+              </p>
             </div>
           )}
         </div>

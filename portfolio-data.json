@@ -4,7 +4,7 @@
     "heroTitleAr": "مطور",
     "heroQuoteEn": "I'm trying to make something. Not just for you. Maybe not even for me.",
     "heroQuoteAr": "أحاول أن أصنع شيئاً. ليس فقط من أجلك. وربما ليس حتى من أجلي.",
-    "heroImage": "/uploads/1788529608841_me.png",
+    "heroImage": "https://dibrssekkpsbyhvwwzln.supabase.co/storage/v1/object/public/portfolio-media/1788539240479_me.png",
     "aboutBioEn": "I'm a 23-year-old Front-End Developer from Egypt focused on building modern, fast, and responsive web applications. I enjoy turning ideas and designs into smooth, interactive user experiences with attention to detail and performance.\n\nOver the past few years, I've worked on personal and freelance projects, mainly using React, Next.js, and TypeScript. I focus on writing clean, maintainable code and building well-structured interfaces.\n\nOutside of coding, I work on side projects and explore new ideas that help me grow as a developer. I'm always open to collaborating and contributing to products that create real value.",
     "aboutBioAr": "أنا مطور واجهات أمامية مصري أبلغ من العمر 23 عاماً، أركز على بناء تطبيقات ويب حديثة، سريعة ومتجاوبة. أستمتع بتحويل الأفكار والتصميمات إلى تجارب مستخدم تفاعلية وسلسة مع الاهتمام بأدق التفاصيل والأداء العالي.\n\nعلى مدار السنوات الماضية، عملت على مشاريع شخصية ومشاريع عمل حر، معتمداً بشكل أساسي على React و Next.js و TypeScript. أركز على كتابة كود نظيف وسهل الصيانة، وبناء واجهات ذات بنية محكمة.\n\nخارج أوقات البرمجة، أعمل على مشاريع جانبية وأستكشف أفكاراً جديدة تساعدني على التطور المستمر كمطور. أنا دائماً منفتح على التعاون والمساهمة في بناء منتجات تقدم قيمة حقيقية للمستخدمين.",
     "githubUrl": "https://github.com/mowafy-dev",
@@ -382,6 +382,234 @@
         ],
         "conclusion": "السرعة الفائقة ليست تفصيلاً ثانوياً، بل هي ميزة أساسية ورسالة واضحة لجودة واحترافية علامتك التجارية."
       }
+    }
+  ],
+  "skills": [
+    {
+      "id": "frontend-core",
+      "titleEn": "Front-End Core & Frameworks",
+      "titleAr": "تطوير واجهات المستخدم وأطر العمل",
+      "descEn": "Building fast, reactive, and user-friendly web interfaces using Next.js 16, React 19, TypeScript, and modern standards.",
+      "descAr": "بناء واجهات ويب تفاعلية وسريعة وفائقة الاستجابة بالاعتماد على Next.js 16 و React 19 و TypeScript ومعايير الويب العالمية.",
+      "icons": [
+        "SiHtml5",
+        "SiCss",
+        "SiJavascript",
+        "SiTypescript",
+        "SiReact",
+        "SiNextdotjs"
+      ],
+      "badges": [
+        "Next.js 16",
+        "React 19",
+        "TypeScript",
+        "ES6+"
+      ],
+      "order": 1
+    },
+    {
+      "id": "styling",
+      "titleEn": "Styling & Design Systems",
+      "titleAr": "التنسيق وأنظمة التصميم",
+      "descEn": "Crafting visually appealing, pixel-perfect, and responsive layouts with Tailwind CSS, Sass, and modern UI component systems.",
+      "descAr": "صياغة تصميمات عصرية فائقة الدقة متجاوبة مع كافة الشاشات باستخدام Tailwind CSS و Sass ونظم التصميم المتقدمة.",
+      "icons": [
+        "SiTailwindcss",
+        "SiSass",
+        "SiMui",
+        "SiBootstrap"
+      ],
+      "badges": [
+        "Responsive Design",
+        "Mobile-First",
+        "Dark Mode",
+        "Custom Themes"
+      ],
+      "order": 2
+    },
+    {
+      "id": "animations",
+      "titleEn": "Web Animations & Interactions",
+      "titleAr": "التحريك وتفاعلات الويب المتقدمة",
+      "descEn": "Creating 60FPS fluid animations, scroll-driven choreographies, and magnetic micro-interactions that elevate brand feel.",
+      "descAr": "صناعة حركات انتقالية وتفاعلات حركية فائقة السلاسة بمعدل 60 إطار مع مؤثرات سكرول تجذب المستخدم وترفع قيمة البراند.",
+      "icons": [
+        "SiGreensock",
+        "SiFramer"
+      ],
+      "badges": [
+        "ScrollTrigger",
+        "Micro-Interactions",
+        "Spring Physics",
+        "Page Transitions"
+      ],
+      "order": 3
+    },
+    {
+      "id": "ai-tools",
+      "titleEn": "AI Tools & Modern Workflow",
+      "titleAr": "أدوات الذكاء الاصطناعي والإنتاجية",
+      "descEn": "Leveraging cutting-edge AI coding environments and models to accelerate component scaffolding, refactoring, and code review.",
+      "descAr": "تسخير أحدث أدوات ومحررات الذكاء الاصطناعي لمضاعفة سرعة كتابة الكود، وإعادة الهيكلة ومراجعة الجودة البرمجية.",
+      "icons": [
+        "SiCursor",
+        "SiGithubcopilot",
+        "SiAnthropic",
+        "SiChatbot"
+      ],
+      "badges": [
+        "Prompt Engineering",
+        "Context-Aware Dev",
+        "Smart Refactoring"
+      ],
+      "order": 4
+    },
+    {
+      "id": "dev-tools",
+      "titleEn": "Developer Environment & Tools",
+      "titleAr": "بيئة التطوير وأدوات المطور",
+      "descEn": "Proficient with industry-standard development software, debugging toolchains, and API exploration suites.",
+      "descAr": "إتقان كامل لأدوات بيئة العمل الاحترافية، فحص وتصحيح الأخطاء، وتحليل استجابات الـ APIs.",
+      "icons": [
+        "VscCode",
+        "SiGooglechrome",
+        "SiPostman",
+        "SiGit",
+        "SiGithub"
+      ],
+      "badges": [
+        "VS Code",
+        "DevTools",
+        "Git Workflow"
+      ],
+      "order": 5
+    },
+    {
+      "id": "state-management",
+      "titleEn": "State Management & Data Fetching",
+      "titleAr": "إدارة الحالة وجلب البيانات",
+      "descEn": "Architecting predictable client/server state with modern cache invalidation, optimistic updates, and clean hooks.",
+      "descAr": "بناء معمارية بيانات مستقرة وسريعة مع تحديثات متفائلة وتخزين مؤقت ذكي واستعلامات غير متزامنة.",
+      "icons": [
+        "SiRedux",
+        "SiReactquery"
+      ],
+      "badges": [
+        "Zustand",
+        "Context API",
+        "Axios",
+        "Optimistic UI",
+        "SWR"
+      ],
+      "order": 6
+    },
+    {
+      "id": "build-performance",
+      "titleEn": "Build Tools & Web Performance",
+      "titleAr": "أدوات البناء وتحسين الأداء",
+      "descEn": "Optimizing bundle sizes, tree-shaking, and web vitals to consistently achieve a 95+ score on Google Lighthouse.",
+      "descAr": "تحسين سرعة التحميل، وتقليص حجم حزم الكود، والوصول إلى تقييم 95+ على Google Lighthouse ومؤشرات الويب الحيوية.",
+      "icons": [
+        "SiVite",
+        "SiWebpack",
+        "SiLighthouse",
+        "SiVercel"
+      ],
+      "badges": [
+        "95+ Lighthouse",
+        "Core Web Vitals",
+        "Code Splitting",
+        "Lazy Loading"
+      ],
+      "order": 7
+    },
+    {
+      "id": "testing",
+      "titleEn": "Testing & Code Quality",
+      "titleAr": "الاختبارات وضمان جودة الكود",
+      "descEn": "Writing comprehensive unit, integration, and linting rules to maintain a bug-free, scalable codebase.",
+      "descAr": "كتابة اختبارات شاملة وقواعد تدقيق قياسية للحفاظ على استقرار الكود البرمجي وسهولة صيانته.",
+      "icons": [
+        "SiJest",
+        "SiTestinglibrary",
+        "SiEslint",
+        "SiPrettier"
+      ],
+      "badges": [
+        "Unit Testing",
+        "Code Quality",
+        "CI/CD Tests"
+      ],
+      "order": 8
+    },
+    {
+      "id": "uiux-design",
+      "titleEn": "UI/UX & Design Collaboration",
+      "titleAr": "تصميم الواجهات وتجربة المستخدم",
+      "descEn": "Translating complex Figma mockups into accessible, pixel-perfect digital experiences with high visual polish.",
+      "descAr": "تحويل تصميمات فيجما المعقدة إلى واجهات برمجية حية تطابق التصميم بالبكسل مع مراعاة أدق التفاصيل الجمالية.",
+      "icons": [
+        "SiFigma"
+      ],
+      "badges": [
+        "Prototyping",
+        "Wireframing",
+        "Design Handoff",
+        "Atomic Design"
+      ],
+      "order": 9
+    },
+    {
+      "id": "mobile-crossplatform",
+      "titleEn": "Mobile Web & Cross-Platform",
+      "titleAr": "تطبيقات الهواتف والويب المتجاوب",
+      "descEn": "Creating sleek cross-platform web and mobile experiences with touch gestures and adaptive viewports.",
+      "descAr": "تطوير تطبيقات ويب وهواتف ذكية متوافقة مع شاشات اللمس والمنصات المختلفة بأعلى درجات الانسيابية.",
+      "icons": [
+        "TbBrandReactNative"
+      ],
+      "badges": [
+        "Progressive Web Apps (PWA)",
+        "Touch Gestures",
+        "Adaptive Layouts"
+      ],
+      "order": 10
+    },
+    {
+      "id": "deployment-hosting",
+      "titleEn": "Deployment & Modern Hosting",
+      "titleAr": "النشر والاستضافة السحابية",
+      "descEn": "Deploying high-availability frontend applications using Vercel, edge serverless functions, and CI/CD automation.",
+      "descAr": "نشر تطبيقات الويب بسرعة فائقة عبر Vercel والشبكات الطرفية Edge مع أتمتة دورة البناء والنشر المستمر.",
+      "icons": [
+        "SiVercel",
+        "SiGithub"
+      ],
+      "badges": [
+        "CI/CD",
+        "Serverless Edge",
+        "DNS & SSL",
+        "Environment Management"
+      ],
+      "order": 11
+    },
+    {
+      "id": "frontend-concepts",
+      "titleEn": "Core Frontend Concepts",
+      "titleAr": "المفاهيم البرمجية الأساسية للواجهات",
+      "descEn": "Strong command of DOM mechanics, event loop, asynchronous JavaScript, Web Accessibility (a11y), and semantic HTML.",
+      "descAr": "فهم عميق لآليات شجرة الـ DOM، دورة الأحداث البرمجية، إمكانية الوصول لذوي الاحتياجات الخاصة (a11y) والـ SEO المتقدم.",
+      "icons": [
+        "SiHtml5",
+        "SiTypescript"
+      ],
+      "badges": [
+        "Accessibility (a11y)",
+        "Technical SEO",
+        "Event Loop",
+        "DOM Tree Optimization"
+      ],
+      "order": 12
     }
   ],
   "messages": [
