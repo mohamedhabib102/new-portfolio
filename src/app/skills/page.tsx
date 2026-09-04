@@ -2,6 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { motion } from "framer-motion";
 import { useTranslation } from "@/i18n/LanguageContext";
 import { useLoading } from "@/components/providers/LoadingContext";
@@ -31,9 +32,19 @@ export default function SkillsPage() {
         >
           <Link
             href="/"
-            className="text-white/95 font-normal tracking-tight text-sm sm:text-base hover:text-neutral-300 transition-colors"
+            className="inline-flex items-center gap-2.5 group text-white/95 font-normal tracking-tight text-sm sm:text-base hover:text-neutral-300 transition-colors"
           >
-            {t.codeBy}
+            <div className="relative w-8 h-8 rounded-full overflow-hidden border border-white/20 shadow-sm bg-neutral-900 shrink-0 transition-transform duration-300 group-hover:scale-105">
+              <Image
+                src="/avatar.png"
+                alt="Mohamed H. Mowafy Logo"
+                width={32}
+                height={32}
+                className="object-cover w-full h-full"
+                priority
+              />
+            </div>
+            <span>{t.codeBy}</span>
           </Link>
 
           <div className="flex flex-col items-end gap-2.5 max-w-sm sm:max-w-md text-right">

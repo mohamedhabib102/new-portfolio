@@ -1,4 +1,5 @@
 "use client";
+import Link from "next/link";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { useTranslation } from "@/i18n/LanguageContext";
@@ -44,10 +45,22 @@ export default function HeroSection({ initialConfig }: { initialConfig?: SiteCon
         transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
         className="relative z-20 w-full px-6 sm:px-12 pt-8 pb-4 flex items-start justify-between"
       >
-        {/* Top Left: @ Code by Habib / @ كود بواسطة حبيب */}
-        <div className="text-white font-normal tracking-tight text-sm sm:text-base drop-shadow-sm">
-          {t.codeBy}
-        </div>
+        {/* Top Left: Logo & @ Code by Habib / @ كود بواسطة حبيب */}
+        <Link href="/" className="inline-flex items-center gap-2.5 group">
+          <div className="relative w-8 h-8 rounded-full overflow-hidden border border-white/20 shadow-sm bg-neutral-900 shrink-0 transition-transform duration-300 group-hover:scale-105">
+            <Image
+              src="/avatar.png"
+              alt="Mohamed H. Mowafy Logo"
+              width={32}
+              height={32}
+              className="object-cover w-full h-full"
+              priority
+            />
+          </div>
+          <span className="text-white font-normal tracking-tight text-sm sm:text-base drop-shadow-sm group-hover:text-neutral-200 transition-colors">
+            {t.codeBy}
+          </span>
+        </Link>
 
         {/* Top Right: Language Toggle & Quote (Single continuous block, not split) */}
         <div
