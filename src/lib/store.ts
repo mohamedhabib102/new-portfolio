@@ -1,6 +1,6 @@
 import fs from "fs";
 import path from "path";
-import { prisma } from "./prisma";
+import { supabase } from "./supabase";
 import { initialProjects } from "@/app/api/projects/route";
 import { blogsData } from "@/features/blogs/data/blogsData";
 
@@ -80,7 +80,7 @@ const defaultSiteConfig: SiteConfigData = {
     "I'm a 23-year-old Front-End Developer from Egypt focused on building modern, fast, and responsive web applications. I enjoy turning ideas and designs into smooth, interactive user experiences with attention to detail and performance.\n\nOver the past few years, I've worked on personal and freelance projects, mainly using React, Next.js, and TypeScript. I focus on writing clean, maintainable code and building well-structured interfaces.\n\nOutside of coding, I work on side projects and explore new ideas that help me grow as a developer. I'm always open to collaborating and contributing to products that create real value.",
   aboutBioAr:
     "أنا مطور واجهات أمامية مصري أبلغ من العمر 23 عاماً، أركز على بناء تطبيقات ويب حديثة، سريعة ومتجاوبة. أستمتع بتحويل الأفكار والتصميمات إلى تجارب مستخدم تفاعلية وسلسة مع الاهتمام بأدق التفاصيل والأداء العالي.\n\nعلى مدار السنوات الماضية، عملت على مشاريع شخصية ومشاريع عمل حر، معتمداً بشكل أساسي على React و Next.js و TypeScript. أركز على كتابة كود نظيف وسهل الصيانة، وبناء واجهات ذات بنية محكمة.\n\nخارج أوقات البرمجة، أعمل على مشاريع جانبية وأستكشف أفكاراً جديدة تساعدني على التطور المستمر كمطور. أنا دائماً منفتح على التعاون والمساهمة في بناء منتجات تقدم قيمة حقيقية للمستخدمين.",
-  githubUrl: "https://github.com/mowafy-dev",
+  githubUrl: "https://github.com/mohamedhabib102",
   linkedinUrl: "https://www.linkedin.com/in/habib-mowafy",
   whatsappNumber: "201027227796",
   footerHeadlineEn: "Let's build something great together",
@@ -146,6 +146,35 @@ function writeLocalStore(data: LocalStoreData) {
 export const portfolioStore = {
   // 1. Site Config
   getSiteConfig: async (): Promise<SiteConfigData> => {
+    if (supabase) {
+      try {
+        const { data, error } = await supabase.from("SiteConfig").select("*").eq("id", "default").maybeSingle();
+        if (!error && data) {
+          const config: SiteConfigData = {
+            heroTitleEn: data.heroTitleEn || defaultSiteConfig.heroTitleEn,
+            heroTitleAr: data.heroTitleAr || defaultSiteConfig.heroTitleAr,
+            heroQuoteEn: data.heroQuoteEn || defaultSiteConfig.heroQuoteEn,
+            heroQuoteAr: data.heroQuoteAr || defaultSiteConfig.heroQuoteAr,
+            heroImage: data.heroImage || defaultSiteConfig.heroImage,
+            aboutBioEn: data.aboutBioEn || defaultSiteConfig.aboutBioEn,
+            aboutBioAr: data.aboutBioAr || defaultSiteConfig.aboutBioAr,
+            githubUrl: data.githubUrl || defaultSiteConfig.githubUrl,
+            linkedinUrl: data.linkedinUrl || defaultSiteConfig.linkedinUrl,
+            whatsappNumber: data.whatsappNumber || defaultSiteConfig.whatsappNumber,
+            footerHeadlineEn: data.footerHeadlineEn || defaultSiteConfig.footerHeadlineEn,
+            footerHeadlineAr: data.footerHeadlineAr || defaultSiteConfig.footerHeadlineAr,
+            footerSubEn: data.footerSubEn || defaultSiteConfig.footerSubEn,
+            footerSubAr: data.footerSubAr || defaultSiteConfig.footerSubAr,
+          };
+          const store = readLocalStore();
+          store.siteConfig = config;
+          writeLocalStore(store);
+          return config;
+        }
+      } catch (err) {
+        console.warn("[Supabase] getSiteConfig fallback to local:", err);
+      }
+    }
     return readLocalStore().siteConfig;
   },
 
@@ -153,11 +182,46 @@ export const portfolioStore = {
     const store = readLocalStore();
     store.siteConfig = { ...store.siteConfig, ...updates };
     writeLocalStore(store);
+
+    if (supabase) {
+      try {
+        await supabase.from("SiteConfig").upsert({
+          id: "default",
+          ...store.siteConfig,
+          updatedAt: new Date().toISOString(),
+        });
+      } catch (err) {
+        console.warn("[Supabase] updateSiteConfig error:", err);
+      }
+    }
     return store.siteConfig;
   },
 
   // 2. Experiences
   getExperiences: async (): Promise<ExperienceData[]> => {
+    if (supabase) {
+      try {
+        const { data, error } = await supabase.from("Experience").select("*").order("createdAt", { ascending: false });
+        if (!error && data && data.length > 0) {
+          const formatted: ExperienceData[] = data.map((d) => ({
+            id: d.id,
+            period: d.period,
+            roleEn: d.roleEn,
+            roleAr: d.roleAr,
+            company: d.company,
+            descEn: d.descEn,
+            descAr: d.descAr,
+            skills: Array.isArray(d.skills) ? d.skills : [],
+          }));
+          const store = readLocalStore();
+          store.experiences = formatted;
+          writeLocalStore(store);
+          return formatted;
+        }
+      } catch (err) {
+        console.warn("[Supabase] getExperiences fallback:", err);
+      }
+    }
     return readLocalStore().experiences;
   },
 
@@ -181,6 +245,25 @@ export const portfolioStore = {
       store.experiences.push(fullExp);
     }
     writeLocalStore(store);
+
+    if (supabase) {
+      try {
+        await supabase.from("Experience").upsert({
+          id: fullExp.id,
+          period: fullExp.period,
+          roleEn: fullExp.roleEn,
+          roleAr: fullExp.roleAr,
+          company: fullExp.company,
+          descEn: fullExp.descEn,
+          descAr: fullExp.descAr,
+          skills: fullExp.skills,
+          updatedAt: new Date().toISOString(),
+        });
+      } catch (err) {
+        console.warn("[Supabase] saveExperience error:", err);
+      }
+    }
+
     return fullExp;
   },
 
@@ -188,11 +271,32 @@ export const portfolioStore = {
     const store = readLocalStore();
     store.experiences = store.experiences.filter((e) => e.id !== id);
     writeLocalStore(store);
+
+    if (supabase) {
+      try {
+        await supabase.from("Experience").delete().eq("id", id);
+      } catch (err) {
+        console.warn("[Supabase] deleteExperience error:", err);
+      }
+    }
     return true;
   },
 
   // 3. Projects
   getProjects: async () => {
+    if (supabase) {
+      try {
+        const { data, error } = await supabase.from("Project").select("*").order("order", { ascending: true });
+        if (!error && data && data.length > 0) {
+          const store = readLocalStore();
+          store.projects = data as any;
+          writeLocalStore(store);
+          return data as any;
+        }
+      } catch (err) {
+        console.warn("[Supabase] getProjects fallback:", err);
+      }
+    }
     return readLocalStore().projects;
   },
 
@@ -215,6 +319,29 @@ export const portfolioStore = {
       store.projects.push(fullProject);
     }
     writeLocalStore(store);
+
+    if (supabase) {
+      try {
+        await supabase.from("Project").upsert({
+          id: fullProject.id,
+          slug: fullProject.slug,
+          titleEn: fullProject.titleEn,
+          titleAr: fullProject.titleAr,
+          descriptionEn: fullProject.descriptionEn,
+          descriptionAr: fullProject.descriptionAr,
+          videoUrl: fullProject.videoUrl || "",
+          liveUrl: fullProject.liveUrl || null,
+          githubUrl: fullProject.githubUrl || null,
+          tags: fullProject.tags,
+          featured: fullProject.featured ?? true,
+          order: fullProject.order ?? 0,
+          updatedAt: new Date().toISOString(),
+        });
+      } catch (err) {
+        console.warn("[Supabase] saveProject error:", err);
+      }
+    }
+
     return fullProject;
   },
 
@@ -222,11 +349,41 @@ export const portfolioStore = {
     const store = readLocalStore();
     store.projects = store.projects.filter((p) => p.id !== id);
     writeLocalStore(store);
+
+    if (supabase) {
+      try {
+        await supabase.from("Project").delete().eq("id", id);
+      } catch (err) {
+        console.warn("[Supabase] deleteProject error:", err);
+      }
+    }
     return true;
   },
 
   // 4. Blogs
   getBlogs: async () => {
+    if (supabase) {
+      try {
+        const { data, error } = await supabase.from("Blog").select("*").order("createdAt", { ascending: false });
+        if (!error && data && data.length > 0) {
+          const formatted = data.map((b) => ({
+            ...b,
+            author: {
+              name: b.authorName || "Mohamed H. Mowafy",
+              roleEn: b.authorRole || "Front-End Developer",
+              roleAr: "مطور واجهات أمامية",
+              avatar: "/me.png",
+            },
+          }));
+          const store = readLocalStore();
+          store.blogs = formatted as any;
+          writeLocalStore(store);
+          return formatted as any;
+        }
+      } catch (err) {
+        console.warn("[Supabase] getBlogs fallback:", err);
+      }
+    }
     return readLocalStore().blogs;
   },
 
@@ -266,6 +423,34 @@ export const portfolioStore = {
       store.blogs.unshift(fullBlog);
     }
     writeLocalStore(store);
+
+    if (supabase) {
+      try {
+        await supabase.from("Blog").upsert({
+          id: fullBlog.id,
+          slug: fullBlog.slug,
+          titleEn: fullBlog.titleEn,
+          titleAr: fullBlog.titleAr,
+          excerptEn: fullBlog.excerptEn,
+          excerptAr: fullBlog.excerptAr,
+          contentEn: fullBlog.contentEn,
+          contentAr: fullBlog.contentAr,
+          coverImage: fullBlog.coverImage,
+          categoryEn: fullBlog.categoryEn,
+          categoryAr: fullBlog.categoryAr,
+          tags: fullBlog.tags,
+          authorName: "Mohamed H. Mowafy",
+          authorRole: "Front-End Developer",
+          readTimeEn: fullBlog.readTimeEn || "5 min read",
+          readTimeAr: fullBlog.readTimeAr || "5 دقائق قراءة",
+          publishedAt: fullBlog.publishedAt,
+          updatedAt: new Date().toISOString(),
+        });
+      } catch (err) {
+        console.warn("[Supabase] saveBlog error:", err);
+      }
+    }
+
     return fullBlog;
   },
 
@@ -273,11 +458,29 @@ export const portfolioStore = {
     const store = readLocalStore();
     store.blogs = store.blogs.filter((b) => b.id !== id);
     writeLocalStore(store);
+
+    if (supabase) {
+      try {
+        await supabase.from("Blog").delete().eq("id", id);
+      } catch (err) {
+        console.warn("[Supabase] deleteBlog error:", err);
+      }
+    }
     return true;
   },
 
   // 5. Contact Messages
   getMessages: async (): Promise<ClientMessageData[]> => {
+    if (supabase) {
+      try {
+        const { data, error } = await supabase.from("ContactMessage").select("*").order("createdAt", { ascending: false });
+        if (!error && data && data.length > 0) {
+          return data;
+        }
+      } catch (err) {
+        console.warn("[Supabase] getMessages fallback:", err);
+      }
+    }
     return readLocalStore().messages;
   },
 
@@ -293,6 +496,22 @@ export const portfolioStore = {
     };
     store.messages.unshift(newMsg);
     writeLocalStore(store);
+
+    if (supabase) {
+      try {
+        await supabase.from("ContactMessage").insert({
+          id: newMsg.id,
+          name: newMsg.name,
+          email: newMsg.email,
+          phone: newMsg.phone,
+          message: newMsg.message,
+          createdAt: newMsg.createdAt,
+        });
+      } catch (err) {
+        console.warn("[Supabase] addMessage error:", err);
+      }
+    }
+
     return newMsg;
   },
 };
