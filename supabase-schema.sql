@@ -35,12 +35,15 @@ CREATE TABLE IF NOT EXISTS public."Project" (
     "videoUrl" TEXT NOT NULL,
     "liveUrl" TEXT,
     "githubUrl" TEXT,
+    "githubPrivate" BOOLEAN DEFAULT false,
     "tags" TEXT[] DEFAULT ARRAY[]::TEXT[],
     "featured" BOOLEAN DEFAULT true,
     "order" INTEGER DEFAULT 0,
     "createdAt" TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL,
     "updatedAt" TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
 );
+
+ALTER TABLE public."Project" ADD COLUMN IF NOT EXISTS "githubPrivate" BOOLEAN DEFAULT false;
 
 -- 3. Blogs Table
 CREATE TABLE IF NOT EXISTS public."Blog" (

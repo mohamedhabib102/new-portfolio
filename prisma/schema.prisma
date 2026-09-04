@@ -31,6 +31,7 @@ model Project {
   videoUrl      String
   liveUrl       String?
   githubUrl     String?
+  githubPrivate Boolean  @default(false)
   tags          String[]
   featured      Boolean  @default(true)
   order         Int      @default(0)

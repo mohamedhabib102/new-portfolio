@@ -64,6 +64,12 @@ import {
   SiYarn,
   SiStripe,
   SiSocketdotio,
+  SiNpm,
+  SiGooglegemini,
+  SiGooglejules,
+  SiGoogle,
+  SiClaude,
+  SiClaudecode,
 } from "react-icons/si";
 import { VscCode } from "react-icons/vsc";
 import { TbBrandReactNative, TbBrandCpp } from "react-icons/tb";
@@ -102,23 +108,31 @@ export const AVAILABLE_TECH_ICONS: TechIconDefinition[] = [
   { id: "SiFigma", name: "Figma", category: "Styling", color: "text-purple-400", icon: SiFigma },
 
   // AI & Productivity
+  { id: "SiClaude", name: "Claude (Anthropic)", category: "AI & Productivity", color: "text-amber-500", icon: SiClaude },
+  { id: "SiClaudecode", name: "Claude Code", category: "AI & Productivity", color: "text-amber-400", icon: SiClaudecode },
+  { id: "SiGooglegemini", name: "Gemini Pro", category: "AI & Productivity", color: "text-blue-400", icon: SiGooglegemini },
+  { id: "SiGooglejules", name: "Google Jules / Stitch", category: "AI & Productivity", color: "text-emerald-400", icon: SiGooglejules },
   { id: "SiCursor", name: "Cursor AI", category: "AI & Productivity", color: "text-cyan-300", icon: SiCursor },
   { id: "SiGithubcopilot", name: "GitHub Copilot", category: "AI & Productivity", color: "text-white", icon: SiGithubcopilot },
-  { id: "SiAnthropic", name: "Claude AI", category: "AI & Productivity", color: "text-amber-500", icon: SiAnthropic },
+  { id: "SiAnthropic", name: "Anthropic AI", category: "AI & Productivity", color: "text-amber-500", icon: SiAnthropic },
   { id: "SiChatbot", name: "AI Assistant", category: "AI & Productivity", color: "text-emerald-400", icon: SiChatbot },
 
   // Developer Tools
+  { id: "SiGit", name: "Git", category: "DevOps & Tools", color: "text-red-500", icon: SiGit },
+  { id: "SiGithub", name: "GitHub", category: "DevOps & Tools", color: "text-white", icon: SiGithub },
+  { id: "SiNpm", name: "npm", category: "DevOps & Tools", color: "text-red-500", icon: SiNpm },
+  { id: "SiVite", name: "Vite", category: "DevOps & Tools", color: "text-purple-400", icon: SiVite },
+  { id: "SiWebpack", name: "Webpack", category: "DevOps & Tools", color: "text-blue-400", icon: SiWebpack },
   { id: "VscCode", name: "VS Code", category: "DevOps & Tools", color: "text-blue-400", icon: VscCode },
   { id: "SiGooglechrome", name: "Chrome DevTools", category: "DevOps & Tools", color: "text-yellow-400", icon: SiGooglechrome },
   { id: "SiPostman", name: "Postman", category: "DevOps & Tools", color: "text-orange-500", icon: SiPostman },
-  { id: "SiGit", name: "Git", category: "DevOps & Tools", color: "text-red-500", icon: SiGit },
-  { id: "SiGithub", name: "GitHub", category: "DevOps & Tools", color: "text-white", icon: SiGithub },
   { id: "SiVercel", name: "Vercel", category: "DevOps & Tools", color: "text-white", icon: SiVercel },
   { id: "SiDocker", name: "Docker", category: "DevOps & Tools", color: "text-blue-400", icon: SiDocker },
   { id: "SiKubernetes", name: "Kubernetes", category: "DevOps & Tools", color: "text-blue-500", icon: SiKubernetes },
   { id: "SiLinux", name: "Linux", category: "DevOps & Tools", color: "text-yellow-500", icon: SiLinux },
   { id: "FaAws", name: "AWS", category: "DevOps & Tools", color: "text-amber-500", icon: FaAws },
   { id: "SiNginx", name: "Nginx", category: "DevOps & Tools", color: "text-green-500", icon: SiNginx },
+  { id: "SiGoogle", name: "Google Cloud / AI", category: "DevOps & Tools", color: "text-blue-500", icon: SiGoogle },
 
   // Build & Testing
   { id: "SiVite", name: "Vite", category: "Testing & Performance", color: "text-purple-400", icon: SiVite },

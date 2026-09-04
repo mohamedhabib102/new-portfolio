@@ -10,7 +10,7 @@ import LanguageToggle from "@/components/ui/LanguageToggle";
 import FloatingDock from "@/components/ui/FloatingDock";
 import ContactSection from "@/features/contact/components/ContactSection";
 import FooterSection from "@/features/footer/components/FooterSection";
-import { FiArrowLeft, FiExternalLink, FiGithub } from "react-icons/fi";
+import { FiArrowLeft, FiExternalLink, FiGithub, FiLock, FiShield } from "react-icons/fi";
 
 export default function ProjectDetailPage({
   params,
@@ -128,7 +128,17 @@ export default function ProjectDetailPage({
             </a>
           )}
 
-          {project.githubUrl && (
+          {project.githubPrivate ? (
+            <div className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-neutral-900 border border-neutral-700 text-neutral-200 font-normal text-xs sm:text-sm shadow-sm select-none" title={language === "ar" ? "الكود المصدري خاص ومحمي باتفاقية سرية مع العميل / الشركة" : "Source code is private and protected by NDA / Client Agreement"}>
+              <FiLock className="w-3.5 h-3.5 text-amber-400" />
+              <FiGithub className="w-3.5 h-3.5 text-neutral-400" />
+              <span>
+                {language === "ar"
+                  ? "مستودع خاص (مشروع عميل / كود غير متاح للعامة)"
+                  : "Private Repository (Client NDA Protected)"}
+              </span>
+            </div>
+          ) : project.githubUrl ? (
             <a
               href={project.githubUrl}
               target="_blank"
@@ -138,7 +148,7 @@ export default function ProjectDetailPage({
               <FiGithub className="w-3.5 h-3.5" />
               <span>{t.sourceCode}</span>
             </a>
-          )}
+          ) : null}
         </motion.div>
 
         {/* 3. Rich Features & Key Highlights */}

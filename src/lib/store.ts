@@ -94,12 +94,14 @@ const defaultSkills: SkillItemData[] = [
   },
   {
     id: "styling",
-    titleEn: "Styling & Design Systems",
-    titleAr: "التنسيق وأنظمة التصميم",
-    descEn: "Crafting visually appealing, pixel-perfect, and responsive layouts with Tailwind CSS, Sass, and modern UI component systems.",
-    descAr: "صياغة تصميمات عصرية فائقة الدقة متجاوبة مع كافة الشاشات باستخدام Tailwind CSS و Sass ونظم التصميم المتقدمة.",
-    icons: ["SiTailwindcss", "SiSass", "SiMui", "SiBootstrap"],
-    badges: ["Responsive Design", "Mobile-First", "Dark Mode", "Custom Themes"],
+    titleEn: "Styling, UI Frameworks & Elegant UI",
+    titleAr: "التنسيق وأنظمة التصميم والواجهات الأنيقة",
+    descEn:
+      "Crafting responsive, pixel-perfect, and elegant UIs with Tailwind CSS, Bootstrap, modern CSS standards, and customized design systems.",
+    descAr:
+      "صياغة واجهات مستخدم متجاوبة وأنيقة (Elegant UI) وفائقة الدقة باستخدام Tailwind CSS و Bootstrap وتصميمات Responsive Design وأنظمة التصميم الحديثة.",
+    icons: ["SiTailwindcss", "SiBootstrap", "SiCss", "SiSass", "SiMui"],
+    badges: ["Tailwind CSS", "Bootstrap", "Responsive Design", "Elegant UI", "Mobile-First", "Dark Mode", "Custom Themes"],
     order: 2,
   },
   {
@@ -114,22 +116,26 @@ const defaultSkills: SkillItemData[] = [
   },
   {
     id: "ai-tools",
-    titleEn: "AI Tools & Modern Workflow",
-    titleAr: "أدوات الذكاء الاصطناعي والإنتاجية",
-    descEn: "Leveraging cutting-edge AI coding environments and models to accelerate component scaffolding, refactoring, and code review.",
-    descAr: "تسخير أحدث أدوات ومحررات الذكاء الاصطناعي لمضاعفة سرعة كتابة الكود، وإعادة الهيكلة ومراجعة الجودة البرمجية.",
-    icons: ["SiCursor", "SiGithubcopilot", "SiAnthropic", "SiChatbot"],
-    badges: ["Prompt Engineering", "Context-Aware Dev", "Smart Refactoring"],
+    titleEn: "AI Development Tools & Intelligent Workflows",
+    titleAr: "أدوات التطوير بالذكاء الاصطناعي والإنتاجية",
+    descEn:
+      "Leveraging next-generation AI coding assistants including Claude (Claude Code), Google Stitch / Jules, and Gemini Pro alongside Cursor to build, refactor, and review code with superhuman velocity.",
+    descAr:
+      "تسخير أحدث وأقوى نماذج وأدوات الذكاء الاصطناعي مثل كلود (Claude & Claude Code)، جوجل ستيشت / جولز (Google Stitch / Jules)، وجيميني برو (Gemini Pro) بالإضافة إلى Cursor AI لتسريع بناء الواجهات وإعادة الهيكلة ومراجعة الجودة.",
+    icons: ["SiClaude", "SiGooglegemini", "SiGooglejules", "SiCursor", "SiGithubcopilot", "SiAnthropic"],
+    badges: ["Claude 3.7 / Sonnet", "Gemini Pro", "Google Stitch", "Google Jules", "Cursor AI", "Prompt Engineering", "Context-Aware Dev", "Smart Refactoring"],
     order: 4,
   },
   {
     id: "dev-tools",
-    titleEn: "Developer Environment & Tools",
-    titleAr: "بيئة التطوير وأدوات المطور",
-    descEn: "Proficient with industry-standard development software, debugging toolchains, and API exploration suites.",
-    descAr: "إتقان كامل لأدوات بيئة العمل الاحترافية، فحص وتصحيح الأخطاء، وتحليل استجابات الـ APIs.",
-    icons: ["VscCode", "SiGooglechrome", "SiPostman", "SiGit", "SiGithub"],
-    badges: ["VS Code", "DevTools", "Git Workflow"],
+    titleEn: "Development Tools & Version Control",
+    titleAr: "أدوات التطوير وإدارة الإصدارات",
+    descEn:
+      "Mastering modern developer tooling including Git version control, GitHub workflows, Vite, Webpack bundlers, and npm package ecosystem.",
+    descAr:
+      "إتقان أدوات بيئة التطوير الاحترافية والتحكم في الإصدارات باستخدام Git و GitHub، وحزم البناء السريعة Vite و Webpack وإدارة الحزم عبر npm.",
+    icons: ["SiGit", "SiGithub", "SiVite", "SiWebpack", "SiNpm", "VscCode", "SiGooglechrome", "SiPostman"],
+    badges: ["Git", "GitHub", "Vite", "Webpack", "npm", "VS Code", "DevTools", "Git Workflow"],
     order: 5,
   },
   {
@@ -144,12 +150,14 @@ const defaultSkills: SkillItemData[] = [
   },
   {
     id: "build-performance",
-    titleEn: "Build Tools & Web Performance",
-    titleAr: "أدوات البناء وتحسين الأداء",
-    descEn: "Optimizing bundle sizes, tree-shaking, and web vitals to consistently achieve a 95+ score on Google Lighthouse.",
-    descAr: "تحسين سرعة التحميل، وتقليص حجم حزم الكود، والوصول إلى تقييم 95+ على Google Lighthouse ومؤشرات الويب الحيوية.",
-    icons: ["SiVite", "SiWebpack", "SiLighthouse", "SiVercel"],
-    badges: ["95+ Lighthouse", "Core Web Vitals", "Code Splitting", "Lazy Loading"],
+    titleEn: "Performance Optimization & Modern Rendering",
+    titleAr: "تحسين الأداء ومعمارية الرندرة الحديثة",
+    descEn:
+      "Accelerating web experiences with Lazy Loading, API Caching, Server-Side Rendering (SSR), Static Site Generation (SSG), and sub-second Core Web Vitals.",
+    descAr:
+      "تحسين سرعة التصفح وتجربة المستخدم عبر التحميل الكسول (Lazy Loading)، التخزين المؤقت للبيانات (API Caching)، والمعالجة عبر الخادم (SSR) والتوليد الثابت (SSG) لتحقيق أعلى تقييم على Google Lighthouse.",
+    icons: ["SiLighthouse", "SiNextdotjs", "SiVite", "SiWebpack", "SiVercel"],
+    badges: ["Lazy Loading", "API Caching", "Server-Side Rendering (SSR)", "Static Site Generation (SSG)", "Core Web Vitals", "95+ Lighthouse", "Code Splitting"],
     order: 7,
   },
   {
@@ -424,11 +432,28 @@ export const portfolioStore = {
     if (supabase) {
       try {
         const { data, error } = await supabase.from("Project").select("*").order("order", { ascending: true });
-        if (!error && Array.isArray(data)) {
+        if (!error && Array.isArray(data) && data.length > 0) {
           const store = readLocalStore();
-          store.projects = data as any;
+          // Merge Supabase projects with any local-only metadata (like githubPrivate or features)
+          const merged = data.map((d: any) => {
+            const local = store.projects.find((p: any) => p.id === d.id || p.slug === d.slug);
+            return {
+              ...d,
+              githubPrivate: d.githubPrivate ?? local?.githubPrivate ?? false,
+              featuresEn: d.featuresEn || local?.featuresEn,
+              featuresAr: d.featuresAr || local?.featuresAr,
+            };
+          });
+
+          // Also include any local projects that are not yet in Supabase
+          const nonSupabase = store.projects.filter(
+            (lp: any) => !data.some((sp: any) => sp.id === lp.id || sp.slug === lp.slug)
+          );
+          const fullList = [...merged, ...nonSupabase].sort((a: any, b: any) => (a.order ?? 0) - (b.order ?? 0));
+
+          store.projects = fullList as any;
           writeLocalStore(store);
-          return data as any;
+          return fullList as any;
         }
       } catch (err) {
         console.warn("[Supabase] getProjects fallback:", err);
@@ -446,12 +471,13 @@ export const portfolioStore = {
       ...projectData,
       id,
       slug,
+      githubPrivate: Boolean(projectData.githubPrivate),
       tags: Array.isArray(projectData.tags) ? projectData.tags : (projectData.tags || "").split(",").map((s: string) => s.trim()).filter(Boolean),
       featured: projectData.featured ?? true,
       order: projectData.order ?? 0,
     };
 
-    const existingIdx = store.projects.findIndex((p) => p.id === id);
+    const existingIdx = store.projects.findIndex((p) => p.id === id || p.slug === slug);
     if (existingIdx >= 0) {
       store.projects[existingIdx] = fullProject;
     } else {
@@ -461,7 +487,7 @@ export const portfolioStore = {
 
     if (supabase) {
       try {
-        await supabase.from("Project").upsert({
+        const payload: any = {
           id: fullProject.id,
           slug: fullProject.slug,
           titleEn: fullProject.titleEn,
@@ -475,7 +501,17 @@ export const portfolioStore = {
           featured: fullProject.featured,
           order: fullProject.order,
           updatedAt: new Date().toISOString(),
+        };
+
+        const { error: upsertErr } = await supabase.from("Project").upsert({
+          ...payload,
+          githubPrivate: fullProject.githubPrivate,
         });
+
+        if (upsertErr) {
+          // If githubPrivate column is not in schema cache, fallback to base payload
+          await supabase.from("Project").upsert(payload);
+        }
       } catch (err) {
         console.warn("[Supabase] saveProject error:", err);
       }

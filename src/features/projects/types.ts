@@ -12,9 +12,10 @@ export interface Project {
   descriptionEn: string;
   descriptionAr: string;
   videoUrl: string;
-  posterUrl?: string;
-  liveUrl?: string;
-  githubUrl?: string;
+  posterUrl?: string | null;
+  liveUrl?: string | null;
+  githubUrl?: string | null;
+  githubPrivate?: boolean;
   tags: string[];
   featured: boolean;
   order: number;

@@ -120,6 +120,7 @@ export default function DashboardPage() {
     videoUrl: "",
     liveUrl: "",
     githubUrl: "",
+    githubPrivate: false,
     tags: "",
     featured: true,
     order: 0,
@@ -1115,6 +1116,7 @@ export default function DashboardPage() {
                       videoUrl: "",
                       liveUrl: "",
                       githubUrl: "",
+                      githubPrivate: false,
                       tags: "",
                       featured: true,
                       order: projects.length + 1,
@@ -1153,9 +1155,17 @@ export default function DashboardPage() {
                     </div>
 
                     <div>
-                      <h4 className="text-lg font-medium text-white mb-1">
-                        {isRtl ? proj.titleAr : proj.titleEn}
-                      </h4>
+                      <div className="flex items-center justify-between gap-2 mb-1">
+                        <h4 className="text-lg font-medium text-white">
+                          {isRtl ? proj.titleAr : proj.titleEn}
+                        </h4>
+                        {proj.githubPrivate && (
+                          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-medium bg-amber-500/15 text-amber-400 border border-amber-500/30 shrink-0">
+                            <FiLock className="w-3 h-3" />
+                            <span>{isRtl ? "مستودع خاص (عميل)" : "Private Repo"}</span>
+                          </span>
+                        )}
+                      </div>
                       <p className="text-xs text-neutral-400 line-clamp-2">
                         {isRtl ? proj.descriptionAr : proj.descriptionEn}
                       </p>
@@ -1170,6 +1180,7 @@ export default function DashboardPage() {
                           onClick={() => {
                             setEditingProject({
                               ...proj,
+                              githubPrivate: proj.githubPrivate ?? false,
                               tags: Array.isArray(proj.tags) ? proj.tags.join(", ") : (proj.tags || ""),
                             });
                             setIsProjectModalOpen(true);
@@ -1928,7 +1939,7 @@ export default function DashboardPage() {
                   </div>
                 </div>
 
-                {/* URLs & Tags */}
+                {/* URLs, GitHub Private & Tags */}
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                   <div>
                     <label className="block text-xs text-neutral-400 mb-1">Live URL</label>
@@ -1942,13 +1953,18 @@ export default function DashboardPage() {
                   </div>
 
                   <div>
-                    <label className="block text-xs text-neutral-400 mb-1">GitHub Repo</label>
+                    <label className="block text-xs text-neutral-400 mb-1">
+                      {editingProject.githubPrivate
+                        ? (isRtl ? "GitHub (مستودع خاص)" : "GitHub (Private Repo)")
+                        : "GitHub Repo URL"}
+                    </label>
                     <input
                       type="url"
+                      disabled={editingProject.githubPrivate}
                       value={editingProject.githubUrl || ""}
                       onChange={(e) => setEditingProject({ ...editingProject, githubUrl: e.target.value })}
-                      placeholder="https://github.com/..."
-                      className="w-full px-3.5 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-xs focus:outline-none focus:border-blue-500"
+                      placeholder={editingProject.githubPrivate ? (isRtl ? "المستودع محمي وخاص" : "Repository is private") : "https://github.com/..."}
+                      className="w-full px-3.5 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-xs focus:outline-none focus:border-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
                     />
                   </div>
 
@@ -1962,6 +1978,43 @@ export default function DashboardPage() {
                       className="w-full px-3.5 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-xs focus:outline-none focus:border-blue-500"
                     />
                   </div>
+                </div>
+
+                {/* Private GitHub Repo Toggle */}
+                <div className="p-3.5 rounded-2xl bg-white/[0.03] border border-white/10 flex items-center justify-between gap-4">
+                  <div className="flex items-start gap-3">
+                    <div className={`p-2 rounded-xl border ${editingProject.githubPrivate ? "bg-amber-500/20 border-amber-500/40 text-amber-400" : "bg-white/5 border-white/10 text-neutral-400"}`}>
+                      <FiLock className="w-4 h-4" />
+                    </div>
+                    <div>
+                      <h4 className="text-xs font-medium text-white">
+                        {isRtl
+                          ? "مستودع GitHub خاص (مشروع عميل / شركة)"
+                          : "Private GitHub Repository (Client / Company NDA)"}
+                      </h4>
+                      <p className="text-[11px] text-neutral-400 mt-0.5 leading-relaxed">
+                        {isRtl
+                          ? "تفعيل هذا الخيار يُظهر شارة توضح أن الكود خاص وغير متاح للعامة بناءً على طلب العميل أو الشركة."
+                          : "Enable this to mark the project as private/confidential. Displays a private repo badge on project details."}
+                      </p>
+                    </div>
+                  </div>
+
+                  <label className="relative inline-flex items-center cursor-pointer shrink-0">
+                    <input
+                      type="checkbox"
+                      checked={editingProject.githubPrivate || false}
+                      onChange={(e) =>
+                        setEditingProject({
+                          ...editingProject,
+                          githubPrivate: e.target.checked,
+                          githubUrl: e.target.checked ? "" : editingProject.githubUrl,
+                        })
+                      }
+                      className="sr-only peer"
+                    />
+                    <div className="w-11 h-6 bg-white/10 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-neutral-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-amber-500"></div>
+                  </label>
                 </div>
 
                 <div className="flex items-center justify-end gap-3 pt-4 border-t border-white/10">
