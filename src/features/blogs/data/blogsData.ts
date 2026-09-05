@@ -2,6 +2,431 @@ import { BlogPost } from "../types";
 
 export const blogsData: BlogPost[] = [
   {
+    id: "blog-rendering-techniques-csr-ssr-ssg-isr",
+    slug: "nextjs-rendering-techniques-csr-ssr-ssg-isr",
+    titleEn: "Next.js Rendering Strategies: Complete Guide to CSR, SSR, SSG & ISR",
+    titleAr: "تقنيات تصيير الويب في React و Next.js: المقارنة الشاملة بين CSR و SSR و SSG و ISR",
+    excerptEn: "A deep dive into Next.js & React rendering techniques (CSR, SSR, SSG, and ISR). Discover how each strategy works under the hood, its direct impact on Googlebot crawling and SEO, and real TypeScript code examples.",
+    excerptAr: "دليل شامل ومفصل يشرح تقنيات تصيير الويب في React و Next.js مع مقارنة عملية بين CSR و SSR و SSG و ISR، وتأثير كل استراتيجية على عناكب بحث جوجل (SEO) والأداء مع الأكواد البرمجية.",
+    coverImage: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=1200&q=80",
+    categoryEn: "Next.js & Architecture",
+    categoryAr: "نكست جي إس ومعمارية الويب",
+    tags: ["Next.js", "React", "CSR", "SSR", "SSG", "ISR", "SEO", "TypeScript", "Performance"],
+    author: {
+      name: "Mohamed H. Mowafy",
+      roleEn: "Front-End Developer",
+      roleAr: "مطور واجهات أمامية",
+      avatar: "/me.png",
+    },
+    readTimeEn: "7 min read",
+    readTimeAr: "7 دقائق قراءة",
+    publishedAt: "2026-09",
+    contentEn: {
+      intro: "Hello, my friend! If you are building with Next.js or React.js, this post is specifically crafted for you. We will break down the essential rendering techniques that define modern web architecture: CSR, SSR, SSG, and ISR. You have probably heard of them, but together we will uncover how each mechanism works under the hood, how search engine crawlers interact with your pages, and how to choose the ideal strategy for your application.",
+      sections: [
+        {
+          heading: "1. Client-Side Rendering (CSR): Mechanics & SEO Pitfalls",
+          body: "In Client-Side Rendering, the user's browser is entirely responsible for generating HTML and executing UI logic. When a visitor requests your page, the server returns an almost bare HTML file with a root element (e.g., <div id='root'></div>) and a bundle of JavaScript. The browser downloads the scripts, compiles the code, fetches data, and injects elements into the DOM.\n\nDoes CSR deliver good SEO? Absolutely not. Search engine crawlers (like Googlebot) crawl the web to index page content. When a crawler hits a pure CSR application, it initially sees a blank white page because JavaScript has not yet executed. Consequently, the crawler cannot parse headings, semantic text, or internal links, resulting in poor ranking and indexing delays.\n\nIn Next.js 14 and above (App Router), components are Server Components by default. To opt into CSR, you declare the 'use client' directive at the very top of the file. You use this when dealing with React hooks (useState, useEffect), DOM events, and browser APIs.",
+          codeSnippet: `"use client";
+import { useEffect, useState } from "react";
+
+interface Project {
+  sectionID: number;
+  name: string;
+}
+
+const ClientSide: React.FC = () => {
+  const [projects, setProjects] = useState<Project[]>([]);
+
+  const getProjects = async () => {
+    try {
+      const res = await fetch("https://example.runasp.net/api/Donations/GetAllSections");
+      if (!res.ok) {
+        console.warn("API returned an error:", res.status);
+        return;
+      }
+      const data = await res.json();
+      setProjects(data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    getProjects();
+  }, []);
+
+  return (
+    <div className="bg-[#EEE] p-4 rounded-lg">
+      <h2 className="text-2xl text-blue-400 font-semibold mb-1">CSR Technique</h2>
+      <p className="text-black/70 leading-6 text-lg mb-5">
+        Client-Side Rendering: Data fetching and DOM rendering occur entirely inside the browser.
+      </p>
+      <div className="bg-white p-4 rounded-lg">
+        {projects.map((ele) => (
+          <div key={ele.sectionID} className="mb-3">
+            <h3 className="text-2xl text-right bg-[#EEE] p-2 rounded-sm">{ele.name}</h3>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+export default ClientSide;`,
+        },
+        {
+          heading: "2. Server-Side Rendering (SSR): Full On-Demand HTML",
+          body: "Server-Side Rendering flips the equation: the server assumes full responsibility for generating the complete HTML document on every single request. When a user or crawler visits the URL, the server executes backend logic, queries databases or REST APIs, constructs the ready HTML markup, and streams it back.\n\nThis guarantees stellar SEO. Search engine crawlers immediately index fully formed markup, semantic headings, and rich meta tags without waiting for client-side JavaScript execution.\n\nIn Next.js App Router, any Server Component fetching data with cache: 'no-store' triggers on-demand SSR on every incoming request.",
+          codeSnippet: `// Server-Side Rendering (SSR) in Next.js Server Component
+// Runs on every incoming request on the server (Dynamic On-Demand Rendering)
+
+interface Project {
+  sectionID: number;
+  name: string;
+}
+
+const getProjectsSSR = async (): Promise<Project[]> => {
+  const res = await fetch("https://example.runasp.net/api/Donations/GetAllSections", {
+    cache: "no-store", // SSR: No caching, fetches fresh data on every request
+  });
+
+  if (!res.ok) {
+    throw new Error("Failed to fetch fresh data on server");
+  }
+
+  return res.json();
+};
+
+export default async function SSRBlog() {
+  const projects = await getProjectsSSR();
+
+  return (
+    <div className="bg-[#EEE] p-4 rounded-lg">
+      <h2 className="text-2xl text-blue-500 font-bold mb-2">SSR Technique</h2>
+      <p className="text-neutral-700 mb-4">
+        Pre-rendered HTML ready for instant crawlers with fresh real-time data.
+      </p>
+      <div className="bg-white p-4 rounded-lg space-y-3">
+        {projects.map((item) => (
+          <h3 key={item.sectionID} className="text-xl bg-[#EEE] p-2 rounded">
+            {item.name}
+          </h3>
+        ))}
+      </div>
+    </div>
+  );
+}`,
+        },
+        {
+          heading: "3. Static Site Generation (SSG): Maximum Speed at Build-Time",
+          body: "Static Site Generation pre-renders all HTML pages ahead of time during the application build phase (next build). The resulting HTML and JSON files are cached statically and served worldwide via Global Edge Content Delivery Networks (CDNs).\n\nThe primary advantages are blazing fast load times (<100ms TTFB), 100/100 Core Web Vitals scores, and zero server CPU load under high traffic. However, the tradeoff is freshness: if content changes in your database, visitors will not see the updates until you trigger a completely new build and deployment of the entire project.\n\nIn Next.js, SSG is achieved using cache: 'force-cache' in fetch requests.",
+          codeSnippet: `// Static Site Generation (SSG) in Next.js Server Component
+// Pre-rendered once at build time and cached across Edge CDNs
+
+interface Project {
+  sectionID: number;
+  name: string;
+}
+
+const getProjectsSSG = async (): Promise<Project[]> => {
+  try {
+    const res = await fetch("https://example.runasp.net/api/Donations/GetAllSections", {
+      cache: "force-cache", // SSG: Cached permanently until next application build
+    });
+
+    if (!res.ok) {
+      console.warn("API returned an error:", res.status);
+      return [];
+    }
+
+    return await res.json();
+  } catch (error) {
+    console.error(error);
+    return [];
+  }
+};
+
+export default async function SSGBlog() {
+  const projects = await getProjectsSSG();
+
+  return (
+    <div className="bg-[#EEE] p-4 rounded-lg">
+      <h2 className="text-2xl text-blue-400 font-semibold mb-1">SSG Technique</h2>
+      <div className="bg-white p-4 rounded-lg">
+        {projects.map((ele: Project) => (
+          <div key={ele.sectionID} className="mb-3">
+            <h3 className="text-2xl text-right bg-[#EEE] p-2 rounded-sm">{ele.name}</h3>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}`,
+        },
+        {
+          heading: "4. Incremental Static Regeneration (ISR): The Best of Both Worlds",
+          body: "This is where Next.js truly shines. Incremental Static Regeneration combines the blistering speed of SSG with the dynamism of SSR without requiring a full site rebuild.\n\nWith ISR, you define a revalidation interval in seconds. Next.js delivers the ultra-fast static cached page from the CDN. Once the revalidation timer elapses and a new request arrives, Next.js triggers a background regeneration of that specific page, invalidates the old cache, and serves the updated page to subsequent visitors seamlessly.\n\nHere is the complete comparison snippet highlighting SSG, ISR, and SSR cache controls in a Next.js Server Component:",
+          codeSnippet: `// static site generation => ssg/ssr/isr techniques comparison
+interface Project {
+  sectionID: number;
+  name: string;
+}
+
+const getProjects = async () => {
+  try {
+    const res = await fetch("https://example.runasp.net/api/Donations/GetAllSections", {
+      // 1. SSG: Pre-rendered at build time
+      // cache: "force-cache", 
+
+      // 2. ISR: Background revalidation every 30 seconds without rebuilding entire site
+      next: { revalidate: 30 }, 
+
+      // 3. SSR: Fetched fresh on every single client request
+      // cache: "no-store", 
+    });
+
+    if (!res.ok) {
+      console.warn("API returned an error:", res.status);
+      return []; // fallback data
+    }
+
+    const data = await res.json();
+    return data;
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
+};
+
+const Blog: React.FC = async () => {
+  const projects = await getProjects();
+
+  return (
+    <div className="bg-[#EEE] p-4 rounded-lg">
+      <h2 className="text-2xl text-blue-400 font-semibold mb-1">ISR Technique</h2>
+      <div className="bg-white p-4 rounded-lg">
+        {projects.map((ele: Project) => (
+          <div key={ele.sectionID} className="mb-3">
+            <h3 className="text-2xl text-right bg-[#EEE] p-2 rounded-sm">{ele.name}</h3>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+export default Blog;`,
+        },
+      ],
+      conclusion: "Summary: If you are building authenticated user dashboards or highly interactive widgets, CSR with Client Components is the natural choice. If you have real-time dynamic data that requires instant SEO indexing, use SSR. For marketing pages and documentation, SSG provides unmatched speed. And for high-traffic blogs, e-commerce stores, and catalogs, ISR provides the ultimate balance between performance and freshness.",
+    },
+    contentAr: {
+      intro: "ازيك يا صديقي العزيز! لو أنت شغال بـ Next.js أو React.js فالبوست ده ليك خصيصاً. هنتكلم فيه عن أهم تقنيات التصيير (Rendering Techniques) اللي بتشكل معمارية تطبيقات الويب الحديثة: CSR و SSR و SSG و ISR. أكيد سمعت بيهم وعارفهم، ولكن في السطور دي هنشرحهم مع بعض خطوة بخطوة، ونفهم كواليس كل تقنية، إزاي عناكب جوجل ومحركات البحث بتتعامل معاها، ومتى تختار كل واحدة في مشروعك. يلا بينا نبدأ في أول technique!",
+      sections: [
+        {
+          heading: "1. التصيير من جانب العميل: Client-Side Rendering (CSR)",
+          body: "باختصار، التقنية دي أنت أكيد عارفها: المتصفح (Browser) هو المسؤول الأول والأخير عن عملية الـ Rendering. يعني بالبساطة كده كود الـ JavaScript هو اللي بيولد عناصر الـ HTML وبيشغل الموقع على جهاز المستخدم.\n\nطب هل الـ technique ده هيحقق الـ SEO المطلوب؟ لا طبعاً! وتعال نعرف ليه:\nفي محركات البحث عندك حاجة اسمها 'عناكب جوجل' (Googlebot / Web Crawlers) ودي اللي بتحقق مبدأ وفهرسة الـ SEO. ولما بتيجي العناكب دي تعمل Crawl للموقع بتاعك لو أنت شغال بالـ CSR البحت، بتستلم ملف HTML فاضي تقريباً (مجرد <div id='root'></div>)، فبتلاقي صفحة بيضاااااا! فمش هتعرف تفهرس أو تقرأ محتوى الموقع بتاعك، وبكده موقعك هيكون الـ SEO بتاعه ضعيف جداً.\n\nطب لو محتاج أشغل الـ technique ده في Next.js (سواء الإصدار 14 أو أحدث) هعمل إيه؟\nبص يا سيدي: في Next.js المكونات افتراضياً Server Components، وعشان تشغل الـ technique ده هتحط الـ Directive ده في بداية الصفحة 'use client'. وطبعاً استخداماته الأساسية بتكون مع الـ Hooks التفاعلية زي useEffect و useState وغيرهم للتعامل المباشر مع المتصفح والـ DOM كما في الكود التالي:",
+          codeSnippet: `"use client";
+import { useEffect, useState } from "react";
+
+interface Project {
+  sectionID: number;
+  name: string;
+}
+
+const ClientSide: React.FC = () => {
+  const [projects, setProjects] = useState<Project[]>([]);
+
+  const getProjects = async () => {
+    try {
+      const res = await fetch("https://example.runasp.net/api/Donations/GetAllSections");
+      if (!res.ok) {
+        console.warn("API returned an error:", res.status);
+        return;
+      }
+      const data = await res.json();
+      setProjects(data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    getProjects();
+  }, []);
+
+  return (
+    <div className="bg-[#EEE] p-4 rounded-lg">
+      <h2 className="text-2xl text-blue-400 font-semibold mb-1">CSR Technique</h2>
+      <p className="text-black/70 leading-6 text-lg mb-5">
+        Client-Side Rendering: يتم جلب البيانات وبناء عناصر الواجهة بالكامل داخل متصفح المستخدم.
+      </p>
+      <div className="bg-white p-4 rounded-lg">
+        {projects.map((ele) => (
+          <div key={ele.sectionID} className="mb-3">
+            <h3 className="text-2xl text-right bg-[#EEE] p-2 rounded-sm">{ele.name}</h3>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+export default ClientSide;`,
+        },
+        {
+          heading: "2. التصيير من جانب الخادم: Server-Side Rendering (SSR)",
+          body: "الـ technique ده بقى بيعمل العكس خالص وهو إن السيرفر هو المسؤول عن عملية الـ Rendering. يعني السيرفر بيعالج الكود وبيجلب البيانات من الـ API أو قاعدة البيانات وبيعمل Render للـ HTML ويبعتها للمتصفح جاهزة تماماً. المتصفح بيعرضها على طول وبكده الـ SEO بتاعك هيكون عالي جداااا لأن عناكب جوجل هتقدر تـ crawl الموقع بتاعك بسهولة لأن الـ HTML جاهز ومكتمل بدون أي انتظار لجافا سكريبت.\n\nطب لو محتاج أشغل الـ technique ده في Next.js هعمل إيه؟\nفي Next.js في الـ App Router أي Server Component يعتبر افتراضياً شغال على السيرفر. ولو بتعمل fetch لبيانات وعايزها تطلب في كل Request مباشرة من غير كاش بنحدد خيار الكاش cache: 'no-store' كالتالي:",
+          codeSnippet: `// Server-Side Rendering (SSR) in Next.js Server Component
+// يتم جلب البيانات في كل طلب يرسله المستخدم مباشرة من السيرفر بدون كاش
+
+interface Project {
+  sectionID: number;
+  name: string;
+}
+
+const getProjectsSSR = async (): Promise<Project[]> => {
+  const res = await fetch("https://example.runasp.net/api/Donations/GetAllSections", {
+    cache: "no-store", // SSR: Runs on request in the case of SSR (No Store)
+  });
+
+  if (!res.ok) {
+    throw new Error("فشل في جلب البيانات من الخادم");
+  }
+
+  return res.json();
+};
+
+export default async function SSRBlogPage() {
+  const projects = await getProjectsSSR();
+
+  return (
+    <div className="bg-[#EEE] p-4 rounded-lg">
+      <h2 className="text-2xl text-blue-500 font-bold mb-2">SSR Technique</h2>
+      <p className="text-neutral-700 mb-4">
+        HTML جاهز بالكامل من السيرفر - ممتاز لأرشفة عناكب جوجل ومثالي للبيانات المتغيرة لحظياً.
+      </p>
+      <div className="bg-white p-4 rounded-lg space-y-3">
+        {projects.map((item) => (
+          <h3 key={item.sectionID} className="text-xl bg-[#EEE] p-2 rounded">
+            {item.name}
+          </h3>
+        ))}
+      </div>
+    </div>
+  );
+}`,
+        },
+        {
+          heading: "3. التوليد الثابت للموقع: Static Site Generation (SSG)",
+          body: "تالت تقنية معانا هي Static Site Generation (SSG). التقنية دي بقى بتعمل render لصفحات الـ HTML وقت الـ Build للمشروع! يعني الصفحات بتتولد مرة واحدة بس وتتخزن كملفات Static في السيرفر أو على شبكات الـ CDN العالمية.\n\nالميزة الجبارة هنا هي السرعة الخارقة والـ SEO الممتاز وتحقيق علامة 100% في Core Web Vitals لأن السيرفر بيبعت الملفات الجاهزة فوراً، لكن عيبها إن لو البيانات اتغيرت في الـ Database، الصفحة مش هتحدث غير لو عملت Build جديد للموقع بالكامل!\n\nوفي Next.js عشان نستخدم الـ SSG بنعمل fetch مع خيار الكاش force-cache كالتالي:",
+          codeSnippet: `// Static Site Generation (SSG) in Next.js Server Component
+// يتم توليد صفحات الـ HTML مسبقاً وقت الـ Build وتخزينها على الـ CDN
+
+interface Project {
+  sectionID: number;
+  name: string;
+}
+
+const getProjectsSSG = async (): Promise<Project[]> => {
+  try {
+    const res = await fetch("https://example.runasp.net/api/Donations/GetAllSections", {
+      cache: "force-cache", // SSG: Runs at build time and cached statically
+    });
+
+    if (!res.ok) {
+      console.warn("API returned an error:", res.status);
+      return [];
+    }
+
+    const data = await res.json();
+    return data;
+  } catch (error) {
+    console.error(error);
+    return [];
+  }
+};
+
+export default async function SSGBlogPage() {
+  const projects = await getProjectsSSG();
+
+  return (
+    <div className="bg-[#EEE] p-4 rounded-lg">
+      <h2 className="text-2xl text-blue-400 font-semibold mb-1">SSG Technique</h2>
+      <p className="text-black/70 leading-6 text-lg mb-5">
+        أسرع استجابة ممكنة مع كاش دائم للصفحات الجاهزة.
+      </p>
+      <div className="bg-white p-4 rounded-lg">
+        {projects.map((ele: Project) => (
+          <div key={ele.sectionID} className="mb-3">
+            <h3 className="text-2xl text-right bg-[#EEE] p-2 rounded-sm">{ele.name}</h3>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}`,
+        },
+        {
+          heading: "4. إعادة التوليد الثابت التدريجي: Incremental Static Regeneration (ISR)",
+          body: "رابع تقنية معانا هي الـ Incremental Static Regeneration (ISR). وهنا يجي دور التقنية العبقرية دي اللي جمعت بين مميزات الـ SSG وسرعته الخارقة، وبين قدرة الـ SSR على تحديث البيانات!\n\nالـ ISR بتخليك تحدد وقت معين (بالثواني) للصفحة، فـ Next.js يولد الصفحة كـ Static وتفضل سريعة، وأول ما الوقت ده يعدي وحد يطلب الصفحة، بيتعمل لها Revalidation وإعادة بناء في الخلفية وتحديث للبيانات بدون ما تحتاج تعمل Build كامل للمشروع!\n\nوفي الكود المرفق بالأسفل، يظهر الكود المشترك الذي يوضح الفروقات بين خيارات الـ fetch الثلاثة (SSG و ISR و SSR):",
+          codeSnippet: `// static site generation => ssg/ssr/isr techniques
+interface Project {
+  sectionID: number;
+  name: string;
+}
+
+const getProjects = async () => {
+  try {
+    const res = await fetch("https://example.runasp.net/api/Donations/GetAllSections", {
+      // 1. SSG: Runs at build-time (Static Site Generation)
+      // cache: "force-cache", 
+
+      // 2. ISR: Revalidates on request in the background every 30s
+      next: { revalidate: 30 }, 
+
+      // 3. SSR: Runs on every single request in the case of SSR
+      // cache: "no-store", 
+    });
+
+    if (!res.ok) {
+      console.warn("API returned an error:", res.status);
+      return []; // fallback data
+    }
+
+    const data = await res.json();
+    return data;
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
+};
+
+const Blog: React.FC = async () => {
+  const projects = await getProjects();
+
+  return (
+    <div className="bg-[#EEE] p-4 rounded-lg">
+      <h2 className="text-2xl text-blue-400 font-semibold mb-1">ISR Technique</h2>
+      <div className="bg-white p-4 rounded-lg">
+        {projects.map((ele: Project) => (
+          <div key={ele.sectionID} className="mb-3">
+            <h3 className="text-2xl text-right bg-[#EEE] p-2 rounded-sm">{ele.name}</h3>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+export default Blog;`,
+        },
+      ],
+      conclusion: "خلاصة القول يا صديقي: إذا كانت الصفحة لوحة تحكم خاصة (Dashboard) أو تحتاج تفاعلات معقدة مع المتصفح، فـ CSR مع 'use client' هي الخيار الطبيعي. أما إذا كانت صفحة تتغير بياناتها في كل لحظة وتحتاج SEO قوي وفوري، فـ SSR هو الحل. وإذا كانت مقالات مدونة أو صفحات هبوط شبه ثابتة، فـ SSG هو الأسرع والأوفر في الموارد. ولتحقيق المعادلة الذهبية بين السرعة الخارقة وتحديث المحتوى، فإن ISR هو الاختيار الأذكى في Next.js.",
+    },
+  },
+  {
     id: "blog-1",
     slug: "mastering-web-animations-gsap-framer-motion",
     titleEn: "Building 60FPS Fluid Web Animations with GSAP & Framer Motion",

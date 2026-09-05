@@ -35,6 +35,45 @@
   ],
   "projects": [
     {
+      "id": "proj-1788541272452",
+      "slug": "sohighla",
+      "titleEn": "sohighla",
+      "titleAr": "شغلة",
+      "descriptionEn": "Shogla is a modern on-demand digital marketplace designed to seamlessly connect homeowners and clients with qualified, trusted local craftsmen and technicians. The platform serves as a direct communication and job facilitation bridge, enabling clients to submit customized service requests and review technician profiles, while empowering craftsmen to review requirements and establish direct service agreements without platform financial friction. To ensure maximum safety and service reliability, craftsmen must undergo a thorough identity verification process before their profiles are published. The application features a comprehensive client dashboard with interaction history for quick re-hiring, alongside a verified rating and review engine that reflects authentic customer feedback. The frontend is engineered with Next.js, TypeScript, and Tailwind CSS, utilizing Zustand for lightweight client state management and integrated with an enterprise ASP.NET Core backend for high performance and scalability.",
+      "descriptionAr": "منصة شغلة هي منصة وساطة رقمية متطورة تهدف إلى تسهيل وصول العملاء إلى أمهر الحرفيين والفنيين الموثوقين في مجالات الصيانة والتشطيبات المنزلية. تعمل المنصة كحلقة وصل ذكية تتيح للعميل استعراض الحرفيين المعتمدين وإنشاء طلبات تواصل وشرح متطلبات العمل ليقوم الحرفي باستقبال الطلب والاتفاق على تفاصيل التعاقد بشكل مباشر وسلس دون تدخل المنصة في المعاملات المالية المباشرة. يتميز النظام بوجود آلية تحقق وتدقيق صارمة تمنع ظهور أي صنايعي في المنصة قبل فحص هويته واعتماده لضمان أعلى مستويات الأمان والموثوقية للعملاء، بالإضافة إلى لوحة تحكم تتيح للمستخدم الاحتفاظ بسجل كامل للصنايعية الذين تم التعامل معهم لسهولة الرجوع إليهم وإعادة طلبهم، مع نظام تقييمات ومراجعات شفافة يعكس جودة الخدمة المقدمة. تم بناء واجهات المشروع بالاعتماد على Next.js و TypeScript و Tailwind CSS مع إدارة الحالة عبر Zustand وربطها بباك إند قوي مبني بـ ASP.NET Core لتقديم تجربة استخدام فائقة السرعة والاستجابة.",
+      "videoUrl": "https://dibrssekkpsbyhvwwzln.supabase.co/storage/v1/object/public/portfolio-media/1788540982041_sohighla.mp4",
+      "liveUrl": "http://sohighla.vercel.app/",
+      "githubUrl": "https://github.com/mohamedhabib102/sohighla",
+      "tags": [
+        "Next.js",
+        "TypeScript",
+        "Tailwind CSS",
+        "Zustand",
+        "ASP.NET Core",
+        "REST APIs",
+        "UI/UX Design"
+      ],
+      "featured": true,
+      "order": 1,
+      "createdAt": "2026-09-04T17:01:13.127516+00:00",
+      "updatedAt": "2026-09-04T17:15:40.676+00:00",
+      "githubPrivate": false,
+      "featuresEn": [
+        "Direct Craftsman Booking: Seamless service requests and communication between clients and verified technicians",
+        "Strict Identity Verification: Rigorous background verification workflows before technician profile publishing",
+        "Smart Re-hiring History: Client dashboard for tracking previous technicians and quick one-click re-hiring",
+        "Transparent Ratings Engine: Authentic user review system reflecting real customer service feedback",
+        "High-Performance UI: Fast Next.js frontend with lightweight Zustand client state management"
+      ],
+      "featuresAr": [
+        "حجز وتواصل مباشر مع الحرفيين: سهولة إنشاء طلبات الصيانة والتواصل مع الفنيين المعتمدين",
+        "نظام تحقق وتدقيق صارم للهوية: فحص واعتماد هويات الحرفيين لضمان أمان وموثوقية الخدمة",
+        "سجل تفاعلي لإعادة الطلب: لوحة تحكم تتيح الاحتفاظ بسجل الصنايعية وسهولة الرجوع إليهم",
+        "محرك تقييمات ومراجعات شفافة: نظام تقييم دقيق يعكس جودة الخدمة الحقيقية",
+        "أداء فائق واستجابة سريعة: واجهات Next.js سريعة مع إدارة خفيفة للحالة عبر Zustand"
+      ]
+    },
+    {
       "id": "proj-serv5-optimization",
       "slug": "serv5-platform-optimization",
       "titleEn": "Serv5 Corporate Platform & Performance Revamp",
@@ -57,7 +96,7 @@
       "featured": true,
       "order": 1,
       "createdAt": "2026-09-04T19:03:36.84857+00:00",
-      "updatedAt": "2026-09-04T19:44:20.916+00:00",
+      "updatedAt": "2026-09-04T19:03:34.469+00:00",
       "githubPrivate": true,
       "featuresEn": [
         "Eliminated heavy loading bottlenecks and optimized scripts for instantaneous page delivery",
@@ -72,6 +111,45 @@
         "إصلاح وضبط التصميم المتجاوب (Responsive Design) لكافة الشاشات والهواتف والأجهزة اللوحية بدقة متناهية",
         "استخدام مكون Next.js Image المدمج لمعالجة الصور تلقائياً ومنع تذبذب وانزياح الواجهة (CLS)",
         "إضافة حركات وتفاعلات بصرية سلسة باستخدام Framer Motion وجافاسكريبت الحديثة"
+      ]
+    },
+    {
+      "id": "proj-1788541485137",
+      "slug": "noor-alhuda",
+      "titleEn": "Noor Alhuda",
+      "titleAr": "نور الهدى",
+      "descriptionEn": "A comprehensive Islamic digital platform engineered with modern web technologies to deliver an enriching, spiritually focused user experience. The platform features Holy Qur’an reading with an intuitive interface, an integrated audio streaming player for listening to renowned Qur’an reciters, and a dedicated morning and evening adhkar section. The system implements seamless Google authentication via NextAuth, a vibrant Community hub allowing users to publish and share insightful religious articles across internal feeds and social media, and an interactive FAQ module addressing common user questions. Built using Next.js, TypeScript, and Tailwind CSS, the application leverages Framer Motion for smooth micro-interactions and Context API for synchronized audio playback and global state management.",
+      "descriptionAr": "\nمنصة إسلامية رقمية شاملة تم بناؤها بأحدث تقنيات الويب لتقديم تجربة إيمانية متكاملة وسلسة للمستخدمين. تتيح المنصة قراءة القرآن الكريم وتصفح الآيات بسهولة، مع مشغل صوتي متقدم للبث والاستماع للتلاوات القرآنية بأصوات نخبة من القراء، بالإضافة إلى قسم خاص لأذكار الصباح والمساء والأدعية المأثورة. يتضمن المشروع نظام تسجيل دخول آمن وسريع بحسابات Google عبر NextAuth، ومجتمعاً تفاعلياً يُمكّن الأعضاء من نشر المقالات الهادفة ومشاركتها داخلياً وعبر وسائل التواصل الاجتماعي لنشر العلم النافع، إلى جانب قسم متكامل للأسئلة الشائعة لدعم استفسارات الزوار. تم تطوير الواجهات باستخدام Next.js و TypeScript و Tailwind CSS، مع توظيف Framer Motion للحركات والتنقلات الانسيابية، و Context API لإدارة حالة التطبيق وتشغيل الصوتيات بكفاءة عالية.",
+      "videoUrl": "https://dibrssekkpsbyhvwwzln.supabase.co/storage/v1/object/public/portfolio-media/1788543258827_2026-09-04_20-08-03.mp4",
+      "liveUrl": "https://noor-alhuda-lyart.vercel.app/",
+      "githubUrl": "https://github.com/mohamedhabib102/noor-alhuda",
+      "tags": [
+        "Next.js",
+        "TypeScript",
+        "Tailwind CSS",
+        "NextAuth",
+        "Context API",
+        "Framer Motion",
+        "Audio Streaming"
+      ],
+      "featured": true,
+      "order": 2,
+      "createdAt": "2026-09-04T17:04:45.381158+00:00",
+      "updatedAt": "2026-09-04T17:35:37.867+00:00",
+      "githubPrivate": false,
+      "featuresEn": [
+        "Quran Reader & Typography: Clean, accessible Arabic font rendering and surah navigation",
+        "Synchronized Audio Streaming: Global audio playback with reciter selection and smooth streaming",
+        "Interactive Community Hub: User publishing and sharing of articles across social networks",
+        "Morning & Evening Adhkar: Dedicated daily remembrance section with counter interactions",
+        "Secure NextAuth Authentication: Google OAuth sign-in with personalized user bookmarking"
+      ],
+      "featuresAr": [
+        "مصحف إلكتروني بخطوط واضحة: تصفح سهل ومريح للآيات والسور القرآنية",
+        "مشغل صوتي متزامن للبث: استماع لتلاوات خاشعة بأصوات كبار القراء مع تحكم صوتي شامل",
+        "مجتمع ومقالات تفاعلية: إمكانية نشر ومشاركة المقالات الهادفة عبر شبكات التواصل",
+        "أذكار الصباح والمساء: قسم مخصص للأدعية والأذكار اليومية مع عداد تسبيح تفاعلي",
+        "تسجيل دخول آمن بـ NextAuth: دعم تسجيل الدخول بحسابات Google لحفظ المقالات والمفضلة"
       ]
     },
     {
@@ -97,7 +175,7 @@
       "featured": true,
       "order": 2,
       "createdAt": "2026-09-04T19:03:37.423162+00:00",
-      "updatedAt": "2026-09-04T19:44:21.949+00:00",
+      "updatedAt": "2026-09-04T19:03:35.483+00:00",
       "githubPrivate": true,
       "featuresEn": [
         "Full Lifecycle Execution: Custom Figma UI/UX architecture translated into a modular Vue.js frontend",
@@ -113,87 +191,92 @@
         "لوحة تحكم Super-Admin متطورة: إدارة شاملة لكافة محتويات الصفحات والخدمات وإعدادات المنصة بالكامل",
         "محرك بحث وفلترة عقارية متقدم: تصفية دقيقة بحسب المنطقة، نوع العقار، الأسعار، والمواصفات"
       ]
-    },
-    {
-      "id": "proj-1788541272452",
-      "slug": "sohighla",
-      "titleEn": "Shogla - On-Demand Craftsmen Marketplace",
-      "titleAr": "منصة شغلة - وساطة رقمية للحرفيين والتشطيبات",
-      "descriptionEn": "Shogla is a modern on-demand digital marketplace designed to seamlessly connect homeowners and clients with qualified, trusted local craftsmen and technicians. The platform enables clients to submit customized service requests, review technician profiles, and establish direct service agreements. To ensure safety and service reliability, craftsmen undergo an identity verification process. Built with Next.js, TypeScript, and Tailwind CSS with Zustand state management.",
-      "descriptionAr": "منصة شغلة هي منصة وساطة رقمية متطورة تهدف إلى تسهيل وصول العملاء إلى أمهر الحرفيين والفنيين الموثوقين في مجالات الصيانة والتشطيبات المنزلية. تعمل المنصة كحلقة وصل ذكية تتيح للعميل استعراض الحرفيين المعتمدين وإنشاء طلبات تواصل وشرح متطلبات العمل ليقوم الحرفي باستقبال الطلب والاتفاق المباشر. تم بناء واجهات المشروع بالاعتماد على Next.js و TypeScript و Tailwind CSS مع إدارة الحالة عبر Zustand.",
-      "videoUrl": "https://dibrssekkpsbyhvwwzln.supabase.co/storage/v1/object/public/portfolio-media/1788540982041_sohighla.mp4",
-      "liveUrl": "http://sohighla.vercel.app/",
-      "githubUrl": "https://github.com/mohamedhabib102/sohighla",
-      "tags": [
-        "Next.js",
-        "TypeScript",
-        "Tailwind CSS",
-        "Zustand",
-        "ASP.NET Core",
-        "REST APIs",
-        "UI/UX Design"
-      ],
-      "featured": true,
-      "order": 3,
-      "createdAt": "2026-09-04T17:01:13.127516+00:00",
-      "updatedAt": "2026-09-04T19:44:24.153+00:00",
-      "githubPrivate": false,
-      "featuresEn": [
-        "Direct Craftsman Booking: Seamless service requests and communication between clients and verified technicians",
-        "Strict Identity Verification: Rigorous background verification workflows before technician profile publishing",
-        "Smart Re-hiring History: Client dashboard for tracking previous technicians and quick one-click re-hiring",
-        "Transparent Ratings Engine: Authentic user review system reflecting real customer service feedback",
-        "High-Performance UI: Fast Next.js frontend with lightweight Zustand client state management"
-      ],
-      "featuresAr": [
-        "حجز وتواصل مباشر مع الحرفيين: سهولة إنشاء طلبات الصيانة والتواصل مع الفنيين المعتمدين",
-        "نظام تحقق وتدقيق صارم للهوية: فحص واعتماد هويات الحرفيين لضمان أمان وموثوقية الخدمة",
-        "سجل تفاعلي لإعادة الطلب: لوحة تحكم تتيح الاحتفاظ بسجل الصنايعية وسهولة الرجوع إليهم",
-        "محرك تقييمات ومراجعات شفافة: نظام تقييم دقيق يعكس جودة الخدمة الحقيقية",
-        "أداء فائق واستجابة سريعة: واجهات Next.js سريعة مع إدارة خفيفة للحالة عبر Zustand"
-      ]
-    },
-    {
-      "id": "proj-1788541485137",
-      "slug": "noor-alhuda",
-      "titleEn": "Noor Alhuda - Islamic Platform & Audio Streaming",
-      "titleAr": "منصة نور الهدى - منصة إسلامية وبث صوتي تفاعلي",
-      "descriptionEn": "A comprehensive Islamic digital platform engineered with modern web technologies. Features Holy Qur’an reading with an intuitive interface, audio streaming player for listening to renowned Qur’an reciters, morning/evening adhkar, Google authentication via NextAuth, and an interactive Community hub for publishing and sharing articles. Built using Next.js, TypeScript, Tailwind CSS, Framer Motion, and Context API.",
-      "descriptionAr": "منصة إسلامية رقمية شاملة تم بناؤها بأحدث تقنيات الويب لتقديم تجربة إيمانية متكاملة وسلسة. تتيح المنصة قراءة القرآن الكريم وتصفح الآيات بسهولة، مع مشغل صوتي متقدم للبث والاستماع للتلاوات القرآنية، وقسم خاص لأذكار الصباح والمساء، وتسجيل دخول آمن بحسابات Google عبر NextAuth، ومجتمع تفاعلي لنشر ومشاركة المقالات الهادفة. تم التطوير باستخدام Next.js و TypeScript و Tailwind CSS و Framer Motion و Context API.",
-      "videoUrl": "https://dibrssekkpsbyhvwwzln.supabase.co/storage/v1/object/public/portfolio-media/1788543258827_2026-09-04_20-08-03.mp4",
-      "liveUrl": "https://noor-alhuda-lyart.vercel.app/",
-      "githubUrl": "https://github.com/mohamedhabib102/noor-alhuda",
-      "tags": [
-        "Next.js",
-        "TypeScript",
-        "Tailwind CSS",
-        "NextAuth",
-        "Context API",
-        "Framer Motion",
-        "Audio Streaming"
-      ],
-      "featured": true,
-      "order": 4,
-      "createdAt": "2026-09-04T17:04:45.381158+00:00",
-      "updatedAt": "2026-09-04T19:44:25.056+00:00",
-      "githubPrivate": false,
-      "featuresEn": [
-        "Quran Reader & Typography: Clean, accessible Arabic font rendering and surah navigation",
-        "Synchronized Audio Streaming: Global audio playback with reciter selection and smooth streaming",
-        "Interactive Community Hub: User publishing and sharing of articles across social networks",
-        "Morning & Evening Adhkar: Dedicated daily remembrance section with counter interactions",
-        "Secure NextAuth Authentication: Google OAuth sign-in with personalized user bookmarking"
-      ],
-      "featuresAr": [
-        "مصحف إلكتروني بخطوط واضحة: تصفح سهل ومريح للآيات والسور القرآنية",
-        "مشغل صوتي متزامن للبث: استماع لتلاوات خاشعة بأصوات كبار القراء مع تحكم صوتي شامل",
-        "مجتمع ومقالات تفاعلية: إمكانية نشر ومشاركة المقالات الهادفة عبر شبكات التواصل",
-        "أذكار الصباح والمساء: قسم مخصص للأدعية والأذكار اليومية مع عداد تسبيح تفاعلي",
-        "تسجيل دخول آمن بـ NextAuth: دعم تسجيل الدخول بحسابات Google لحفظ المقالات والمفضلة"
-      ]
     }
   ],
   "blogs": [
+    {
+      "id": "blog-rendering-techniques-csr-ssr-ssg-isr",
+      "slug": "nextjs-rendering-techniques-csr-ssr-ssg-isr",
+      "titleEn": "Next.js Rendering Strategies: Complete Guide to CSR, SSR, SSG & ISR",
+      "titleAr": "تقنيات تصيير الويب في React و Next.js: المقارنة الشاملة بين CSR و SSR و SSG و ISR",
+      "excerptEn": "A deep dive into Next.js & React rendering techniques (CSR, SSR, SSG, and ISR). Discover how each strategy works under the hood, its direct impact on Googlebot crawling and SEO, and real TypeScript code examples.",
+      "excerptAr": "دليل شامل ومفصل يشرح تقنيات تصيير الويب في React و Next.js مع مقارنة عملية بين CSR و SSR و SSG و ISR، وتأثير كل استراتيجية على عناكب بحث جوجل (SEO) والأداء مع الأكواد البرمجية.",
+      "coverImage": "https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=1200&q=80",
+      "categoryEn": "Next.js & Architecture",
+      "categoryAr": "نكست جي إس ومعمارية الويب",
+      "tags": [
+        "Next.js",
+        "React",
+        "CSR",
+        "SSR",
+        "SSG",
+        "ISR",
+        "SEO",
+        "TypeScript",
+        "Performance"
+      ],
+      "author": {
+        "name": "Mohamed H. Mowafy",
+        "roleEn": "Front-End Developer",
+        "roleAr": "مطور واجهات أمامية",
+        "avatar": "/me.png"
+      },
+      "readTimeEn": "7 min read",
+      "readTimeAr": "7 دقائق قراءة",
+      "publishedAt": "2026-09",
+      "contentEn": {
+        "intro": "Hello, my friend! If you are building with Next.js or React.js, this post is specifically crafted for you. We will break down the essential rendering techniques that define modern web architecture: CSR, SSR, SSG, and ISR. You have probably heard of them, but together we will uncover how each mechanism works under the hood, how search engine crawlers interact with your pages, and how to choose the ideal strategy for your application.",
+        "sections": [
+          {
+            "heading": "1. Client-Side Rendering (CSR): Mechanics & SEO Pitfalls",
+            "body": "In Client-Side Rendering, the user's browser is entirely responsible for generating HTML and executing UI logic. When a visitor requests your page, the server returns an almost bare HTML file with a root element (e.g., <div id='root'></div>) and a bundle of JavaScript. The browser downloads the scripts, compiles the code, fetches data, and injects elements into the DOM.\n\nDoes CSR deliver good SEO? Absolutely not. Search engine crawlers (like Googlebot) crawl the web to index page content. When a crawler hits a pure CSR application, it initially sees a blank white page because JavaScript has not yet executed. Consequently, the crawler cannot parse headings, semantic text, or internal links, resulting in poor ranking and indexing delays.\n\nIn Next.js 14 and above (App Router), components are Server Components by default. To opt into CSR, you declare the 'use client' directive at the very top of the file. You use this when dealing with React hooks (useState, useEffect), DOM events, and browser APIs.",
+            "codeSnippet": "\"use client\";\nimport { useEffect, useState } from \"react\";\n\ninterface Project {\n  sectionID: number;\n  name: string;\n}\n\nconst ClientSide: React.FC = () => {\n  const [projects, setProjects] = useState<Project[]>([]);\n\n  const getProjects = async () => {\n    try {\n      const res = await fetch(\"https://example.runasp.net/api/Donations/GetAllSections\");\n      if (!res.ok) {\n        console.warn(\"API returned an error:\", res.status);\n        return;\n      }\n      const data = await res.json();\n      setProjects(data);\n    } catch (error) {\n      console.log(error);\n    }\n  };\n\n  useEffect(() => {\n    getProjects();\n  }, []);\n\n  return (\n    <div className=\"bg-[#EEE] p-4 rounded-lg\">\n      <h2 className=\"text-2xl text-blue-400 font-semibold mb-1\">CSR Technique</h2>\n      <p className=\"text-black/70 leading-6 text-lg mb-5\">\n        Client-Side Rendering: Data fetching and DOM rendering occur entirely inside the browser.\n      </p>\n      <div className=\"bg-white p-4 rounded-lg\">\n        {projects.map((ele) => (\n          <div key={ele.sectionID} className=\"mb-3\">\n            <h3 className=\"text-2xl text-right bg-[#EEE] p-2 rounded-sm\">{ele.name}</h3>\n          </div>\n        ))}\n      </div>\n    </div>\n  );\n};\n\nexport default ClientSide;"
+          },
+          {
+            "heading": "2. Server-Side Rendering (SSR): Full On-Demand HTML",
+            "body": "Server-Side Rendering flips the equation: the server assumes full responsibility for generating the complete HTML document on every single request. When a user or crawler visits the URL, the server executes backend logic, queries databases or REST APIs, constructs the ready HTML markup, and streams it back.\n\nThis guarantees stellar SEO. Search engine crawlers immediately index fully formed markup, semantic headings, and rich meta tags without waiting for client-side JavaScript execution.\n\nIn Next.js App Router, any Server Component fetching data with cache: 'no-store' triggers on-demand SSR on every incoming request.",
+            "codeSnippet": "// Server-Side Rendering (SSR) in Next.js Server Component\n// Runs on every incoming request on the server (Dynamic On-Demand Rendering)\n\ninterface Project {\n  sectionID: number;\n  name: string;\n}\n\nconst getProjectsSSR = async (): Promise<Project[]> => {\n  const res = await fetch(\"https://example.runasp.net/api/Donations/GetAllSections\", {\n    cache: \"no-store\", // SSR: No caching, fetches fresh data on every request\n  });\n\n  if (!res.ok) {\n    throw new Error(\"Failed to fetch fresh data on server\");\n  }\n\n  return res.json();\n};\n\nexport default async function SSRBlog() {\n  const projects = await getProjectsSSR();\n\n  return (\n    <div className=\"bg-[#EEE] p-4 rounded-lg\">\n      <h2 className=\"text-2xl text-blue-500 font-bold mb-2\">SSR Technique</h2>\n      <p className=\"text-neutral-700 mb-4\">\n        Pre-rendered HTML ready for instant crawlers with fresh real-time data.\n      </p>\n      <div className=\"bg-white p-4 rounded-lg space-y-3\">\n        {projects.map((item) => (\n          <h3 key={item.sectionID} className=\"text-xl bg-[#EEE] p-2 rounded\">\n            {item.name}\n          </h3>\n        ))}\n      </div>\n    </div>\n  );\n}"
+          },
+          {
+            "heading": "3. Static Site Generation (SSG): Maximum Speed at Build-Time",
+            "body": "Static Site Generation pre-renders all HTML pages ahead of time during the application build phase (next build). The resulting HTML and JSON files are cached statically and served worldwide via Global Edge Content Delivery Networks (CDNs).\n\nThe primary advantages are blazing fast load times (<100ms TTFB), 100/100 Core Web Vitals scores, and zero server CPU load under high traffic. However, the tradeoff is freshness: if content changes in your database, visitors will not see the updates until you trigger a completely new build and deployment of the entire project.\n\nIn Next.js, SSG is achieved using cache: 'force-cache' in fetch requests.",
+            "codeSnippet": "// Static Site Generation (SSG) in Next.js Server Component\n// Pre-rendered once at build time and cached across Edge CDNs\n\ninterface Project {\n  sectionID: number;\n  name: string;\n}\n\nconst getProjectsSSG = async (): Promise<Project[]> => {\n  try {\n    const res = await fetch(\"https://example.runasp.net/api/Donations/GetAllSections\", {\n      cache: \"force-cache\", // SSG: Cached permanently until next application build\n    });\n\n    if (!res.ok) {\n      console.warn(\"API returned an error:\", res.status);\n      return [];\n    }\n\n    return await res.json();\n  } catch (error) {\n    console.error(error);\n    return [];\n  }\n};\n\nexport default async function SSGBlog() {\n  const projects = await getProjectsSSG();\n\n  return (\n    <div className=\"bg-[#EEE] p-4 rounded-lg\">\n      <h2 className=\"text-2xl text-blue-400 font-semibold mb-1\">SSG Technique</h2>\n      <div className=\"bg-white p-4 rounded-lg\">\n        {projects.map((ele: Project) => (\n          <div key={ele.sectionID} className=\"mb-3\">\n            <h3 className=\"text-2xl text-right bg-[#EEE] p-2 rounded-sm\">{ele.name}</h3>\n          </div>\n        ))}\n      </div>\n    </div>\n  );\n}"
+          },
+          {
+            "heading": "4. Incremental Static Regeneration (ISR): The Best of Both Worlds",
+            "body": "This is where Next.js truly shines. Incremental Static Regeneration combines the blistering speed of SSG with the dynamism of SSR without requiring a full site rebuild.\n\nWith ISR, you define a revalidation interval in seconds. Next.js delivers the ultra-fast static cached page from the CDN. Once the revalidation timer elapses and a new request arrives, Next.js triggers a background regeneration of that specific page, invalidates the old cache, and serves the updated page to subsequent visitors seamlessly.\n\nHere is the complete comparison snippet highlighting SSG, ISR, and SSR cache controls in a Next.js Server Component:",
+            "codeSnippet": "// static site generation => ssg/ssr/isr techniques comparison\ninterface Project {\n  sectionID: number;\n  name: string;\n}\n\nconst getProjects = async () => {\n  try {\n    const res = await fetch(\"https://example.runasp.net/api/Donations/GetAllSections\", {\n      // 1. SSG: Pre-rendered at build time\n      // cache: \"force-cache\", \n\n      // 2. ISR: Background revalidation every 30 seconds without rebuilding entire site\n      next: { revalidate: 30 }, \n\n      // 3. SSR: Fetched fresh on every single client request\n      // cache: \"no-store\", \n    });\n\n    if (!res.ok) {\n      console.warn(\"API returned an error:\", res.status);\n      return []; // fallback data\n    }\n\n    const data = await res.json();\n    return data;\n  } catch (error) {\n    console.log(error);\n    return [];\n  }\n};\n\nconst Blog: React.FC = async () => {\n  const projects = await getProjects();\n\n  return (\n    <div className=\"bg-[#EEE] p-4 rounded-lg\">\n      <h2 className=\"text-2xl text-blue-400 font-semibold mb-1\">ISR Technique</h2>\n      <div className=\"bg-white p-4 rounded-lg\">\n        {projects.map((ele: Project) => (\n          <div key={ele.sectionID} className=\"mb-3\">\n            <h3 className=\"text-2xl text-right bg-[#EEE] p-2 rounded-sm\">{ele.name}</h3>\n          </div>\n        ))}\n      </div>\n    </div>\n  );\n};\n\nexport default Blog;"
+          }
+        ],
+        "conclusion": "Summary: If you are building authenticated user dashboards or highly interactive widgets, CSR with Client Components is the natural choice. If you have real-time dynamic data that requires instant SEO indexing, use SSR. For marketing pages and documentation, SSG provides unmatched speed. And for high-traffic blogs, e-commerce stores, and catalogs, ISR provides the ultimate balance between performance and freshness."
+      },
+      "contentAr": {
+        "intro": "ازيك يا صديقي العزيز! لو أنت شغال بـ Next.js أو React.js فالبوست ده ليك خصيصاً. هنتكلم فيه عن أهم تقنيات التصيير (Rendering Techniques) اللي بتشكل معمارية تطبيقات الويب الحديثة: CSR و SSR و SSG و ISR. أكيد سمعت بيهم وعارفهم، ولكن في السطور دي هنشرحهم مع بعض خطوة بخطوة، ونفهم كواليس كل تقنية، إزاي عناكب جوجل ومحركات البحث بتتعامل معاها، ومتى تختار كل واحدة في مشروعك. يلا بينا نبدأ في أول technique!",
+        "sections": [
+          {
+            "heading": "1. التصيير من جانب العميل: Client-Side Rendering (CSR)",
+            "body": "باختصار، التقنية دي أنت أكيد عارفها: المتصفح (Browser) هو المسؤول الأول والأخير عن عملية الـ Rendering. يعني بالبساطة كده كود الـ JavaScript هو اللي بيولد عناصر الـ HTML وبيشغل الموقع على جهاز المستخدم.\n\nطب هل الـ technique ده هيحقق الـ SEO المطلوب؟ لا طبعاً! وتعال نعرف ليه:\nفي محركات البحث عندك حاجة اسمها 'عناكب جوجل' (Googlebot / Web Crawlers) ودي اللي بتحقق مبدأ وفهرسة الـ SEO. ولما بتيجي العناكب دي تعمل Crawl للموقع بتاعك لو أنت شغال بالـ CSR البحت، بتستلم ملف HTML فاضي تقريباً (مجرد <div id='root'></div>)، فبتلاقي صفحة بيضاااااا! فمش هتعرف تفهرس أو تقرأ محتوى الموقع بتاعك، وبكده موقعك هيكون الـ SEO بتاعه ضعيف جداً.\n\nطب لو محتاج أشغل الـ technique ده في Next.js (سواء الإصدار 14 أو أحدث) هعمل إيه؟\nبص يا سيدي: في Next.js المكونات افتراضياً Server Components، وعشان تشغل الـ technique ده هتحط الـ Directive ده في بداية الصفحة 'use client'. وطبعاً استخداماته الأساسية بتكون مع الـ Hooks التفاعلية زي useEffect و useState وغيرهم للتعامل المباشر مع المتصفح والـ DOM كما في الكود التالي:",
+            "codeSnippet": "\"use client\";\nimport { useEffect, useState } from \"react\";\n\ninterface Project {\n  sectionID: number;\n  name: string;\n}\n\nconst ClientSide: React.FC = () => {\n  const [projects, setProjects] = useState<Project[]>([]);\n\n  const getProjects = async () => {\n    try {\n      const res = await fetch(\"https://example.runasp.net/api/Donations/GetAllSections\");\n      if (!res.ok) {\n        console.warn(\"API returned an error:\", res.status);\n        return;\n      }\n      const data = await res.json();\n      setProjects(data);\n    } catch (error) {\n      console.log(error);\n    }\n  };\n\n  useEffect(() => {\n    getProjects();\n  }, []);\n\n  return (\n    <div className=\"bg-[#EEE] p-4 rounded-lg\">\n      <h2 className=\"text-2xl text-blue-400 font-semibold mb-1\">CSR Technique</h2>\n      <p className=\"text-black/70 leading-6 text-lg mb-5\">\n        Client-Side Rendering: يتم جلب البيانات وبناء عناصر الواجهة بالكامل داخل متصفح المستخدم.\n      </p>\n      <div className=\"bg-white p-4 rounded-lg\">\n        {projects.map((ele) => (\n          <div key={ele.sectionID} className=\"mb-3\">\n            <h3 className=\"text-2xl text-right bg-[#EEE] p-2 rounded-sm\">{ele.name}</h3>\n          </div>\n        ))}\n      </div>\n    </div>\n  );\n};\n\nexport default ClientSide;"
+          },
+          {
+            "heading": "2. التصيير من جانب الخادم: Server-Side Rendering (SSR)",
+            "body": "الـ technique ده بقى بيعمل العكس خالص وهو إن السيرفر هو المسؤول عن عملية الـ Rendering. يعني السيرفر بيعالج الكود وبيجلب البيانات من الـ API أو قاعدة البيانات وبيعمل Render للـ HTML ويبعتها للمتصفح جاهزة تماماً. المتصفح بيعرضها على طول وبكده الـ SEO بتاعك هيكون عالي جداااا لأن عناكب جوجل هتقدر تـ crawl الموقع بتاعك بسهولة لأن الـ HTML جاهز ومكتمل بدون أي انتظار لجافا سكريبت.\n\nطب لو محتاج أشغل الـ technique ده في Next.js هعمل إيه؟\nفي Next.js في الـ App Router أي Server Component يعتبر افتراضياً شغال على السيرفر. ولو بتعمل fetch لبيانات وعايزها تطلب في كل Request مباشرة من غير كاش بنحدد خيار الكاش cache: 'no-store' كالتالي:",
+            "codeSnippet": "// Server-Side Rendering (SSR) in Next.js Server Component\n// يتم جلب البيانات في كل طلب يرسله المستخدم مباشرة من السيرفر بدون كاش\n\ninterface Project {\n  sectionID: number;\n  name: string;\n}\n\nconst getProjectsSSR = async (): Promise<Project[]> => {\n  const res = await fetch(\"https://example.runasp.net/api/Donations/GetAllSections\", {\n    cache: \"no-store\", // SSR: Runs on request in the case of SSR (No Store)\n  });\n\n  if (!res.ok) {\n    throw new Error(\"فشل في جلب البيانات من الخادم\");\n  }\n\n  return res.json();\n};\n\nexport default async function SSRBlogPage() {\n  const projects = await getProjectsSSR();\n\n  return (\n    <div className=\"bg-[#EEE] p-4 rounded-lg\">\n      <h2 className=\"text-2xl text-blue-500 font-bold mb-2\">SSR Technique</h2>\n      <p className=\"text-neutral-700 mb-4\">\n        HTML جاهز بالكامل من السيرفر - ممتاز لأرشفة عناكب جوجل ومثالي للبيانات المتغيرة لحظياً.\n      </p>\n      <div className=\"bg-white p-4 rounded-lg space-y-3\">\n        {projects.map((item) => (\n          <h3 key={item.sectionID} className=\"text-xl bg-[#EEE] p-2 rounded\">\n            {item.name}\n          </h3>\n        ))}\n      </div>\n    </div>\n  );\n}"
+          },
+          {
+            "heading": "3. التوليد الثابت للموقع: Static Site Generation (SSG)",
+            "body": "تالت تقنية معانا هي Static Site Generation (SSG). التقنية دي بقى بتعمل render لصفحات الـ HTML وقت الـ Build للمشروع! يعني الصفحات بتتولد مرة واحدة بس وتتخزن كملفات Static في السيرفر أو على شبكات الـ CDN العالمية.\n\nالميزة الجبارة هنا هي السرعة الخارقة والـ SEO الممتاز وتحقيق علامة 100% في Core Web Vitals لأن السيرفر بيبعت الملفات الجاهزة فوراً، لكن عيبها إن لو البيانات اتغيرت في الـ Database، الصفحة مش هتحدث غير لو عملت Build جديد للموقع بالكامل!\n\nوفي Next.js عشان نستخدم الـ SSG بنعمل fetch مع خيار الكاش force-cache كالتالي:",
+            "codeSnippet": "// Static Site Generation (SSG) in Next.js Server Component\n// يتم توليد صفحات الـ HTML مسبقاً وقت الـ Build وتخزينها على الـ CDN\n\ninterface Project {\n  sectionID: number;\n  name: string;\n}\n\nconst getProjectsSSG = async (): Promise<Project[]> => {\n  try {\n    const res = await fetch(\"https://example.runasp.net/api/Donations/GetAllSections\", {\n      cache: \"force-cache\", // SSG: Runs at build time and cached statically\n    });\n\n    if (!res.ok) {\n      console.warn(\"API returned an error:\", res.status);\n      return [];\n    }\n\n    const data = await res.json();\n    return data;\n  } catch (error) {\n    console.error(error);\n    return [];\n  }\n};\n\nexport default async function SSGBlogPage() {\n  const projects = await getProjectsSSG();\n\n  return (\n    <div className=\"bg-[#EEE] p-4 rounded-lg\">\n      <h2 className=\"text-2xl text-blue-400 font-semibold mb-1\">SSG Technique</h2>\n      <p className=\"text-black/70 leading-6 text-lg mb-5\">\n        أسرع استجابة ممكنة مع كاش دائم للصفحات الجاهزة.\n      </p>\n      <div className=\"bg-white p-4 rounded-lg\">\n        {projects.map((ele: Project) => (\n          <div key={ele.sectionID} className=\"mb-3\">\n            <h3 className=\"text-2xl text-right bg-[#EEE] p-2 rounded-sm\">{ele.name}</h3>\n          </div>\n        ))}\n      </div>\n    </div>\n  );\n}"
+          },
+          {
+            "heading": "4. إعادة التوليد الثابت التدريجي: Incremental Static Regeneration (ISR)",
+            "body": "رابع تقنية معانا هي الـ Incremental Static Regeneration (ISR). وهنا يجي دور التقنية العبقرية دي اللي جمعت بين مميزات الـ SSG وسرعته الخارقة، وبين قدرة الـ SSR على تحديث البيانات!\n\nالـ ISR بتخليك تحدد وقت معين (بالثواني) للصفحة، فـ Next.js يولد الصفحة كـ Static وتفضل سريعة، وأول ما الوقت ده يعدي وحد يطلب الصفحة، بيتعمل لها Revalidation وإعادة بناء في الخلفية وتحديث للبيانات بدون ما تحتاج تعمل Build كامل للمشروع!\n\nوفي الكود المرفق بالأسفل، يظهر الكود المشترك الذي يوضح الفروقات بين خيارات الـ fetch الثلاثة (SSG و ISR و SSR):",
+            "codeSnippet": "// static site generation => ssg/ssr/isr techniques\ninterface Project {\n  sectionID: number;\n  name: string;\n}\n\nconst getProjects = async () => {\n  try {\n    const res = await fetch(\"https://example.runasp.net/api/Donations/GetAllSections\", {\n      // 1. SSG: Runs at build-time (Static Site Generation)\n      // cache: \"force-cache\", \n\n      // 2. ISR: Revalidates on request in the background every 30s\n      next: { revalidate: 30 }, \n\n      // 3. SSR: Runs on every single request in the case of SSR\n      // cache: \"no-store\", \n    });\n\n    if (!res.ok) {\n      console.warn(\"API returned an error:\", res.status);\n      return []; // fallback data\n    }\n\n    const data = await res.json();\n    return data;\n  } catch (error) {\n    console.log(error);\n    return [];\n  }\n};\n\nconst Blog: React.FC = async () => {\n  const projects = await getProjects();\n\n  return (\n    <div className=\"bg-[#EEE] p-4 rounded-lg\">\n      <h2 className=\"text-2xl text-blue-400 font-semibold mb-1\">ISR Technique</h2>\n      <div className=\"bg-white p-4 rounded-lg\">\n        {projects.map((ele: Project) => (\n          <div key={ele.sectionID} className=\"mb-3\">\n            <h3 className=\"text-2xl text-right bg-[#EEE] p-2 rounded-sm\">{ele.name}</h3>\n          </div>\n        ))}\n      </div>\n    </div>\n  );\n};\n\nexport default Blog;"
+          }
+        ],
+        "conclusion": "خلاصة القول يا صديقي: إذا كانت الصفحة لوحة تحكم خاصة (Dashboard) أو تحتاج تفاعلات معقدة مع المتصفح، فـ CSR مع 'use client' هي الخيار الطبيعي. أما إذا كانت صفحة تتغير بياناتها في كل لحظة وتحتاج SEO قوي وفوري، فـ SSR هو الحل. وإذا كانت مقالات مدونة أو صفحات هبوط شبه ثابتة، فـ SSG هو الأسرع والأوفر في الموارد. ولتحقيق المعادلة الذهبية بين السرعة الخارقة وتحديث المحتوى، فإن ISR هو الاختيار الأذكى في Next.js."
+      }
+    },
     {
       "id": "blog-1",
       "slug": "mastering-web-animations-gsap-framer-motion",

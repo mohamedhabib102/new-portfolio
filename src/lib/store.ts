@@ -540,7 +540,7 @@ export const portfolioStore = {
     if (supabase) {
       try {
         const { data, error } = await supabase.from("Blog").select("*").order("createdAt", { ascending: false });
-        if (!error && Array.isArray(data) && data.length > 0) {
+        if (!error && Array.isArray(data)) {
           const formatted = data.map((b) => ({
             ...b,
             author: {
@@ -550,10 +550,15 @@ export const portfolioStore = {
               avatar: "/me.png",
             },
           }));
+          const defaultList = blogsData;
+          const nonSupabase = defaultList.filter(
+            (lb: any) => !formatted.some((sb: any) => sb.id === lb.id || sb.slug === lb.slug)
+          );
+          const fullList = [...formatted, ...nonSupabase];
           const store = readLocalStore();
-          store.blogs = formatted as any;
+          store.blogs = fullList as any;
           writeLocalStore(store);
-          return formatted as any;
+          return fullList as any;
         }
       } catch (err) {
         console.warn("[Supabase] getBlogs fallback:", err);
