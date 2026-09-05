@@ -17,79 +17,23 @@
   },
   "experiences": [
     {
-      "id": "exp-1",
-      "period": "6 / 2026  Present",
+      "id": "exp-1788543601133",
+      "period": "6 / 2026 - Present",
       "roleEn": "Frontend Engineer",
       "roleAr": "مهندس واجهات أمامية",
-      "company": "serv5",
-      "descEn": "Leading UI development for highly interactive web projects to boost user engagement and retention. Designing advanced custom scroll animations and micro-interactions with GSAP, while optimizing site performance to achieve a 95+ score on Google Lighthouse across core pages.",
-      "descAr": "قيادة تطوير واجهات المستخدم للمشاريع التفاعلية المتقدمة لتعزيز تجربة المستخدم ومعدل التفاعل. تصميم وتطوير حركات سكرول تفاعلية مخصصة باستخدام GSAP و Framer Motion، مع تحسين أداء المواقع لتحقيق معدل 95+ على Google Lighthouse في جميع الصفحات الرئيسية.",
+      "company": "Serv5",
+      "descEn": "Working as part of the engineering team to build and maintain scalable, responsive web applications using React, Next.js, and TypeScript. Responsible for translating Figma UI/UX designs into pixel-perfect, accessible code with Tailwind CSS, integrating RESTful APIs, and handling client-side state management. Focused on full RTL/LTR localization support, developing reusable component libraries, optimizing bundle sizes and page load performance, and collaborating closely with backend engineers and designers in an agile environment to deliver clean, maintainable code.",
+      "descAr": "العمل ضمن الفريق التقني على تطوير وبناء واجهات مستخدم تفاعلية لمشاريع الشركة وعملائها بالاعتماد على React و Next.js و TypeScript. تحويل تصميمات Figma إلى كود نظيف ومتجاوب بالكامل مع كافة الشاشات باستخدام Tailwind CSS، مع ربط الواجهات بـ RESTful APIs وإدارة الحالة وتدفق البيانات. التركيز على دعم تعدد اللغات والاتجاهات (RTL/LTR)، كتابة مكونات برمجية قابلة لإعادة الاستخدام (Reusable Components)، وحل مشاكل التوافقية وتحسين سرعة تحميل الصفحات وتجربة المستخدم العامة بالتعاون مع مطوري الباك إند ومصممي الـ UI/UX.",
       "skills": [
         "Next.js",
         "React",
-        "GSAP",
-        "TypeScript",
-        "Tailwind CSS",
-        "Performance Optimization"
-      ]
-    },
-    {
-      "id": "exp-2",
-      "period": "4 / 2024  Present",
-      "roleEn": "Freelance Frontend Developer",
-      "roleAr": "مطور واجهات أمامية مستقل",
-      "company": "Independent / Saudi Clients",
-      "descEn": "Developing bespoke web systems for Saudi clients, directly aligning tech stacks with business requirements. Managing full project lifecycles from requirement gathering and UI coding to cloud hosting and maintenance, ensuring fully responsive, high-performance designs.",
-      "descAr": "تطوير أنظمة ويب وحلول رقمية مخصصة لعملاء في المملكة العربية السعودية، مع مواءمة التقنيات المستخدمة مع متطلبات الأعمال. إدارة دورة حياة المشاريع بالكامل بدءاً من تحليل المتطلبات وتكويد الواجهات وحتى الاستضافة السحابية والصيانة، وضمان تصميمات متجاوبة وعالية الأداء.",
-      "skills": [
-        "Next.js",
-        "Tailwind CSS",
-        "Supabase",
-        "Prisma",
-        "Client Collaboration"
+        "Vue TypeScript",
+        "Tailiwnd CSS",
+        "TeamWork"
       ]
     }
   ],
   "projects": [
-    {
-      "id": "proj-1788541272452",
-      "slug": "sohighla",
-      "titleEn": "sohighla",
-      "titleAr": "شغلة",
-      "descriptionEn": "Shogla is a modern on-demand digital marketplace designed to seamlessly connect homeowners and clients with qualified, trusted local craftsmen and technicians. The platform serves as a direct communication and job facilitation bridge, enabling clients to submit customized service requests and review technician profiles, while empowering craftsmen to review requirements and establish direct service agreements without platform financial friction. To ensure maximum safety and service reliability, craftsmen must undergo a thorough identity verification process before their profiles are published. The application features a comprehensive client dashboard with interaction history for quick re-hiring, alongside a verified rating and review engine that reflects authentic customer feedback. The frontend is engineered with Next.js, TypeScript, and Tailwind CSS, utilizing Zustand for lightweight client state management and integrated with an enterprise ASP.NET Core backend for high performance and scalability.",
-      "descriptionAr": "منصة شغلة هي منصة وساطة رقمية متطورة تهدف إلى تسهيل وصول العملاء إلى أمهر الحرفيين والفنيين الموثوقين في مجالات الصيانة والتشطيبات المنزلية. تعمل المنصة كحلقة وصل ذكية تتيح للعميل استعراض الحرفيين المعتمدين وإنشاء طلبات تواصل وشرح متطلبات العمل ليقوم الحرفي باستقبال الطلب والاتفاق على تفاصيل التعاقد بشكل مباشر وسلس دون تدخل المنصة في المعاملات المالية المباشرة. يتميز النظام بوجود آلية تحقق وتدقيق صارمة تمنع ظهور أي صنايعي في المنصة قبل فحص هويته واعتماده لضمان أعلى مستويات الأمان والموثوقية للعملاء، بالإضافة إلى لوحة تحكم تتيح للمستخدم الاحتفاظ بسجل كامل للصنايعية الذين تم التعامل معهم لسهولة الرجوع إليهم وإعادة طلبهم، مع نظام تقييمات ومراجعات شفافة يعكس جودة الخدمة المقدمة. تم بناء واجهات المشروع بالاعتماد على Next.js و TypeScript و Tailwind CSS مع إدارة الحالة عبر Zustand وربطها بباك إند قوي مبني بـ ASP.NET Core لتقديم تجربة استخدام فائقة السرعة والاستجابة.",
-      "videoUrl": "https://dibrssekkpsbyhvwwzln.supabase.co/storage/v1/object/public/portfolio-media/1788540982041_sohighla.mp4",
-      "liveUrl": "http://sohighla.vercel.app/",
-      "githubUrl": "https://github.com/mohamedhabib102/sohighla",
-      "tags": [
-        "Next.js",
-        "TypeScript",
-        "Tailwind CSS",
-        "Zustand",
-        "ASP.NET Core",
-        "REST APIs",
-        "UI/UX Design"
-      ],
-      "featured": true,
-      "order": 1,
-      "createdAt": "2026-09-04T17:01:13.127516+00:00",
-      "updatedAt": "2026-09-04T17:15:40.676+00:00",
-      "githubPrivate": false,
-      "featuresEn": [
-        "Direct Craftsman Booking: Seamless service requests and communication between clients and verified technicians",
-        "Strict Identity Verification: Rigorous background verification workflows before technician profile publishing",
-        "Smart Re-hiring History: Client dashboard for tracking previous technicians and quick one-click re-hiring",
-        "Transparent Ratings Engine: Authentic user review system reflecting real customer service feedback",
-        "High-Performance UI: Fast Next.js frontend with lightweight Zustand client state management"
-      ],
-      "featuresAr": [
-        "حجز وتواصل مباشر مع الحرفيين: سهولة إنشاء طلبات الصيانة والتواصل مع الفنيين المعتمدين",
-        "نظام تحقق وتدقيق صارم للهوية: فحص واعتماد هويات الحرفيين لضمان أمان وموثوقية الخدمة",
-        "سجل تفاعلي لإعادة الطلب: لوحة تحكم تتيح الاحتفاظ بسجل الصنايعية وسهولة الرجوع إليهم",
-        "محرك تقييمات ومراجعات شفافة: نظام تقييم دقيق يعكس جودة الخدمة الحقيقية",
-        "أداء فائق واستجابة سريعة: واجهات Next.js سريعة مع إدارة خفيفة للحالة عبر Zustand"
-      ]
-    },
     {
       "id": "proj-serv5-optimization",
       "slug": "serv5-platform-optimization",
@@ -113,7 +57,7 @@
       "featured": true,
       "order": 1,
       "createdAt": "2026-09-04T19:03:36.84857+00:00",
-      "updatedAt": "2026-09-04T19:03:34.469+00:00",
+      "updatedAt": "2026-09-04T19:44:20.916+00:00",
       "githubPrivate": true,
       "featuresEn": [
         "Eliminated heavy loading bottlenecks and optimized scripts for instantaneous page delivery",
@@ -128,45 +72,6 @@
         "إصلاح وضبط التصميم المتجاوب (Responsive Design) لكافة الشاشات والهواتف والأجهزة اللوحية بدقة متناهية",
         "استخدام مكون Next.js Image المدمج لمعالجة الصور تلقائياً ومنع تذبذب وانزياح الواجهة (CLS)",
         "إضافة حركات وتفاعلات بصرية سلسة باستخدام Framer Motion وجافاسكريبت الحديثة"
-      ]
-    },
-    {
-      "id": "proj-1788541485137",
-      "slug": "noor-alhuda",
-      "titleEn": "Noor Alhuda",
-      "titleAr": "نور الهدى",
-      "descriptionEn": "A comprehensive Islamic digital platform engineered with modern web technologies to deliver an enriching, spiritually focused user experience. The platform features Holy Qur’an reading with an intuitive interface, an integrated audio streaming player for listening to renowned Qur’an reciters, and a dedicated morning and evening adhkar section. The system implements seamless Google authentication via NextAuth, a vibrant Community hub allowing users to publish and share insightful religious articles across internal feeds and social media, and an interactive FAQ module addressing common user questions. Built using Next.js, TypeScript, and Tailwind CSS, the application leverages Framer Motion for smooth micro-interactions and Context API for synchronized audio playback and global state management.",
-      "descriptionAr": "\nمنصة إسلامية رقمية شاملة تم بناؤها بأحدث تقنيات الويب لتقديم تجربة إيمانية متكاملة وسلسة للمستخدمين. تتيح المنصة قراءة القرآن الكريم وتصفح الآيات بسهولة، مع مشغل صوتي متقدم للبث والاستماع للتلاوات القرآنية بأصوات نخبة من القراء، بالإضافة إلى قسم خاص لأذكار الصباح والمساء والأدعية المأثورة. يتضمن المشروع نظام تسجيل دخول آمن وسريع بحسابات Google عبر NextAuth، ومجتمعاً تفاعلياً يُمكّن الأعضاء من نشر المقالات الهادفة ومشاركتها داخلياً وعبر وسائل التواصل الاجتماعي لنشر العلم النافع، إلى جانب قسم متكامل للأسئلة الشائعة لدعم استفسارات الزوار. تم تطوير الواجهات باستخدام Next.js و TypeScript و Tailwind CSS، مع توظيف Framer Motion للحركات والتنقلات الانسيابية، و Context API لإدارة حالة التطبيق وتشغيل الصوتيات بكفاءة عالية.",
-      "videoUrl": "https://dibrssekkpsbyhvwwzln.supabase.co/storage/v1/object/public/portfolio-media/1788543258827_2026-09-04_20-08-03.mp4",
-      "liveUrl": "https://noor-alhuda-lyart.vercel.app/",
-      "githubUrl": "https://github.com/mohamedhabib102/noor-alhuda",
-      "tags": [
-        "Next.js",
-        "TypeScript",
-        "Tailwind CSS",
-        "NextAuth",
-        "Context API",
-        "Framer Motion",
-        "Audio Streaming"
-      ],
-      "featured": true,
-      "order": 2,
-      "createdAt": "2026-09-04T17:04:45.381158+00:00",
-      "updatedAt": "2026-09-04T17:35:37.867+00:00",
-      "githubPrivate": false,
-      "featuresEn": [
-        "Quran Reader & Typography: Clean, accessible Arabic font rendering and surah navigation",
-        "Synchronized Audio Streaming: Global audio playback with reciter selection and smooth streaming",
-        "Interactive Community Hub: User publishing and sharing of articles across social networks",
-        "Morning & Evening Adhkar: Dedicated daily remembrance section with counter interactions",
-        "Secure NextAuth Authentication: Google OAuth sign-in with personalized user bookmarking"
-      ],
-      "featuresAr": [
-        "مصحف إلكتروني بخطوط واضحة: تصفح سهل ومريح للآيات والسور القرآنية",
-        "مشغل صوتي متزامن للبث: استماع لتلاوات خاشعة بأصوات كبار القراء مع تحكم صوتي شامل",
-        "مجتمع ومقالات تفاعلية: إمكانية نشر ومشاركة المقالات الهادفة عبر شبكات التواصل",
-        "أذكار الصباح والمساء: قسم مخصص للأدعية والأذكار اليومية مع عداد تسبيح تفاعلي",
-        "تسجيل دخول آمن بـ NextAuth: دعم تسجيل الدخول بحسابات Google لحفظ المقالات والمفضلة"
       ]
     },
     {
@@ -192,7 +97,7 @@
       "featured": true,
       "order": 2,
       "createdAt": "2026-09-04T19:03:37.423162+00:00",
-      "updatedAt": "2026-09-04T19:03:35.483+00:00",
+      "updatedAt": "2026-09-04T19:44:21.949+00:00",
       "githubPrivate": true,
       "featuresEn": [
         "Full Lifecycle Execution: Custom Figma UI/UX architecture translated into a modular Vue.js frontend",
@@ -208,9 +113,342 @@
         "لوحة تحكم Super-Admin متطورة: إدارة شاملة لكافة محتويات الصفحات والخدمات وإعدادات المنصة بالكامل",
         "محرك بحث وفلترة عقارية متقدم: تصفية دقيقة بحسب المنطقة، نوع العقار، الأسعار، والمواصفات"
       ]
+    },
+    {
+      "id": "proj-1788541272452",
+      "slug": "sohighla",
+      "titleEn": "Shogla - On-Demand Craftsmen Marketplace",
+      "titleAr": "منصة شغلة - وساطة رقمية للحرفيين والتشطيبات",
+      "descriptionEn": "Shogla is a modern on-demand digital marketplace designed to seamlessly connect homeowners and clients with qualified, trusted local craftsmen and technicians. The platform enables clients to submit customized service requests, review technician profiles, and establish direct service agreements. To ensure safety and service reliability, craftsmen undergo an identity verification process. Built with Next.js, TypeScript, and Tailwind CSS with Zustand state management.",
+      "descriptionAr": "منصة شغلة هي منصة وساطة رقمية متطورة تهدف إلى تسهيل وصول العملاء إلى أمهر الحرفيين والفنيين الموثوقين في مجالات الصيانة والتشطيبات المنزلية. تعمل المنصة كحلقة وصل ذكية تتيح للعميل استعراض الحرفيين المعتمدين وإنشاء طلبات تواصل وشرح متطلبات العمل ليقوم الحرفي باستقبال الطلب والاتفاق المباشر. تم بناء واجهات المشروع بالاعتماد على Next.js و TypeScript و Tailwind CSS مع إدارة الحالة عبر Zustand.",
+      "videoUrl": "https://dibrssekkpsbyhvwwzln.supabase.co/storage/v1/object/public/portfolio-media/1788540982041_sohighla.mp4",
+      "liveUrl": "http://sohighla.vercel.app/",
+      "githubUrl": "https://github.com/mohamedhabib102/sohighla",
+      "tags": [
+        "Next.js",
+        "TypeScript",
+        "Tailwind CSS",
+        "Zustand",
+        "ASP.NET Core",
+        "REST APIs",
+        "UI/UX Design"
+      ],
+      "featured": true,
+      "order": 3,
+      "createdAt": "2026-09-04T17:01:13.127516+00:00",
+      "updatedAt": "2026-09-04T19:44:24.153+00:00",
+      "githubPrivate": false,
+      "featuresEn": [
+        "Direct Craftsman Booking: Seamless service requests and communication between clients and verified technicians",
+        "Strict Identity Verification: Rigorous background verification workflows before technician profile publishing",
+        "Smart Re-hiring History: Client dashboard for tracking previous technicians and quick one-click re-hiring",
+        "Transparent Ratings Engine: Authentic user review system reflecting real customer service feedback",
+        "High-Performance UI: Fast Next.js frontend with lightweight Zustand client state management"
+      ],
+      "featuresAr": [
+        "حجز وتواصل مباشر مع الحرفيين: سهولة إنشاء طلبات الصيانة والتواصل مع الفنيين المعتمدين",
+        "نظام تحقق وتدقيق صارم للهوية: فحص واعتماد هويات الحرفيين لضمان أمان وموثوقية الخدمة",
+        "سجل تفاعلي لإعادة الطلب: لوحة تحكم تتيح الاحتفاظ بسجل الصنايعية وسهولة الرجوع إليهم",
+        "محرك تقييمات ومراجعات شفافة: نظام تقييم دقيق يعكس جودة الخدمة الحقيقية",
+        "أداء فائق واستجابة سريعة: واجهات Next.js سريعة مع إدارة خفيفة للحالة عبر Zustand"
+      ]
+    },
+    {
+      "id": "proj-1788541485137",
+      "slug": "noor-alhuda",
+      "titleEn": "Noor Alhuda - Islamic Platform & Audio Streaming",
+      "titleAr": "منصة نور الهدى - منصة إسلامية وبث صوتي تفاعلي",
+      "descriptionEn": "A comprehensive Islamic digital platform engineered with modern web technologies. Features Holy Qur’an reading with an intuitive interface, audio streaming player for listening to renowned Qur’an reciters, morning/evening adhkar, Google authentication via NextAuth, and an interactive Community hub for publishing and sharing articles. Built using Next.js, TypeScript, Tailwind CSS, Framer Motion, and Context API.",
+      "descriptionAr": "منصة إسلامية رقمية شاملة تم بناؤها بأحدث تقنيات الويب لتقديم تجربة إيمانية متكاملة وسلسة. تتيح المنصة قراءة القرآن الكريم وتصفح الآيات بسهولة، مع مشغل صوتي متقدم للبث والاستماع للتلاوات القرآنية، وقسم خاص لأذكار الصباح والمساء، وتسجيل دخول آمن بحسابات Google عبر NextAuth، ومجتمع تفاعلي لنشر ومشاركة المقالات الهادفة. تم التطوير باستخدام Next.js و TypeScript و Tailwind CSS و Framer Motion و Context API.",
+      "videoUrl": "https://dibrssekkpsbyhvwwzln.supabase.co/storage/v1/object/public/portfolio-media/1788543258827_2026-09-04_20-08-03.mp4",
+      "liveUrl": "https://noor-alhuda-lyart.vercel.app/",
+      "githubUrl": "https://github.com/mohamedhabib102/noor-alhuda",
+      "tags": [
+        "Next.js",
+        "TypeScript",
+        "Tailwind CSS",
+        "NextAuth",
+        "Context API",
+        "Framer Motion",
+        "Audio Streaming"
+      ],
+      "featured": true,
+      "order": 4,
+      "createdAt": "2026-09-04T17:04:45.381158+00:00",
+      "updatedAt": "2026-09-04T19:44:25.056+00:00",
+      "githubPrivate": false,
+      "featuresEn": [
+        "Quran Reader & Typography: Clean, accessible Arabic font rendering and surah navigation",
+        "Synchronized Audio Streaming: Global audio playback with reciter selection and smooth streaming",
+        "Interactive Community Hub: User publishing and sharing of articles across social networks",
+        "Morning & Evening Adhkar: Dedicated daily remembrance section with counter interactions",
+        "Secure NextAuth Authentication: Google OAuth sign-in with personalized user bookmarking"
+      ],
+      "featuresAr": [
+        "مصحف إلكتروني بخطوط واضحة: تصفح سهل ومريح للآيات والسور القرآنية",
+        "مشغل صوتي متزامن للبث: استماع لتلاوات خاشعة بأصوات كبار القراء مع تحكم صوتي شامل",
+        "مجتمع ومقالات تفاعلية: إمكانية نشر ومشاركة المقالات الهادفة عبر شبكات التواصل",
+        "أذكار الصباح والمساء: قسم مخصص للأدعية والأذكار اليومية مع عداد تسبيح تفاعلي",
+        "تسجيل دخول آمن بـ NextAuth: دعم تسجيل الدخول بحسابات Google لحفظ المقالات والمفضلة"
+      ]
     }
   ],
-  "blogs": [],
+  "blogs": [
+    {
+      "id": "blog-1",
+      "slug": "mastering-web-animations-gsap-framer-motion",
+      "titleEn": "Building 60FPS Fluid Web Animations with GSAP & Framer Motion",
+      "titleAr": "بناء أنيميشن وحركات ويب فائقة السلاسة بمعدل 60 إطار باستخدام GSAP و Framer Motion",
+      "excerptEn": "A deep dive into choreographing scroll-triggered animations, GPU acceleration, and micro-interactions that captivate users without sacrificing performance.",
+      "excerptAr": "دليل عملي متقدم لبرمجة حركات السكرول التفاعلية، تسريع العتاد عبر كارت الشاشة GPU، وصناعة تفاعلات حركية مبهرة تحافظ على سرعة الموقع القصوى.",
+      "coverImage": "https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&w=1200&q=80",
+      "categoryEn": "Web Animations",
+      "categoryAr": "تحريك الويب",
+      "tags": [
+        "GSAP",
+        "Framer Motion",
+        "WebGL",
+        "UX Design"
+      ],
+      "author": {
+        "name": "Mohamed H. Mowafy",
+        "roleEn": "Front-End Developer",
+        "roleAr": "مطور واجهات أمامية",
+        "avatar": "/me.png"
+      },
+      "readTimeEn": "5 min read",
+      "readTimeAr": "5 دقائق قراءة",
+      "publishedAt": "2026-03",
+      "contentEn": {
+        "intro": "Web animations are no longer just eye candy—when implemented with intentionality, they establish visual hierarchy, guide user attention, and elevate brand perception to an elite tier.",
+        "sections": [
+          {
+            "heading": "1. The Anatomy of 60FPS: Transform & Opacity Only",
+            "body": "The golden rule of browser rendering is avoiding Layout recalculations and Paint cycles inside animation loops. Always animate GPU-composited CSS properties: transform (translate3d, scale, rotate) and opacity. Avoid animating top, left, width, or margin.",
+            "codeSnippet": "// High-performance Framer Motion config\n<motion.div\n  initial={{ opacity: 0, y: 30 }}\n  whileInView={{ opacity: 1, y: 0 }}\n  viewport={{ once: true, margin: \"-50px\" }}\n  transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}\n/>"
+          },
+          {
+            "heading": "2. Combining GSAP ScrollTrigger with Virtual Smooth Scrolling",
+            "body": "When using libraries like Lenis for momentum scrolling, synchronize your GSAP tickers with Lenis's requestAnimationFrame cycle. This guarantees zero frame jitter and fluid interpolation across high-refresh-rate displays.",
+            "codeSnippet": "lenis.on('scroll', ScrollTrigger.update);\ngsap.ticker.add((time) => {\n  lenis.raf(time * 1000);\n});"
+          },
+          {
+            "heading": "3. Magnetic Micro-Interactions",
+            "body": "Buttons that gently pull towards the mouse cursor make interfaces feel tactile and responsive. Using spring physics damping creates organic inertia that users instinctively appreciate."
+          }
+        ],
+        "conclusion": "Great animations don't scream for attention—they whisper elegance and enhance every interaction with precision."
+      },
+      "contentAr": {
+        "intro": "لم تعد حركات الويب مجرد عناصر جمالية تزيينية، بل أصبحت لغة تفاعلية تؤسس التسلسل الهرمي للمعلومات، وتوجه انتباه المستخدمين، وتضفي على العلامة التجارية طابعاً استثنائياً وفخماً.",
+        "sections": [
+          {
+            "heading": "1. سرعة 60 إطار في الثانية: الاعتماد فقط على Transform و Opacity",
+            "body": "القاعدة الذهبية في محركات تصفح الويب هي تجنب إعادة حساب المخطط (Layout Thrashing) ودورات الرسم (Repaints) أثناء تشغيل الأنيميشن. احرص دائماً على تحريك الخصائص التي يتعامل معها كارت الشاشة (GPU) مباشرة مثل transform و opacity وتجنب تماماً تحريك width أو margin.",
+            "codeSnippet": "// إعداد Framer Motion عالي الكفاءة\n<motion.div\n  initial={{ opacity: 0, y: 30 }}\n  whileInView={{ opacity: 1, y: 0 }}\n  viewport={{ once: true, margin: \"-50px\" }}\n  transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}\n/>"
+          },
+          {
+            "heading": "2. دمج GSAP ScrollTrigger مع السكرول الناعم",
+            "body": "عند استخدام مكتبات مثل Lenis للتحكم في سلاسة التمرير، يجب مزامنة ساعة GSAP مع حلقة requestAnimationFrame الخاصة بـ Lenis، مما يمنع أي تقطيع أو تداخل في الإطارات على الشاشات ذات التردد العالي (120Hz+).",
+            "codeSnippet": "lenis.on('scroll', ScrollTrigger.update);\ngsap.ticker.add((time) => {\n  lenis.raf(time * 1000);\n});"
+          },
+          {
+            "heading": "3. التفاعلات المغناطيسية للأزرار",
+            "body": "الأزرار التي تتحرك بنعومة وتنجذب نحو مؤشر الماوس عند الاقتراب منها تمنح المستخدم شعوراً بالحيوية واللمس الواقعي، مما يرفع معدل التفاعل والنقر بشكل ملحوظ."
+          }
+        ],
+        "conclusion": "الحركات الاستثنائية لا تصرخ لجذب الانتباه، بل تهمس بالأناقة والدقة في كل تفصيل تفاعلي داخل الموقع."
+      }
+    },
+    {
+      "id": "blog-2",
+      "slug": "nextjs-app-router-performance-guide",
+      "titleEn": "Next.js App Router: Performance, SSR & Server Components",
+      "titleAr": "معمارية Next.js App Router: أسرار الأداء العالي ومكونات الخادم",
+      "excerptEn": "How to properly leverage React Server Components, streaming SSR, and edge caching to deliver instantaneous page transitions and sub-second load times.",
+      "excerptAr": "كيف تستفيد بالشكل الأمثل من مكونات الخادم React Server Components، التدفق الفوري للنصوص، والتخزين المؤقت لتحقيق تحميل فوري وسرعة تصفح فائقة.",
+      "coverImage": "https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=1200&q=80",
+      "categoryEn": "Next.js",
+      "categoryAr": "نكست جي إس",
+      "tags": [
+        "Next.js",
+        "React 19",
+        "Server Components",
+        "Performance"
+      ],
+      "author": {
+        "name": "Mohamed H. Mowafy",
+        "roleEn": "Front-End Developer",
+        "roleAr": "مطور واجهات أمامية",
+        "avatar": "/me.png"
+      },
+      "readTimeEn": "6 min read",
+      "readTimeAr": "6 دقائق قراءة",
+      "publishedAt": "2026-02",
+      "contentEn": {
+        "intro": "The transition from Pages router to App router revolutionized how we structure production React applications. Understanding when to render on the server vs. client is the key differentiator for top-tier frontend engineers.",
+        "sections": [
+          {
+            "heading": "1. The Boundary Between Server and Client Components",
+            "body": "Keep interactive client components as leaves at the edge of your component tree. The vast majority of layouts, data-fetching components, and SEO wrappers should remain pure Server Components to minimize JavaScript bundle size sent to the client.",
+            "codeSnippet": "// Server Component by default: zero client JS overhead\nexport default async function ProjectsFeed() {\n  const projects = await getProjects();\n  return <ProjectsGrid items={projects} />;\n}"
+          },
+          {
+            "heading": "2. Streaming with Suspense",
+            "body": "Don't let slow database queries block the initial HTML response. Wrap data-heavy widgets in React Suspense boundaries to stream the shell immediately while async chunks load progressively."
+          },
+          {
+            "heading": "3. Image Optimization with Next/Image",
+            "body": "Always define responsive sizes and modern formats (WebP/AVIF). Leveraging proper dimensions eliminates Cumulative Layout Shift (CLS) and preserves pristine Core Web Vitals."
+          }
+        ],
+        "conclusion": "By designing with server-first principles, your web apps stay lightning-fast regardless of project complexity."
+      },
+      "contentAr": {
+        "intro": "مثل الانتقال إلى معمارية App Router في Next.js نقلة نوعية في هندسة تطبيقات React الحديثة. فهم الحدود الفاصلة بين المعالجة على الخادم والتفاعل في المتصفح هو الفارق الحقيقي بين المطور المحترف وغيره.",
+        "sections": [
+          {
+            "heading": "1. الحدود الدقيقة بين Server و Client Components",
+            "body": "اجعل مكونات العميل (Client Components) تقتصر فقط على الأطراف التفاعلية (كالأزرار والنماذج). احتفظ بباقي الهيكل وجلب البيانات كـ Server Components لتقليص حجم حزمة كود الجافاسكريبت المرسلة للمستخدم إلى الصفر تقريباً.",
+            "codeSnippet": "// مكون خادم تلقائياً بدون أي حمولة جافاسكريبت إضافية\nexport default async function ProjectsFeed() {\n  const projects = await getProjects();\n  return <ProjectsGrid items={projects} />;\n}"
+          },
+          {
+            "heading": "2. تقنية البث المباشر التدريجي مع Suspense",
+            "body": "لا تجعل استعلامات قواعد البيانات تعطل إرسال هيكل الصفحة الأولي للمتصفح. استخدم React Suspense لبث الهيكل فوراً في أجزاء من الثانية بينما يتم استكمال جلب البيانات في الخلفية بسلاسة."
+          },
+          {
+            "heading": "3. تحسين الصور ومنع تذبذب الواجهة",
+            "body": "تطبيق قواعد Next/Image مع تحديد الأحجام الصحيحة يمنع ظاهرة انزياح التصميم التراكمي (CLS) ويضمن اجتياز مؤشرات الأداء الحيوية لكبرى محركات البحث."
+          }
+        ],
+        "conclusion": "التفكير بمنطق الخادم أولاً يضمن أن تظل تطبيقاتك فائقة السرعة والاستجابة مهما زاد حجم المشروع والبيانات."
+      }
+    },
+    {
+      "id": "blog-3",
+      "slug": "frontend-ai-tools-workflow-2026",
+      "titleEn": "Supercharging Frontend Workflows with AI: Cursor, Copilot & Modern Tools",
+      "titleAr": "مضاعفة إنتاجية مطور الواجهات باستخدام أدوات الذكاء الاصطناعي الحديثة",
+      "excerptEn": "Practical workflows and prompt engineering strategies using Cursor, Copilot, and LLMs to accelerate component scaffolding, testing, and debugging.",
+      "excerptAr": "استراتيجيات عملية لتسخير أدوات مثل Cursor AI و GitHub Copilot لكتابة واجهات معقدة، كتابة اختبارات شاملة، وحل المشكلات البرمجية في دقائق معدودة.",
+      "coverImage": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=1200&q=80",
+      "categoryEn": "AI Tools",
+      "categoryAr": "أدوات الذكاء الاصطناعي",
+      "tags": [
+        "Cursor",
+        "Copilot",
+        "Claude",
+        "Productivity"
+      ],
+      "author": {
+        "name": "Mohamed H. Mowafy",
+        "roleEn": "Front-End Developer",
+        "roleAr": "مطور واجهات أمامية",
+        "avatar": "/me.png"
+      },
+      "readTimeEn": "4 min read",
+      "readTimeAr": "4 دقائق قراءة",
+      "publishedAt": "2026-01",
+      "contentEn": {
+        "intro": "AI won't replace frontend engineers, but engineers leveraging AI effectively will replace those who don't. Here is how I integrate modern AI tools into daily production workflows.",
+        "sections": [
+          {
+            "heading": "1. Context-Aware Code Generation with Cursor & Claude",
+            "body": "The superpower of Cursor is referencing relevant files (@file) and types directly in your queries. Instead of vague prompts, feed the exact TypeScript interfaces and design tokens to generate production-ready components instantly."
+          },
+          {
+            "heading": "2. Rapid Prototyping & Edge Cases Detection",
+            "body": "Use AI to think through boundary conditions: empty states, network error recoveries, RTL layout flipping, and accessible aria-labels that are often overlooked during initial sprints."
+          },
+          {
+            "heading": "3. Automated Test Suites Generation",
+            "body": "Generating unit tests with Jest and React Testing Library is one of the highest-ROI use cases. AI accurately maps props permutations and user interaction flows."
+          }
+        ],
+        "conclusion": "Embracing AI as an intelligent copilot allows you to focus 90% of your mental energy on architecture, UX aesthetics, and business value."
+      },
+      "contentAr": {
+        "intro": "الذكاء الاصطناعي لن يحل محل مهندسي الواجهات المبدعين، ولكن المطورين الذين يتقنون توظيف أدوات الذكاء الاصطناعي سيتفوقون بفارق هائل على من يتجاهلونها.",
+        "sections": [
+          {
+            "heading": "1. التوليد البرمجي الواعي بالسياق مع Cursor و Claude",
+            "body": "القوة الحقيقية في محرر مثل Cursor تكمن في قدرته على قراءة سياق المشروع بالكامل (@file) وواجهات TypeScript، مما يمكنك من توليد كود نظيف ومتوافق بنسبة 100% مع معايير مشروعك في ثوان."
+          },
+          {
+            "heading": "2. اكتشاف الحالات الاستثنائية ودعم إمكانية الوصول",
+            "body": "يمكنك استخدام نماذج الذكاء الاصطناعي لمراجعة حالات الخطأ (Network Errors)، الشاشات الفارغة (Empty States)، وانعكاس النصوص في وضع اللغة العربية (RTL) دون إغفال أي تفصيلة."
+          },
+          {
+            "heading": "3. كتابة اختبارات الجودة بشكل مؤتمت",
+            "body": "إنتاج اختبارات الوحدة باستخدام Jest و React Testing Library يعتبر من أفضل الاستخدامات التي توفر ساعات طويلة من العمل الروتيني وتضمن استقرار النظام."
+          }
+        ],
+        "conclusion": "استخدام الذكاء الاصطناعي كمساعد ذكي يحرر طاقتك الذهنية للتركيز على المعمارية، جماليات التصميم، وتقديم قيمة حقيقية للمستخدم."
+      }
+    },
+    {
+      "id": "blog-4",
+      "slug": "achieving-95-google-lighthouse-score",
+      "titleEn": "Achieving a 95+ Google Lighthouse Score on Core Web Pages",
+      "titleAr": "كيفية تحقيق تقييم 95+ على Google Lighthouse وتحسين سرعة المواقع",
+      "excerptEn": "Actionable engineering techniques implemented to optimize Core Web Vitals (LCP, INP, CLS) and deliver blazing-fast web experiences.",
+      "excerptAr": "تقنيات هندسية عملية طبقتها لتحسين مؤشرات الأداء الحيوية والوصول لعلامة 95+ في سرعة وتجربة المستخدم.",
+      "coverImage": "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=1200&q=80",
+      "categoryEn": "Performance",
+      "categoryAr": "الأداء والسرعة",
+      "tags": [
+        "Lighthouse",
+        "Web Vitals",
+        "Optimization",
+        "SEO"
+      ],
+      "author": {
+        "name": "Mohamed H. Mowafy",
+        "roleEn": "Front-End Developer",
+        "roleAr": "مطور واجهات أمامية",
+        "avatar": "/me.png"
+      },
+      "readTimeEn": "5 min read",
+      "readTimeAr": "5 دقائق قراءة",
+      "publishedAt": "2025-12",
+      "contentEn": {
+        "intro": "Every 100ms delay in website response time reduces conversion rates by up to 7%. Here is the exact performance playbook we used to maintain consistent 95+ scores on Google Lighthouse.",
+        "sections": [
+          {
+            "heading": "1. Eliminating Largest Contentful Paint (LCP) Delays",
+            "body": "Preload your hero resources, utilize modern WebP/AVIF compression with strict quality settings (80%), and inline critical CSS to ensure the above-the-fold content paints under 1.2s."
+          },
+          {
+            "heading": "2. Optimizing Interaction to Next Paint (INP)",
+            "body": "Break down long-running JavaScript execution tasks using scheduler.yield() or requestIdleCallback. Never block the main thread with heavy computation during user inputs."
+          },
+          {
+            "heading": "3. Zero Cumulative Layout Shift (CLS)",
+            "body": "Always reserve explicit aspect-ratio boxes for images, video embeds, and dynamic widgets to prevent sudden jarring page shifts while resources stream in."
+          }
+        ],
+        "conclusion": "Speed is a feature and a brand statement. Exceptional performance paired with beautiful aesthetics creates unforgettable user journeys."
+      },
+      "contentAr": {
+        "intro": "كل تأخير مقداره 100 ميلي ثانية في تحميل الموقع يكلف فقدان ما يصل إلى 7% من تفاعل العملاء. إليك الدليل الهندسي الذي طبقته للحفاظ على تقييم 95+ في مؤشرات Google Lighthouse العالمية.",
+        "sections": [
+          {
+            "heading": "1. تسريع ظهور المحتوى الرئيسي (LCP)",
+            "body": "التحميل المسبق (Preload) لخطوط الهيرو وصوره الأساسية، استخدام صيغ حديثة مثل WebP مع ضغط ذكي بنسبة 80%، وتضمين الـ CSS الحرج يضمن رسم الصفحة الأولى للمستخدم في أقل من ثانية واحدة."
+          },
+          {
+            "heading": "2. استجابة التفاعل الفورية (INP)",
+            "body": "تقسيم المهام البرمجية الثقيلة عبر requestIdleCallback أو خيوط معالجة فرعية، وتجنب تعطيل الـ Main Thread لضمان استجابة سريعة جداً لنقرات وتمرير المستخدم."
+          },
+          {
+            "heading": "3. استقرار الواجهة ومنع التذبذب (CLS)",
+            "body": "تحديد نسب أبعاد صريحة (aspect-ratio) للصور ومقاطع الفيديو قبل تحميلها يمنع أي انزياح مفاجئ في موضع العناصر أثناء التصفح."
+          }
+        ],
+        "conclusion": "السرعة الفائقة ليست تفصيلاً ثانوياً، بل هي ميزة أساسية ورسالة واضحة لجودة واحترافية علامتك التجارية."
+      }
+    }
+  ],
   "skills": [
     {
       "id": "frontend-core",
@@ -235,6 +473,27 @@
       "order": 1
     },
     {
+      "id": "skill-1788543878605",
+      "titleEn": "Programming & Frameworks",
+      "titleAr": "البرمجة وأطر العمل",
+      "descEn": "Developing modern software using cutting-edge frameworks and programming languages to deliver fast, stable architectures.",
+      "descAr": "كتابة وتطوير برمجيات حديثة بالاعتماد على أحدث أطر العمل ولغات البرمجة لبناء بنية تحتية برمجية سريعة ومستقرة.",
+      "icons": [
+        "SiJavascript",
+        "SiTypescript",
+        "SiReact",
+        "SiVuedotjs",
+        "SiNextdotjs",
+        "SiNodedotjs",
+        "NextAuth"
+      ],
+      "badges": [
+        "Responsive Design",
+        "Clean Code"
+      ],
+      "order": 1
+    },
+    {
       "id": "styling",
       "titleEn": "Styling, UI Frameworks & Elegant UI",
       "titleAr": "التنسيق وأنظمة التصميم والواجهات الأنيقة",
@@ -255,6 +514,26 @@
         "Mobile-First",
         "Dark Mode",
         "Custom Themes"
+      ],
+      "order": 2
+    },
+    {
+      "id": "skill-1788544008070",
+      "titleEn": "State Management",
+      "titleAr": "إدارة الحالة وتدفق البيانات",
+      "descEn": "Managing complex application state and data flow efficiently, ensuring optimal rendering performance, data synchronization, and smooth user interactions.\n",
+      "descAr": "إدارة الحالة وتدفق البيانات المعقدة للتطبيقات بكفاءة عالية، مع ضمان سرعة المعالجة ومزامنة البيانات وتوفير تجربة تفاعلية سلسة ومستقرة.",
+      "icons": [
+        "SiRedux",
+        "Zustand",
+        "React Context API",
+        "React Query"
+      ],
+      "badges": [
+        "Global State",
+        "Server State",
+        "Client State",
+        "Data Caching"
       ],
       "order": 2
     },

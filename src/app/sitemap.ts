@@ -2,7 +2,7 @@ import { MetadataRoute } from "next";
 import { portfolioStore } from "@/lib/store";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = "https://mohamedmowafy.dev";
+  const baseUrl = "https://mohamedmowafydev.vercel.app";
   
   const projects = await portfolioStore.getProjects();
   const blogs = await portfolioStore.getBlogs();

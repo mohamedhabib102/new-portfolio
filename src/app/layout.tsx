@@ -22,7 +22,7 @@ const alexandria = Alexandria({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://mohamedmowafy.dev"),
+  metadataBase: new URL("https://mohamedmowafydev.vercel.app"),
   title: {
     default: "Mohamed H. Mowafy | Senior Frontend Engineer & UI Specialist",
     template: "%s | Mohamed H. Mowafy",
@@ -51,6 +51,13 @@ export const metadata: Metadata = {
   authors: [{ name: "Mohamed H. Mowafy", url: "https://github.com/mohamedhabib102" }],
   creator: "Mohamed H. Mowafy",
   publisher: "Mohamed H. Mowafy",
+  alternates: {
+    canonical: "https://mohamedmowafydev.vercel.app",
+    languages: {
+      "en-US": "https://mohamedmowafydev.vercel.app",
+      "ar-EG": "https://mohamedmowafydev.vercel.app",
+    },
+  },
   icons: {
     icon: [{ url: "/avatar.png" }],
     apple: [{ url: "/avatar.png", sizes: "180x180", type: "image/png" }],
@@ -60,7 +67,7 @@ export const metadata: Metadata = {
     type: "website",
     locale: "en_US",
     alternateLocale: ["ar_EG"],
-    url: "https://mohamedmowafy.dev",
+    url: "https://mohamedmowafydev.vercel.app",
     siteName: "Mohamed H. Mowafy - Frontend Engineer Portfolio",
     title: "Mohamed H. Mowafy | Senior Frontend Engineer & UI Specialist",
     description:
@@ -93,6 +100,9 @@ export const metadata: Metadata = {
       "max-snippet": -1,
     },
   },
+  verification: {
+    google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION,
+  },
 };
 
 const jsonLd = {
@@ -100,14 +110,14 @@ const jsonLd = {
   "@graph": [
     {
       "@type": "Person",
-      "@id": "https://mohamedmowafy.dev/#person",
+      "@id": "https://mohamedmowafydev.vercel.app/#person",
       name: "Mohamed H. Mowafy",
       alternateName: "محمد حبيب موافي",
       jobTitle: "Senior Frontend Engineer & UI/UX Specialist",
       description:
         "Senior Frontend Developer with expertise in Next.js, React, TypeScript, Vue.js, Tailwind CSS, performance optimization, and fluid web animations.",
-      url: "https://mohamedmowafy.dev",
-      image: "https://mohamedmowafy.dev/avatar.png",
+      url: "https://mohamedmowafydev.vercel.app",
+      image: "https://mohamedmowafydev.vercel.app/avatar.png",
       sameAs: [
         "https://github.com/mohamedhabib102",
         "https://www.linkedin.com/in/habib-mowafy",
@@ -128,11 +138,11 @@ const jsonLd = {
     },
     {
       "@type": "WebSite",
-      "@id": "https://mohamedmowafy.dev/#website",
-      url: "https://mohamedmowafy.dev",
+      "@id": "https://mohamedmowafydev.vercel.app/#website",
+      url: "https://mohamedmowafydev.vercel.app",
       name: "Mohamed H. Mowafy - Portfolio",
       publisher: {
-        "@id": "https://mohamedmowafy.dev/#person",
+        "@id": "https://mohamedmowafydev.vercel.app/#person",
       },
       inLanguage: ["en-US", "ar-EG"],
     },

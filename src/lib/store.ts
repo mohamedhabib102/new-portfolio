@@ -248,9 +248,9 @@ function readLocalStore(): LocalStoreData {
       return {
         siteConfig: { ...defaultSiteConfig, ...(parsed.siteConfig || {}) },
         experiences: Array.isArray(parsed.experiences) ? parsed.experiences : defaultExperiences,
-        projects: Array.isArray(parsed.projects) ? parsed.projects : initialProjects,
-        blogs: Array.isArray(parsed.blogs) ? parsed.blogs : blogsData,
-        skills: Array.isArray(parsed.skills) ? parsed.skills : defaultSkills,
+        projects: Array.isArray(parsed.projects) && parsed.projects.length > 0 ? parsed.projects : initialProjects,
+        blogs: Array.isArray(parsed.blogs) && parsed.blogs.length > 0 ? parsed.blogs : blogsData,
+        skills: Array.isArray(parsed.skills) && parsed.skills.length > 0 ? parsed.skills : defaultSkills,
         messages: Array.isArray(parsed.messages) ? parsed.messages : [],
       };
     }
@@ -540,7 +540,7 @@ export const portfolioStore = {
     if (supabase) {
       try {
         const { data, error } = await supabase.from("Blog").select("*").order("createdAt", { ascending: false });
-        if (!error && Array.isArray(data)) {
+        if (!error && Array.isArray(data) && data.length > 0) {
           const formatted = data.map((b) => ({
             ...b,
             author: {
