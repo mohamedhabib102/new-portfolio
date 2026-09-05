@@ -49,13 +49,13 @@ export default function FloatingDock({ className = "" }: FloatingDockProps) {
       id: "avatar",
       label: t.dockAvatar,
       icon: (
-        <div className="w-6 h-6 sm:w-7 sm:h-7 rounded-full overflow-hidden bg-cyan-400/20 border border-cyan-400/50 relative flex items-center justify-center">
+        <div className="w-6 h-6 sm:w-7 sm:h-7 rounded-full overflow-hidden border border-white/25 bg-neutral-900 relative flex items-center justify-center shadow-sm">
           <Image
-            src="/me.png"
+            src="/avatar.png"
             alt="Mohamed H. Mowafy"
             width={28}
             height={28}
-            className="object-cover scale-125"
+            className="object-cover object-top w-full h-full"
           />
         </div>
       ),

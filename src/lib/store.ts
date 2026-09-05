@@ -547,8 +547,9 @@ export const portfolioStore = {
               name: b.authorName || "Mohamed H. Mowafy",
               roleEn: b.authorRole || "Front-End Developer",
               roleAr: "مطور واجهات أمامية",
-              avatar: "/me.png",
+              avatar: "/avatar.png",
             },
+            likes: typeof b.likes === "number" ? b.likes : 0,
           }));
           const defaultList = blogsData;
           const nonSupabase = defaultList.filter(
@@ -576,11 +577,12 @@ export const portfolioStore = {
       ...blogData,
       id,
       slug,
+      likes: typeof blogData.likes === "number" ? blogData.likes : 0,
       author: {
         name: "Mohamed H. Mowafy",
         roleEn: "Front-End Developer",
         roleAr: "مطور واجهات أمامية",
-        avatar: "/me.png",
+        avatar: "/avatar.png",
       },
       tags: Array.isArray(blogData.tags) ? blogData.tags : (blogData.tags || "").split(",").map((s: string) => s.trim()).filter(Boolean),
       publishedAt: blogData.publishedAt || new Date().toISOString().slice(0, 7),
@@ -632,6 +634,30 @@ export const portfolioStore = {
     }
 
     return fullBlog;
+  },
+
+  likeBlog: async (idOrSlug: string, increment: number = 1): Promise<{ likes: number }> => {
+    const store = readLocalStore();
+    const blogIdx = store.blogs.findIndex((b: any) => b.id === idOrSlug || b.slug === idOrSlug);
+    let newLikes = 1;
+    if (blogIdx >= 0) {
+      const current = typeof store.blogs[blogIdx].likes === "number" ? store.blogs[blogIdx].likes : 0;
+      newLikes = Math.max(0, current + increment);
+      store.blogs[blogIdx].likes = newLikes;
+      writeLocalStore(store);
+
+      if (supabase) {
+        try {
+          await supabase
+            .from("Blog")
+            .update({ likes: newLikes, updatedAt: new Date().toISOString() })
+            .eq("id", store.blogs[blogIdx].id);
+        } catch (err) {
+          console.warn("[Supabase] likeBlog error:", err);
+        }
+      }
+    }
+    return { likes: newLikes };
   },
 
   deleteBlog: async (id: string) => {

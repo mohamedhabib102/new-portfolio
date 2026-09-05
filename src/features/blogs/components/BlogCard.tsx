@@ -6,7 +6,7 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import { BlogPost } from "../types";
 import { useTranslation } from "@/i18n/LanguageContext";
-import { FiArrowUpRight, FiClock } from "react-icons/fi";
+import { FiArrowUpRight, FiClock, FiHeart } from "react-icons/fi";
 
 interface BlogCardProps {
   blog: BlogPost;
@@ -21,6 +21,8 @@ export default function BlogCard({ blog, index }: BlogCardProps) {
   const category = language === "ar" ? blog.categoryAr : blog.categoryEn;
   const readTime = language === "ar" ? blog.readTimeAr : blog.readTimeEn;
   const authorRole = language === "ar" ? blog.author.roleAr : blog.author.roleEn;
+  const blogUrl = `/blogs/${blog.slug || blog.id}`;
+  const avatarSrc = blog.author.avatar === "/me.png" ? "/avatar.png" : (blog.author.avatar || "/avatar.png");
 
   return (
     <motion.article
@@ -31,13 +33,13 @@ export default function BlogCard({ blog, index }: BlogCardProps) {
       className="group relative flex flex-col justify-between bg-[#12141a] border border-white/8 hover:border-white/20 rounded-[28px] overflow-hidden transition-all duration-300 shadow-xl"
     >
       {/* 1. Cover Image Container with Hover Scale */}
-      <Link href={`/blogs/${blog.id}`} className="relative w-full aspect-[16/9] overflow-hidden block">
+      <Link href={blogUrl} className="relative w-full aspect-[16/10] sm:aspect-[16/9] overflow-hidden block">
         <Image
           src={blog.coverImage}
           alt={title}
           fill
           unoptimized
-          className="object-cover transition-transform duration-500 group-hover:scale-105"
+          className="object-cover object-center transition-transform duration-500 group-hover:scale-105"
           sizes="(max-width: 768px) 100vw, 50vw"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-[#12141a] via-transparent to-black/20" />
@@ -47,17 +49,25 @@ export default function BlogCard({ blog, index }: BlogCardProps) {
           <span className="px-3 py-1 rounded-full text-xs font-normal bg-black/75 backdrop-blur-md text-white border border-white/10 shadow-sm">
             {category}
           </span>
-          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-normal bg-black/75 backdrop-blur-md text-white/90 border border-white/10 shadow-sm">
-            <FiClock className="w-3 h-3 text-neutral-300" />
-            <span>{readTime}</span>
-          </span>
+          <div className="flex items-center gap-2">
+            {typeof blog.likes === "number" && blog.likes > 0 && (
+              <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-normal bg-rose-500/85 backdrop-blur-md text-white shadow-sm">
+                <FiHeart className="w-3 h-3 fill-white" />
+                <span>{blog.likes}</span>
+              </span>
+            )}
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-normal bg-black/75 backdrop-blur-md text-white/90 border border-white/10 shadow-sm">
+              <FiClock className="w-3 h-3 text-neutral-300" />
+              <span>{readTime}</span>
+            </span>
+          </div>
         </div>
       </Link>
 
       {/* 2. Content */}
       <div className="p-6 sm:p-7 flex flex-col flex-1 justify-between gap-6">
         <div className="flex flex-col gap-3">
-          <Link href={`/blogs/${blog.id}`} className="group-hover:text-blue-400 transition-colors">
+          <Link href={blogUrl} className="group-hover:text-blue-400 transition-colors">
             <h3 className="text-xl sm:text-2xl font-normal text-white tracking-tight leading-snug">
               {title}
             </h3>
@@ -72,13 +82,13 @@ export default function BlogCard({ blog, index }: BlogCardProps) {
         <div className="pt-4 border-t border-white/8 flex items-center justify-between">
           {/* Author info (Habib - Owner of the site) */}
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-full overflow-hidden border border-cyan-400/40 relative shrink-0 bg-cyan-400/10">
+            <div className="relative w-10 h-10 rounded-full overflow-hidden border border-white/20 bg-neutral-900 shrink-0 shadow-sm">
               <Image
-                src={blog.author.avatar}
+                src={avatarSrc}
                 alt={blog.author.name}
-                width={36}
-                height={36}
-                className="object-cover scale-125"
+                width={40}
+                height={40}
+                className="object-cover object-top w-full h-full"
               />
             </div>
             <div className="flex flex-col text-xs">
@@ -89,7 +99,7 @@ export default function BlogCard({ blog, index }: BlogCardProps) {
 
           {/* Read Arrow Button */}
           <Link
-            href={`/blogs/${blog.id}`}
+            href={blogUrl}
             className="flex items-center justify-center w-10 h-10 rounded-full bg-white/5 group-hover:bg-white text-white group-hover:text-black border border-white/10 transition-all duration-300 shadow-md"
             aria-label={t.readArticle}
             title={t.readArticle}

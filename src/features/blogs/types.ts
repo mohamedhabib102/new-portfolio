@@ -30,4 +30,5 @@ export interface BlogPost {
   readTimeEn: string;
   readTimeAr: string;
   publishedAt: string;
+  likes?: number;
 }

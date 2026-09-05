@@ -12,6 +12,7 @@ import ContactSection from "@/features/contact/components/ContactSection";
 import FooterSection from "@/features/footer/components/FooterSection";
 import { useBlogs } from "@/hooks/useBlogs";
 import { FiArrowLeft, FiClock, FiCalendar } from "react-icons/fi";
+import BlogLikeButton from "@/features/blogs/components/BlogLikeButton";
 
 interface BlogDetailClientProps {
   id: string;
@@ -115,13 +116,13 @@ export default function BlogDetailClient({ id, initialBlog }: BlogDetailClientPr
           transition={{ duration: 0.6, delay: 0.2 }}
           className="flex items-center gap-4 py-4 mb-10 border-y border-white/10"
         >
-          <div className="w-12 h-12 rounded-full overflow-hidden border border-cyan-400/50 relative bg-cyan-400/10 shrink-0">
+          <div className="relative w-12 h-12 rounded-full overflow-hidden border border-white/20 bg-neutral-900 shrink-0 shadow-md">
             <Image
-              src={blog.author.avatar || "/avatar.png"}
+              src="/avatar.png"
               alt={blog.author.name}
               width={48}
               height={48}
-              className="object-cover scale-125"
+              className="object-cover object-top w-full h-full"
             />
           </div>
           <div>
@@ -139,7 +140,7 @@ export default function BlogDetailClient({ id, initialBlog }: BlogDetailClientPr
           initial={{ opacity: 0, scale: 0.97 }}
           animate={isLoaded ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.97 }}
           transition={{ duration: 0.8, delay: 0.25, ease: [0.16, 1, 0.3, 1] }}
-          className="relative w-full aspect-[16/9] rounded-3xl overflow-hidden mb-12 border border-white/10 shadow-2xl"
+          className="relative w-full aspect-[16/10] sm:aspect-[16/9] max-h-[500px] rounded-3xl overflow-hidden mb-12 border border-white/10 shadow-2xl"
         >
           <Image
             src={blog.coverImage || "/avatar.png"}
@@ -147,7 +148,7 @@ export default function BlogDetailClient({ id, initialBlog }: BlogDetailClientPr
             fill
             priority
             unoptimized
-            className="object-cover"
+            className="object-cover object-center"
             sizes="(max-width: 1024px) 100vw, 896px"
           />
         </motion.div>
@@ -249,6 +250,12 @@ export default function BlogDetailClient({ id, initialBlog }: BlogDetailClientPr
               ))}
             </div>
           )}
+
+          {/* Interactive Likes Section */}
+          <BlogLikeButton
+            blogId={blog.slug || blog.id || id}
+            initialLikes={typeof blog.likes === "number" ? blog.likes : 0}
+          />
         </motion.div>
       </article>
 
