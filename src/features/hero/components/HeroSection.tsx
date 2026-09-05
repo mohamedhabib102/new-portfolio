@@ -23,7 +23,7 @@ export default function HeroSection({ initialConfig }: { initialConfig?: SiteCon
   return (
     <section
       id="hero"
-      className="relative w-full h-screen min-h-[660px] max-h-[1080px] overflow-hidden flex flex-col justify-between select-none bg-[#7b828a]"
+      className="relative w-full min-h-[100dvh] sm:min-h-[820px] md:min-h-[900px] lg:min-h-[980px] overflow-hidden flex flex-col justify-between select-none bg-[#7b828a]"
     >
       {/* 1. Full Hero Background Image: dynamic hero image filling the screen */}
       <div className="absolute inset-0 z-0">
@@ -33,7 +33,7 @@ export default function HeroSection({ initialConfig }: { initialConfig?: SiteCon
           fill
           priority
           unoptimized
-          className="object-cover object-[center_18%] filter grayscale contrast-105 brightness-100"
+          className="object-cover object-[center_12%] sm:object-[center_14%] filter grayscale contrast-105 brightness-100"
           sizes="100vw"
         />
       </div>
@@ -84,7 +84,7 @@ export default function HeroSection({ initialConfig }: { initialConfig?: SiteCon
         initial={{ opacity: 0, scale: 0.5 }}
         animate={isLoaded ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.5 }}
         transition={{ type: "spring", stiffness: 220, damping: 18, delay: 0.15 }}
-        className={`absolute z-20 top-[31%] sm:top-[32%] ${
+        className={`absolute z-20 top-[28%] sm:top-[30%] ${
           isRtl ? "left-[14%] sm:left-[17%]" : "right-[14%] sm:right-[17%]"
         }`}
       >
@@ -111,7 +111,7 @@ export default function HeroSection({ initialConfig }: { initialConfig?: SiteCon
         initial={{ opacity: 0, y: 55, scale: 0.96 }}
         animate={isLoaded ? { opacity: 1, y: 0, scale: 1 } : { opacity: 0, y: 55, scale: 0.96 }}
         transition={{ duration: 0.9, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-        className="relative z-10 w-full pointer-events-none overflow-hidden select-none mt-auto mb-10 sm:mb-14"
+        className="relative z-10 w-full pointer-events-none overflow-hidden select-none mt-auto mb-6 sm:mb-10 lg:mb-12"
       >
         {language === "ar" ? (
           <div className="w-full flex items-center justify-center px-4">
@@ -119,8 +119,8 @@ export default function HeroSection({ initialConfig }: { initialConfig?: SiteCon
               dir="rtl"
               className="font-bold sm:font-extrabold tracking-normal text-white text-center drop-shadow-md w-full"
               style={{
-                fontSize: "clamp(5.5rem, 21vw, 20rem)",
-                lineHeight: "0.85",
+                fontSize: "clamp(4.5rem, 16.5vw, 16.5rem)",
+                lineHeight: "0.9",
                 letterSpacing: "0.02em",
               }}
             >
