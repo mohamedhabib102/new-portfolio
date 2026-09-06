@@ -57,6 +57,7 @@ model Blog {
   readTimeEn  String   @default("5 min read")
   readTimeAr  String   @default("5 دقائق قراءة")
   publishedAt String
+  likes       Int      @default(0)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }

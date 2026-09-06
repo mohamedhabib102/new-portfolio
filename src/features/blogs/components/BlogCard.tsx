@@ -20,9 +20,12 @@ export default function BlogCard({ blog, index }: BlogCardProps) {
   const excerpt = language === "ar" ? blog.excerptAr : blog.excerptEn;
   const category = language === "ar" ? blog.categoryAr : blog.categoryEn;
   const readTime = language === "ar" ? blog.readTimeAr : blog.readTimeEn;
-  const authorRole = language === "ar" ? blog.author.roleAr : blog.author.roleEn;
+  const authorName = blog.author?.name || (blog as any).authorName || "Mohamed H. Mowafy";
+  const authorRole = language === "ar"
+    ? blog.author?.roleAr || "مطور واجهات أمامية"
+    : blog.author?.roleEn || (blog as any).authorRole || "Front-End Developer";
   const blogUrl = `/blogs/${blog.slug || blog.id}`;
-  const avatarSrc = blog.author.avatar === "/me.png" ? "/avatar.png" : (blog.author.avatar || "/avatar.png");
+  const avatarSrc = (blog.author?.avatar === "/me.png" || !blog.author?.avatar) ? "/avatar.png" : blog.author.avatar;
 
   return (
     <motion.article
@@ -85,14 +88,14 @@ export default function BlogCard({ blog, index }: BlogCardProps) {
             <div className="relative w-10 h-10 rounded-full overflow-hidden border border-white/20 bg-neutral-900 shrink-0 shadow-sm">
               <Image
                 src={avatarSrc}
-                alt={blog.author.name}
+                alt={authorName}
                 width={40}
                 height={40}
                 className="object-cover object-top w-full h-full"
               />
             </div>
             <div className="flex flex-col text-xs">
-              <span className="font-normal text-white">{blog.author.name}</span>
+              <span className="font-normal text-white">{authorName}</span>
               <span className="text-neutral-400 font-light">{authorRole}</span>
             </div>
           </div>

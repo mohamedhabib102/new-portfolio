@@ -64,9 +64,12 @@ CREATE TABLE IF NOT EXISTS public."Blog" (
     "readTimeEn" TEXT DEFAULT '5 min read',
     "readTimeAr" TEXT DEFAULT '5 دقائق قراءة',
     "publishedAt" TEXT NOT NULL,
+    "likes" INTEGER DEFAULT 0,
     "createdAt" TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL,
     "updatedAt" TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
 );
+
+ALTER TABLE public."Blog" ADD COLUMN IF NOT EXISTS "likes" INTEGER DEFAULT 0;
 
 -- 4. Experience Table
 CREATE TABLE IF NOT EXISTS public."Experience" (
@@ -155,4 +158,3 @@ DROP POLICY IF EXISTS "Public Update Storage" ON storage.objects;
 CREATE POLICY "Public Read Storage" ON storage.objects FOR SELECT USING (bucket_id = 'portfolio-media');
 CREATE POLICY "Public Upload Storage" ON storage.objects FOR INSERT WITH CHECK (bucket_id = 'portfolio-media');
 CREATE POLICY "Public Update Storage" ON storage.objects FOR UPDATE USING (bucket_id = 'portfolio-media');
-

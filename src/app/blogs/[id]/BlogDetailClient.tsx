@@ -22,16 +22,51 @@ interface BlogDetailClientProps {
 export default function BlogDetailClient({ id, initialBlog }: BlogDetailClientProps) {
   const { t, language, isRtl } = useTranslation();
   const { isLoaded } = useLoading();
-  const { blogs } = useBlogs();
+  const { blogs, isLoading } = useBlogs();
 
-  const blog = (blogs && blogs.find((b: any) => b.id === id || b.slug === id)) || initialBlog;
+  const cleanId = typeof id === "string" ? decodeURIComponent(id).trim().toLowerCase() : "";
+  const blog =
+    (blogs &&
+      blogs.find((b: any) => {
+        const bId = b.id?.toLowerCase();
+        const bSlug = b.slug?.toLowerCase();
+        return bId === cleanId || bSlug === cleanId;
+      })) ||
+    initialBlog;
 
-  if (!blog) {
+  // If blogs are currently loading and blog is not ready yet, display a smooth loader
+  if (isLoading && !blog) {
     return (
       <div className="min-h-screen bg-black text-white flex flex-col items-center justify-center gap-4">
-        <h2 className="text-xl font-normal">Article not found</h2>
-        <Link href="/blogs" className="text-sm text-blue-400 hover:underline">
-          {t.backToBlogs}
+        <div className="relative flex items-center justify-center">
+          <div className="w-14 h-14 rounded-full border-2 border-cyan-500/20 border-t-cyan-400 animate-spin" />
+          <div className="absolute w-8 h-8 rounded-full border-2 border-blue-500/30 border-b-blue-400 animate-spin [animation-direction:reverse]" />
+        </div>
+        <p className="text-neutral-400 text-sm font-medium tracking-wide animate-pulse">
+          {language === "ar" ? "جاري تحميل تفاصيل المقال..." : "Loading article..."}
+        </p>
+      </div>
+    );
+  }
+
+  // Only display not found if request has finished and article is genuinely missing
+  if (!blog) {
+    return (
+      <div className="min-h-screen bg-black text-white flex flex-col items-center justify-center gap-4 px-6 text-center">
+        <h2 className="text-2xl font-normal text-neutral-200">
+          {language === "ar" ? "المقال غير موجود" : "Article not found"}
+        </h2>
+        <p className="text-neutral-500 text-sm max-w-md">
+          {language === "ar"
+            ? "المقال الذي تبحث عنه قد تم نقله أو حذفه."
+            : "The article you are looking for may have been moved or deleted."}
+        </p>
+        <Link
+          href="/blogs"
+          className="mt-2 inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-white/10 hover:bg-white/15 text-white text-sm border border-white/10 transition-colors"
+        >
+          <FiArrowLeft className={`w-4 h-4 ${isRtl ? "rotate-180" : ""}`} />
+          <span>{t.backToBlogs}</span>
         </Link>
       </div>
     );
@@ -41,7 +76,10 @@ export default function BlogDetailClient({ id, initialBlog }: BlogDetailClientPr
   const excerpt = language === "ar" ? blog.excerptAr : blog.excerptEn;
   const category = language === "ar" ? blog.categoryAr : blog.categoryEn;
   const readTime = language === "ar" ? blog.readTimeAr : blog.readTimeEn;
-  const authorRole = language === "ar" ? blog.author.roleAr : blog.author.roleEn;
+  const authorName = blog.author?.name || blog.authorName || "Mohamed H. Mowafy";
+  const authorRole = language === "ar"
+    ? blog.author?.roleAr || "مطور واجهات أمامية"
+    : blog.author?.roleEn || blog.authorRole || "Front-End Developer";
   const content = language === "ar" ? blog.contentAr : blog.contentEn;
 
   return (
@@ -119,7 +157,7 @@ export default function BlogDetailClient({ id, initialBlog }: BlogDetailClientPr
           <div className="relative w-12 h-12 rounded-full overflow-hidden border border-white/20 bg-neutral-900 shrink-0 shadow-md">
             <Image
               src="/avatar.png"
-              alt={blog.author.name}
+              alt={authorName}
               width={48}
               height={48}
               className="object-cover object-top w-full h-full"
@@ -127,7 +165,7 @@ export default function BlogDetailClient({ id, initialBlog }: BlogDetailClientPr
           </div>
           <div>
             <div className="text-sm sm:text-base font-normal text-white">
-              {blog.author.name}
+              {authorName}
             </div>
             <div className="text-xs sm:text-sm text-neutral-400 font-light">
               {authorRole}

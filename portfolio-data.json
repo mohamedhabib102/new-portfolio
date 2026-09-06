@@ -201,6 +201,58 @@
       "titleAr": "تقنيات تصيير الويب في React و Next.js: المقارنة الشاملة بين CSR و SSR و SSG و ISR",
       "excerptEn": "A deep dive into Next.js & React rendering techniques (CSR, SSR, SSG, and ISR). Discover how each strategy works under the hood, its direct impact on Googlebot crawling and SEO, and real TypeScript code examples.",
       "excerptAr": "دليل شامل ومفصل يشرح تقنيات تصيير الويب في React و Next.js مع مقارنة عملية بين CSR و SSR و SSG و ISR، وتأثير كل استراتيجية على عناكب بحث جوجل (SEO) والأداء مع الأكواد البرمجية.",
+      "contentEn": {
+        "intro": "Hello, my friend! If you are building with Next.js or React.js, this post is specifically crafted for you. We will break down the essential rendering techniques that define modern web architecture: CSR, SSR, SSG, and ISR. You have probably heard of them, but together we will uncover how each mechanism works under the hood, how search engine crawlers interact with your pages, and how to choose the ideal strategy for your application.",
+        "sections": [
+          {
+            "body": "In Client-Side Rendering, the user's browser is entirely responsible for generating HTML and executing UI logic. When a visitor requests your page, the server returns an almost bare HTML file with a root element (e.g., <div id='root'></div>) and a bundle of JavaScript. The browser downloads the scripts, compiles the code, fetches data, and injects elements into the DOM.\n\nDoes CSR deliver good SEO? Absolutely not. Search engine crawlers (like Googlebot) crawl the web to index page content. When a crawler hits a pure CSR application, it initially sees a blank white page because JavaScript has not yet executed. Consequently, the crawler cannot parse headings, semantic text, or internal links, resulting in poor ranking and indexing delays.\n\nIn Next.js 14 and above (App Router), components are Server Components by default. To opt into CSR, you declare the 'use client' directive at the very top of the file. You use this when dealing with React hooks (useState, useEffect), DOM events, and browser APIs.",
+            "heading": "1. Client-Side Rendering (CSR): Mechanics & SEO Pitfalls",
+            "codeSnippet": "\"use client\";\nimport { useEffect, useState } from \"react\";\n\ninterface Project {\n  sectionID: number;\n  name: string;\n}\n\nconst ClientSide: React.FC = () => {\n  const [projects, setProjects] = useState<Project[]>([]);\n\n  const getProjects = async () => {\n    try {\n      const res = await fetch(\"https://example.runasp.net/api/Donations/GetAllSections\");\n      if (!res.ok) {\n        console.warn(\"API returned an error:\", res.status);\n        return;\n      }\n      const data = await res.json();\n      setProjects(data);\n    } catch (error) { \n      console.log(error);\n    }\n  };\n\n  useEffect(() => {\n    getProjects();\n  }, []);\n\n  return (\n    <div className=\"bg-[#EEE] p-4 rounded-lg\">\n      <h2 className=\"text-2xl text-blue-400 font-semibold mb-1\">CSR Technique</h2>\n      <p className=\"text-black/70 leading-6 text-lg mb-5\">\n        Client-Side Rendering: Data fetching and DOM rendering occur entirely inside the browser.\n      </p>\n      <div className=\"bg-white p-4 rounded-lg\">\n        {projects.map((ele) => (\n          <div key={ele.sectionID} className=\"mb-3\">\n            <h3 className=\"text-2xl text-right bg-[#EEE] p-2 rounded-sm\">{ele.name}</h3>\n          </div>\n        ))}\n      </div>\n    </div>\n  );\n};\n\nexport default ClientSide;"
+          },
+          {
+            "body": "Server-Side Rendering flips the equation: the server assumes full responsibility for generating the complete HTML document on every single request. When a user or crawler visits the URL, the server executes backend logic, queries databases or REST APIs, constructs the ready HTML markup, and streams it back.\n\nThis guarantees stellar SEO. Search engine crawlers immediately index fully formed markup, semantic headings, and rich meta tags without waiting for client-side JavaScript execution.\n\nIn Next.js App Router, any Server Component fetching data with cache: 'no-store' triggers on-demand SSR on every incoming request.",
+            "heading": "2. Server-Side Rendering (SSR): Full On-Demand HTML",
+            "codeSnippet": "// Server-Side Rendering (SSR) in Next.js Server Component\n// Runs on every incoming request on the server (Dynamic On-Demand Rendering)\n\ninterface Project {\n  sectionID: number;\n  name: string;\n}\n\nconst getProjectsSSR = async (): Promise<Project[]> => {\n  const res = await fetch(\"https://example.runasp.net/api/Donations/GetAllSections\", {\n    cache: \"no-store\", // SSR: No caching, fetches fresh data on every request\n  });\n\n  if (!res.ok) {\n    throw new Error(\"Failed to fetch fresh data on server\");\n  }\n\n  return res.json();\n};\n\nexport default async function SSRBlog() {\n  const projects = await getProjectsSSR();\n\n  return (\n    <div className=\"bg-[#EEE] p-4 rounded-lg\">\n      <h2 className=\"text-2xl text-blue-500 font-bold mb-2\">SSR Technique</h2>\n      <p className=\"text-neutral-700 mb-4\">\n        Pre-rendered HTML ready for instant crawlers with fresh real-time data.\n      </p>\n      <div className=\"bg-white p-4 rounded-lg space-y-3\">\n        {projects.map((item) => (\n          <h3 key={item.sectionID} className=\"text-xl bg-[#EEE] p-2 rounded\">\n            {item.name}\n          </h3>\n        ))}\n      </div>\n    </div>\n  );\n}"
+          },
+          {
+            "body": "Static Site Generation pre-renders all HTML pages ahead of time during the application build phase (next build). The resulting HTML and JSON files are cached statically and served worldwide via Global Edge Content Delivery Networks (CDNs).\n\nThe primary advantages are blazing fast load times (<100ms TTFB), 100/100 Core Web Vitals scores, and zero server CPU load under high traffic. However, the tradeoff is freshness: if content changes in your database, visitors will not see the updates until you trigger a completely new build and deployment of the entire project.\n\nIn Next.js, SSG is achieved using cache: 'force-cache' in fetch requests.",
+            "heading": "3. Static Site Generation (SSG): Maximum Speed at Build-Time",
+            "codeSnippet": "// Static Site Generation (SSG) in Next.js Server Component\n// Pre-rendered once at build time and cached across Edge CDNs\n\ninterface Project {\n  sectionID: number;\n  name: string;\n}\n\nconst getProjectsSSG = async (): Promise<Project[]> => {\n  try {\n    const res = await fetch(\"https://example.runasp.net/api/Donations/GetAllSections\", {\n      cache: \"force-cache\", // SSG: Cached permanently until next application build\n    });\n\n    if (!res.ok) {\n      console.warn(\"API returned an error:\", res.status);\n      return [];\n    }\n\n    return await res.json();\n  } catch (error) {\n    console.error(error);\n    return [];\n  }\n};\n\nexport default async function SSGBlog() {\n  const projects = await getProjectsSSG();\n\n  return (\n    <div className=\"bg-[#EEE] p-4 rounded-lg\">\n      <h2 className=\"text-2xl text-blue-400 font-semibold mb-1\">SSG Technique</h2>\n      <div className=\"bg-white p-4 rounded-lg\">\n        {projects.map((ele: Project) => (\n          <div key={ele.sectionID} className=\"mb-3\">\n            <h3 className=\"text-2xl text-right bg-[#EEE] p-2 rounded-sm\">{ele.name}</h3>\n          </div>\n        ))}\n      </div>\n    </div>\n  );\n}"
+          },
+          {
+            "body": "This is where Next.js truly shines. Incremental Static Regeneration combines the blistering speed of SSG with the dynamism of SSR without requiring a full site rebuild.\n\nWith ISR, you define a revalidation interval in seconds. Next.js delivers the ultra-fast static cached page from the CDN. Once the revalidation timer elapses and a new request arrives, Next.js triggers a background regeneration of that specific page, invalidates the old cache, and serves the updated page to subsequent visitors seamlessly.\n\nHere is the complete comparison snippet highlighting SSG, ISR, and SSR cache controls in a Next.js Server Component:",
+            "heading": "4. Incremental Static Regeneration (ISR): The Best of Both Worlds",
+            "codeSnippet": "// static site generation => ssg/ssr/isr techniques comparison\ninterface Project {\n  sectionID: number;\n  name: string;\n}\n\nconst getProjects = async () => {\n  try {\n    const res = await fetch(\"https://example.runasp.net/api/Donations/GetAllSections\", {\n      // 1. SSG: Pre-rendered at build time\n      // cache: \"force-cache\", \n\n      // 2. ISR: Background revalidation every 30 seconds without rebuilding entire site\n      next: { revalidate: 30 }, \n\n      // 3. SSR: Fetched fresh on every single client request\n      // cache: \"no-store\", \n    });\n\n    if (!res.ok) {\n      console.warn(\"API returned an error:\", res.status);\n      return []; // fallback data\n    }\n\n    const data = await res.json();\n    return data;\n  } catch (error) {\n    console.log(error);\n    return [];\n  }\n};\n\nconst Blog: React.FC = async () => {\n  const projects = await getProjects();\n\n  return (\n    <div className=\"bg-[#EEE] p-4 rounded-lg\">\n      <h2 className=\"text-2xl text-blue-400 font-semibold mb-1\">ISR Technique</h2>\n      <div className=\"bg-white p-4 rounded-lg\">\n        {projects.map((ele: Project) => (\n          <div key={ele.sectionID} className=\"mb-3\">\n            <h3 className=\"text-2xl text-right bg-[#EEE] p-2 rounded-sm\">{ele.name}</h3>\n          </div>\n        ))}\n      </div>\n    </div>\n  );\n};\n\nexport default Blog;"
+          }
+        ],
+        "conclusion": "Summary: If you are building authenticated user dashboards or highly interactive widgets, CSR with Client Components is the natural choice. If you have real-time dynamic data that requires instant SEO indexing, use SSR. For marketing pages and documentation, SSG provides unmatched speed. And for high-traffic blogs, e-commerce stores, and catalogs, ISR provides the ultimate balance between performance and freshness."
+      },
+      "contentAr": {
+        "intro": "ازيك يا صديقي العزيز! لو أنت شغال بـ Next.js أو React.js فالبوست ده ليك خصيصاً. هنتكلم فيه عن أهم تقنيات التصيير (Rendering Techniques) اللي بتشكل معمارية تطبيقات الويب الحديثة: CSR و SSR و SSG و ISR. أكيد سمعت بيهم وعارفهم، ولكن في السطور دي هنشرحهم مع بعض خطوة بخطوة، ونفهم كواليس كل تقنية، إزاي عناكب جوجل ومحركات البحث بتتعامل معاها، ومتى تختار كل واحدة في مشروعك. يلا بينا نبدأ في أول technique!",
+        "sections": [
+          {
+            "body": "باختصار، التقنية دي أنت أكيد عارفها: المتصفح (Browser) هو المسؤول الأول والأخير عن عملية الـ Rendering. يعني بالبساطة كده كود الـ JavaScript هو اللي بيولد عناصر الـ HTML وبيشغل الموقع على جهاز المستخدم.\n\nطب هل الـ technique ده هيحقق الـ SEO المطلوب؟ لا طبعاً! وتعال نعرف ليه:\nفي محركات البحث عندك حاجة اسمها 'عناكب جوجل' (Googlebot / Web Crawlers) ودي اللي بتحقق مبدأ وفهرسة الـ SEO. ولما بتيجي العناكب دي تعمل Crawl للموقع بتاعك لو أنت شغال بالـ CSR البحت، بتستلم ملف HTML فاضي تقريباً (مجرد <div id='root'></div>)، فبتلاقي صفحة بيضاااااا! فمش هتعرف تفهرس أو تقرأ محتوى الموقع بتاعك، وبكده موقعك هيكون الـ SEO بتاعه ضعيف جداً.\n\nطب لو محتاج أشغل الـ technique ده في Next.js (سواء الإصدار 14 أو أحدث) هعمل إيه؟\nبص يا سيدي: في Next.js المكونات افتراضياً Server Components، وعشان تشغل الـ technique ده هتحط الـ Directive ده في بداية الصفحة 'use client'. وطبعاً استخداماته الأساسية بتكون مع الـ Hooks التفاعلية زي useEffect و useState وغيرهم للتعامل المباشر مع المتصفح والـ DOM كما في الكود التالي:",
+            "heading": "1. التصيير من جانب العميل: Client-Side Rendering (CSR)",
+            "codeSnippet": "\"use client\";\nimport { useEffect, useState } from \"react\";\n\ninterface Project {\n  sectionID: number;\n  name: string;\n}\n\nconst ClientSide: React.FC = () => {\n  const [projects, setProjects] = useState<Project[]>([]);\n\n  const getProjects = async () => {\n    try {\n      const res = await fetch(\"https://example.runasp.net/api/Donations/GetAllSections\");\n      if (!res.ok) {\n        console.warn(\"API returned an error:\", res.status);\n        return;\n      }\n      const data = await res.json();\n      setProjects(data);\n    } catch (error) {\n      console.log(error);\n    }\n  };\n\n  useEffect(() => {\n    getProjects();\n  }, []);\n\n  return (\n    <div className=\"bg-[#EEE] p-4 rounded-lg\">\n      <h2 className=\"text-2xl text-blue-400 font-semibold mb-1\">CSR Technique</h2>\n      <p className=\"text-black/70 leading-6 text-lg mb-5\">\n        Client-Side Rendering: يتم جلب البيانات وبناء عناصر الواجهة بالكامل داخل متصفح المستخدم.\n      </p>\n      <div className=\"bg-white p-4 rounded-lg\">\n        {projects.map((ele) => (\n          <div key={ele.sectionID} className=\"mb-3\">\n            <h3 className=\"text-2xl text-right bg-[#EEE] p-2 rounded-sm\">{ele.name}</h3>\n          </div>\n        ))}\n      </div>\n    </div>\n  );\n};\n\nexport default ClientSide;"
+          },
+          {
+            "body": "الـ technique ده بقى بيعمل العكس خالص وهو إن السيرفر هو المسؤول عن عملية الـ Rendering. يعني السيرفر بيعالج الكود وبيجلب البيانات من الـ API أو قاعدة البيانات وبيعمل Render للـ HTML ويبعتها للمتصفح جاهزة تماماً. المتصفح بيعرضها على طول وبكده الـ SEO بتاعك هيكون عالي جداااا لأن عناكب جوجل هتقدر تـ crawl الموقع بتاعك بسهولة لأن الـ HTML جاهز ومكتمل بدون أي انتظار لجافا سكريبت.\n\nطب لو محتاج أشغل الـ technique ده في Next.js هعمل إيه؟\nفي Next.js في الـ App Router أي Server Component يعتبر افتراضياً شغال على السيرفر. ولو بتعمل fetch لبيانات وعايزها تطلب في كل Request مباشرة من غير كاش بنحدد خيار الكاش cache: 'no-store' كالتالي:",
+            "heading": "2. التصيير من جانب الخادم: Server-Side Rendering (SSR)",
+            "codeSnippet": "// Server-Side Rendering (SSR) in Next.js Server Component\n// يتم جلب البيانات في كل طلب يرسله المستخدم مباشرة من السيرفر بدون كاش\n\ninterface Project {\n  sectionID: number;\n  name: string;\n}\n\nconst getProjectsSSR = async (): Promise<Project[]> => {\n  const res = await fetch(\"https://example.runasp.net/api/Donations/GetAllSections\", {\n    cache: \"no-store\", // SSR: Runs on request in the case of SSR (No Store)\n  });\n\n  if (!res.ok) {\n    throw new Error(\"فشل في جلب البيانات من الخادم\");\n  }\n\n  return res.json();\n};\n\nexport default async function SSRBlogPage() {\n  const projects = await getProjectsSSR();\n\n  return (\n    <div className=\"bg-[#EEE] p-4 rounded-lg\">\n      <h2 className=\"text-2xl text-blue-500 font-bold mb-2\">SSR Technique</h2>\n      <p className=\"text-neutral-700 mb-4\">\n        HTML جاهز بالكامل من السيرفر - ممتاز لأرشفة عناكب جوجل ومثالي للبيانات المتغيرة لحظياً.\n      </p>\n      <div className=\"bg-white p-4 rounded-lg space-y-3\">\n        {projects.map((item) => (\n          <h3 key={item.sectionID} className=\"text-xl bg-[#EEE] p-2 rounded\">\n            {item.name}\n          </h3>\n        ))}\n      </div>\n    </div>\n  );\n}"
+          },
+          {
+            "body": "تالت تقنية معانا هي Static Site Generation (SSG). التقنية دي بقى بتعمل render لصفحات الـ HTML وقت الـ Build للمشروع! يعني الصفحات بتتولد مرة واحدة بس وتتخزن كملفات Static في السيرفر أو على شبكات الـ CDN العالمية.\n\nالميزة الجبارة هنا هي السرعة الخارقة والـ SEO الممتاز وتحقيق علامة 100% في Core Web Vitals لأن السيرفر بيبعت الملفات الجاهزة فوراً، لكن عيبها إن لو البيانات اتغيرت في الـ Database، الصفحة مش هتحدث غير لو عملت Build جديد للموقع بالكامل!\n\nوفي Next.js عشان نستخدم الـ SSG بنعمل fetch مع خيار الكاش force-cache كالتالي:",
+            "heading": "3. التوليد الثابت للموقع: Static Site Generation (SSG)",
+            "codeSnippet": "// Static Site Generation (SSG) in Next.js Server Component\n// يتم توليد صفحات الـ HTML مسبقاً وقت الـ Build وتخزينها على الـ CDN\n\ninterface Project {\n  sectionID: number;\n  name: string;\n}\n\nconst getProjectsSSG = async (): Promise<Project[]> => {\n  try {\n    const res = await fetch(\"https://example.runasp.net/api/Donations/GetAllSections\", {\n      cache: \"force-cache\", // SSG: Runs at build time and cached statically\n    });\n\n    if (!res.ok) {\n      console.warn(\"API returned an error:\", res.status);\n      return [];\n    }\n\n    const data = await res.json();\n    return data;\n  } catch (error) {\n    console.error(error);\n    return [];\n  }\n};\n\nexport default async function SSGBlogPage() {\n  const projects = await getProjectsSSG();\n\n  return (\n    <div className=\"bg-[#EEE] p-4 rounded-lg\">\n      <h2 className=\"text-2xl text-blue-400 font-semibold mb-1\">SSG Technique</h2>\n      <p className=\"text-black/70 leading-6 text-lg mb-5\">\n        أسرع استجابة ممكنة مع كاش دائم للصفحات الجاهزة.\n      </p>\n      <div className=\"bg-white p-4 rounded-lg\">\n        {projects.map((ele: Project) => (\n          <div key={ele.sectionID} className=\"mb-3\">\n            <h3 className=\"text-2xl text-right bg-[#EEE] p-2 rounded-sm\">{ele.name}</h3>\n          </div>\n        ))}\n      </div>\n    </div>\n  );\n}"
+          },
+          {
+            "body": "رابع تقنية معانا هي الـ Incremental Static Regeneration (ISR). وهنا يجي دور التقنية العبقرية دي اللي جمعت بين مميزات الـ SSG وسرعته الخارقة، وبين قدرة الـ SSR على تحديث البيانات!\n\nالـ ISR بتخليك تحدد وقت معين (بالثواني) للصفحة، فـ Next.js يولد الصفحة كـ Static وتفضل سريعة، وأول ما الوقت ده يعدي وحد يطلب الصفحة، بيتعمل لها Revalidation وإعادة بناء في الخلفية وتحديث للبيانات بدون ما تحتاج تعمل Build كامل للمشروع!\n\nوفي الكود المرفق بالأسفل، يظهر الكود المشترك الذي يوضح الفروقات بين خيارات الـ fetch الثلاثة (SSG و ISR و SSR):",
+            "heading": "4. إعادة التوليد الثابت التدريجي: Incremental Static Regeneration (ISR)",
+            "codeSnippet": "// static site generation => ssg/ssr/isr techniques\ninterface Project {\n  sectionID: number;\n  name: string;\n}\n\nconst getProjects = async () => {\n  try {\n    const res = await fetch(\"https://example.runasp.net/api/Donations/GetAllSections\", {\n      // 1. SSG: Runs at build-time (Static Site Generation)\n      // cache: \"force-cache\", \n\n      // 2. ISR: Revalidates on request in the background every 30s\n      next: { revalidate: 30 }, \n\n      // 3. SSR: Runs on every single request in the case of SSR\n      // cache: \"no-store\", \n    });\n\n    if (!res.ok) {\n      console.warn(\"API returned an error:\", res.status);\n      return []; // fallback data\n    }\n\n    const data = await res.json();\n    return data;\n  } catch (error) {\n    console.log(error);\n    return [];\n  }\n};\n\nconst Blog: React.FC = async () => {\n  const projects = await getProjects();\n\n  return (\n    <div className=\"bg-[#EEE] p-4 rounded-lg\">\n      <h2 className=\"text-2xl text-blue-400 font-semibold mb-1\">ISR Technique</h2>\n      <div className=\"bg-white p-4 rounded-lg\">\n        {projects.map((ele: Project) => (\n          <div key={ele.sectionID} className=\"mb-3\">\n            <h3 className=\"text-2xl text-right bg-[#EEE] p-2 rounded-sm\">{ele.name}</h3>\n          </div>\n        ))}\n      </div>\n    </div>\n  );\n};\n\nexport default Blog;"
+          }
+        ],
+        "conclusion": "خلاصة القول يا صديقي: إذا كانت الصفحة لوحة تحكم خاصة (Dashboard) أو تحتاج تفاعلات معقدة مع المتصفح، فـ CSR مع 'use client' هي الخيار الطبيعي. أما إذا كانت صفحة تتغير بياناتها في كل لحظة وتحتاج SEO قوي وفوري، فـ SSR هو الحل. وإذا كانت مقالات مدونة أو صفحات هبوط شبه ثابتة، فـ SSG هو الأسرع والأوفر في الموارد. ولتحقيق المعادلة الذهبية بين السرعة الخارقة وتحديث المحتوى، فإن ISR هو الاختيار الأذكى في Next.js."
+      },
       "coverImage": "https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=1200&q=80",
       "categoryEn": "Next.js & Architecture",
       "categoryAr": "نكست جي إس ومعمارية الويب",
@@ -215,320 +267,19 @@
         "TypeScript",
         "Performance"
       ],
-      "author": {
-        "name": "Mohamed H. Mowafy",
-        "roleEn": "Front-End Developer",
-        "roleAr": "مطور واجهات أمامية",
-        "avatar": "/me.png"
-      },
+      "authorName": "Mohamed H. Mowafy",
+      "authorRole": "Front-End Developer",
       "readTimeEn": "7 min read",
       "readTimeAr": "7 دقائق قراءة",
       "publishedAt": "2026-09",
-      "contentEn": {
-        "intro": "Hello, my friend! If you are building with Next.js or React.js, this post is specifically crafted for you. We will break down the essential rendering techniques that define modern web architecture: CSR, SSR, SSG, and ISR. You have probably heard of them, but together we will uncover how each mechanism works under the hood, how search engine crawlers interact with your pages, and how to choose the ideal strategy for your application.",
-        "sections": [
-          {
-            "heading": "1. Client-Side Rendering (CSR): Mechanics & SEO Pitfalls",
-            "body": "In Client-Side Rendering, the user's browser is entirely responsible for generating HTML and executing UI logic. When a visitor requests your page, the server returns an almost bare HTML file with a root element (e.g., <div id='root'></div>) and a bundle of JavaScript. The browser downloads the scripts, compiles the code, fetches data, and injects elements into the DOM.\n\nDoes CSR deliver good SEO? Absolutely not. Search engine crawlers (like Googlebot) crawl the web to index page content. When a crawler hits a pure CSR application, it initially sees a blank white page because JavaScript has not yet executed. Consequently, the crawler cannot parse headings, semantic text, or internal links, resulting in poor ranking and indexing delays.\n\nIn Next.js 14 and above (App Router), components are Server Components by default. To opt into CSR, you declare the 'use client' directive at the very top of the file. You use this when dealing with React hooks (useState, useEffect), DOM events, and browser APIs.",
-            "codeSnippet": "\"use client\";\nimport { useEffect, useState } from \"react\";\n\ninterface Project {\n  sectionID: number;\n  name: string;\n}\n\nconst ClientSide: React.FC = () => {\n  const [projects, setProjects] = useState<Project[]>([]);\n\n  const getProjects = async () => {\n    try {\n      const res = await fetch(\"https://example.runasp.net/api/Donations/GetAllSections\");\n      if (!res.ok) {\n        console.warn(\"API returned an error:\", res.status);\n        return;\n      }\n      const data = await res.json();\n      setProjects(data);\n    } catch (error) {\n      console.log(error);\n    }\n  };\n\n  useEffect(() => {\n    getProjects();\n  }, []);\n\n  return (\n    <div className=\"bg-[#EEE] p-4 rounded-lg\">\n      <h2 className=\"text-2xl text-blue-400 font-semibold mb-1\">CSR Technique</h2>\n      <p className=\"text-black/70 leading-6 text-lg mb-5\">\n        Client-Side Rendering: Data fetching and DOM rendering occur entirely inside the browser.\n      </p>\n      <div className=\"bg-white p-4 rounded-lg\">\n        {projects.map((ele) => (\n          <div key={ele.sectionID} className=\"mb-3\">\n            <h3 className=\"text-2xl text-right bg-[#EEE] p-2 rounded-sm\">{ele.name}</h3>\n          </div>\n        ))}\n      </div>\n    </div>\n  );\n};\n\nexport default ClientSide;"
-          },
-          {
-            "heading": "2. Server-Side Rendering (SSR): Full On-Demand HTML",
-            "body": "Server-Side Rendering flips the equation: the server assumes full responsibility for generating the complete HTML document on every single request. When a user or crawler visits the URL, the server executes backend logic, queries databases or REST APIs, constructs the ready HTML markup, and streams it back.\n\nThis guarantees stellar SEO. Search engine crawlers immediately index fully formed markup, semantic headings, and rich meta tags without waiting for client-side JavaScript execution.\n\nIn Next.js App Router, any Server Component fetching data with cache: 'no-store' triggers on-demand SSR on every incoming request.",
-            "codeSnippet": "// Server-Side Rendering (SSR) in Next.js Server Component\n// Runs on every incoming request on the server (Dynamic On-Demand Rendering)\n\ninterface Project {\n  sectionID: number;\n  name: string;\n}\n\nconst getProjectsSSR = async (): Promise<Project[]> => {\n  const res = await fetch(\"https://example.runasp.net/api/Donations/GetAllSections\", {\n    cache: \"no-store\", // SSR: No caching, fetches fresh data on every request\n  });\n\n  if (!res.ok) {\n    throw new Error(\"Failed to fetch fresh data on server\");\n  }\n\n  return res.json();\n};\n\nexport default async function SSRBlog() {\n  const projects = await getProjectsSSR();\n\n  return (\n    <div className=\"bg-[#EEE] p-4 rounded-lg\">\n      <h2 className=\"text-2xl text-blue-500 font-bold mb-2\">SSR Technique</h2>\n      <p className=\"text-neutral-700 mb-4\">\n        Pre-rendered HTML ready for instant crawlers with fresh real-time data.\n      </p>\n      <div className=\"bg-white p-4 rounded-lg space-y-3\">\n        {projects.map((item) => (\n          <h3 key={item.sectionID} className=\"text-xl bg-[#EEE] p-2 rounded\">\n            {item.name}\n          </h3>\n        ))}\n      </div>\n    </div>\n  );\n}"
-          },
-          {
-            "heading": "3. Static Site Generation (SSG): Maximum Speed at Build-Time",
-            "body": "Static Site Generation pre-renders all HTML pages ahead of time during the application build phase (next build). The resulting HTML and JSON files are cached statically and served worldwide via Global Edge Content Delivery Networks (CDNs).\n\nThe primary advantages are blazing fast load times (<100ms TTFB), 100/100 Core Web Vitals scores, and zero server CPU load under high traffic. However, the tradeoff is freshness: if content changes in your database, visitors will not see the updates until you trigger a completely new build and deployment of the entire project.\n\nIn Next.js, SSG is achieved using cache: 'force-cache' in fetch requests.",
-            "codeSnippet": "// Static Site Generation (SSG) in Next.js Server Component\n// Pre-rendered once at build time and cached across Edge CDNs\n\ninterface Project {\n  sectionID: number;\n  name: string;\n}\n\nconst getProjectsSSG = async (): Promise<Project[]> => {\n  try {\n    const res = await fetch(\"https://example.runasp.net/api/Donations/GetAllSections\", {\n      cache: \"force-cache\", // SSG: Cached permanently until next application build\n    });\n\n    if (!res.ok) {\n      console.warn(\"API returned an error:\", res.status);\n      return [];\n    }\n\n    return await res.json();\n  } catch (error) {\n    console.error(error);\n    return [];\n  }\n};\n\nexport default async function SSGBlog() {\n  const projects = await getProjectsSSG();\n\n  return (\n    <div className=\"bg-[#EEE] p-4 rounded-lg\">\n      <h2 className=\"text-2xl text-blue-400 font-semibold mb-1\">SSG Technique</h2>\n      <div className=\"bg-white p-4 rounded-lg\">\n        {projects.map((ele: Project) => (\n          <div key={ele.sectionID} className=\"mb-3\">\n            <h3 className=\"text-2xl text-right bg-[#EEE] p-2 rounded-sm\">{ele.name}</h3>\n          </div>\n        ))}\n      </div>\n    </div>\n  );\n}"
-          },
-          {
-            "heading": "4. Incremental Static Regeneration (ISR): The Best of Both Worlds",
-            "body": "This is where Next.js truly shines. Incremental Static Regeneration combines the blistering speed of SSG with the dynamism of SSR without requiring a full site rebuild.\n\nWith ISR, you define a revalidation interval in seconds. Next.js delivers the ultra-fast static cached page from the CDN. Once the revalidation timer elapses and a new request arrives, Next.js triggers a background regeneration of that specific page, invalidates the old cache, and serves the updated page to subsequent visitors seamlessly.\n\nHere is the complete comparison snippet highlighting SSG, ISR, and SSR cache controls in a Next.js Server Component:",
-            "codeSnippet": "// static site generation => ssg/ssr/isr techniques comparison\ninterface Project {\n  sectionID: number;\n  name: string;\n}\n\nconst getProjects = async () => {\n  try {\n    const res = await fetch(\"https://example.runasp.net/api/Donations/GetAllSections\", {\n      // 1. SSG: Pre-rendered at build time\n      // cache: \"force-cache\", \n\n      // 2. ISR: Background revalidation every 30 seconds without rebuilding entire site\n      next: { revalidate: 30 }, \n\n      // 3. SSR: Fetched fresh on every single client request\n      // cache: \"no-store\", \n    });\n\n    if (!res.ok) {\n      console.warn(\"API returned an error:\", res.status);\n      return []; // fallback data\n    }\n\n    const data = await res.json();\n    return data;\n  } catch (error) {\n    console.log(error);\n    return [];\n  }\n};\n\nconst Blog: React.FC = async () => {\n  const projects = await getProjects();\n\n  return (\n    <div className=\"bg-[#EEE] p-4 rounded-lg\">\n      <h2 className=\"text-2xl text-blue-400 font-semibold mb-1\">ISR Technique</h2>\n      <div className=\"bg-white p-4 rounded-lg\">\n        {projects.map((ele: Project) => (\n          <div key={ele.sectionID} className=\"mb-3\">\n            <h3 className=\"text-2xl text-right bg-[#EEE] p-2 rounded-sm\">{ele.name}</h3>\n          </div>\n        ))}\n      </div>\n    </div>\n  );\n};\n\nexport default Blog;"
-          }
-        ],
-        "conclusion": "Summary: If you are building authenticated user dashboards or highly interactive widgets, CSR with Client Components is the natural choice. If you have real-time dynamic data that requires instant SEO indexing, use SSR. For marketing pages and documentation, SSG provides unmatched speed. And for high-traffic blogs, e-commerce stores, and catalogs, ISR provides the ultimate balance between performance and freshness."
-      },
-      "contentAr": {
-        "intro": "ازيك يا صديقي العزيز! لو أنت شغال بـ Next.js أو React.js فالبوست ده ليك خصيصاً. هنتكلم فيه عن أهم تقنيات التصيير (Rendering Techniques) اللي بتشكل معمارية تطبيقات الويب الحديثة: CSR و SSR و SSG و ISR. أكيد سمعت بيهم وعارفهم، ولكن في السطور دي هنشرحهم مع بعض خطوة بخطوة، ونفهم كواليس كل تقنية، إزاي عناكب جوجل ومحركات البحث بتتعامل معاها، ومتى تختار كل واحدة في مشروعك. يلا بينا نبدأ في أول technique!",
-        "sections": [
-          {
-            "heading": "1. التصيير من جانب العميل: Client-Side Rendering (CSR)",
-            "body": "باختصار، التقنية دي أنت أكيد عارفها: المتصفح (Browser) هو المسؤول الأول والأخير عن عملية الـ Rendering. يعني بالبساطة كده كود الـ JavaScript هو اللي بيولد عناصر الـ HTML وبيشغل الموقع على جهاز المستخدم.\n\nطب هل الـ technique ده هيحقق الـ SEO المطلوب؟ لا طبعاً! وتعال نعرف ليه:\nفي محركات البحث عندك حاجة اسمها 'عناكب جوجل' (Googlebot / Web Crawlers) ودي اللي بتحقق مبدأ وفهرسة الـ SEO. ولما بتيجي العناكب دي تعمل Crawl للموقع بتاعك لو أنت شغال بالـ CSR البحت، بتستلم ملف HTML فاضي تقريباً (مجرد <div id='root'></div>)، فبتلاقي صفحة بيضاااااا! فمش هتعرف تفهرس أو تقرأ محتوى الموقع بتاعك، وبكده موقعك هيكون الـ SEO بتاعه ضعيف جداً.\n\nطب لو محتاج أشغل الـ technique ده في Next.js (سواء الإصدار 14 أو أحدث) هعمل إيه؟\nبص يا سيدي: في Next.js المكونات افتراضياً Server Components، وعشان تشغل الـ technique ده هتحط الـ Directive ده في بداية الصفحة 'use client'. وطبعاً استخداماته الأساسية بتكون مع الـ Hooks التفاعلية زي useEffect و useState وغيرهم للتعامل المباشر مع المتصفح والـ DOM كما في الكود التالي:",
-            "codeSnippet": "\"use client\";\nimport { useEffect, useState } from \"react\";\n\ninterface Project {\n  sectionID: number;\n  name: string;\n}\n\nconst ClientSide: React.FC = () => {\n  const [projects, setProjects] = useState<Project[]>([]);\n\n  const getProjects = async () => {\n    try {\n      const res = await fetch(\"https://example.runasp.net/api/Donations/GetAllSections\");\n      if (!res.ok) {\n        console.warn(\"API returned an error:\", res.status);\n        return;\n      }\n      const data = await res.json();\n      setProjects(data);\n    } catch (error) {\n      console.log(error);\n    }\n  };\n\n  useEffect(() => {\n    getProjects();\n  }, []);\n\n  return (\n    <div className=\"bg-[#EEE] p-4 rounded-lg\">\n      <h2 className=\"text-2xl text-blue-400 font-semibold mb-1\">CSR Technique</h2>\n      <p className=\"text-black/70 leading-6 text-lg mb-5\">\n        Client-Side Rendering: يتم جلب البيانات وبناء عناصر الواجهة بالكامل داخل متصفح المستخدم.\n      </p>\n      <div className=\"bg-white p-4 rounded-lg\">\n        {projects.map((ele) => (\n          <div key={ele.sectionID} className=\"mb-3\">\n            <h3 className=\"text-2xl text-right bg-[#EEE] p-2 rounded-sm\">{ele.name}</h3>\n          </div>\n        ))}\n      </div>\n    </div>\n  );\n};\n\nexport default ClientSide;"
-          },
-          {
-            "heading": "2. التصيير من جانب الخادم: Server-Side Rendering (SSR)",
-            "body": "الـ technique ده بقى بيعمل العكس خالص وهو إن السيرفر هو المسؤول عن عملية الـ Rendering. يعني السيرفر بيعالج الكود وبيجلب البيانات من الـ API أو قاعدة البيانات وبيعمل Render للـ HTML ويبعتها للمتصفح جاهزة تماماً. المتصفح بيعرضها على طول وبكده الـ SEO بتاعك هيكون عالي جداااا لأن عناكب جوجل هتقدر تـ crawl الموقع بتاعك بسهولة لأن الـ HTML جاهز ومكتمل بدون أي انتظار لجافا سكريبت.\n\nطب لو محتاج أشغل الـ technique ده في Next.js هعمل إيه؟\nفي Next.js في الـ App Router أي Server Component يعتبر افتراضياً شغال على السيرفر. ولو بتعمل fetch لبيانات وعايزها تطلب في كل Request مباشرة من غير كاش بنحدد خيار الكاش cache: 'no-store' كالتالي:",
-            "codeSnippet": "// Server-Side Rendering (SSR) in Next.js Server Component\n// يتم جلب البيانات في كل طلب يرسله المستخدم مباشرة من السيرفر بدون كاش\n\ninterface Project {\n  sectionID: number;\n  name: string;\n}\n\nconst getProjectsSSR = async (): Promise<Project[]> => {\n  const res = await fetch(\"https://example.runasp.net/api/Donations/GetAllSections\", {\n    cache: \"no-store\", // SSR: Runs on request in the case of SSR (No Store)\n  });\n\n  if (!res.ok) {\n    throw new Error(\"فشل في جلب البيانات من الخادم\");\n  }\n\n  return res.json();\n};\n\nexport default async function SSRBlogPage() {\n  const projects = await getProjectsSSR();\n\n  return (\n    <div className=\"bg-[#EEE] p-4 rounded-lg\">\n      <h2 className=\"text-2xl text-blue-500 font-bold mb-2\">SSR Technique</h2>\n      <p className=\"text-neutral-700 mb-4\">\n        HTML جاهز بالكامل من السيرفر - ممتاز لأرشفة عناكب جوجل ومثالي للبيانات المتغيرة لحظياً.\n      </p>\n      <div className=\"bg-white p-4 rounded-lg space-y-3\">\n        {projects.map((item) => (\n          <h3 key={item.sectionID} className=\"text-xl bg-[#EEE] p-2 rounded\">\n            {item.name}\n          </h3>\n        ))}\n      </div>\n    </div>\n  );\n}"
-          },
-          {
-            "heading": "3. التوليد الثابت للموقع: Static Site Generation (SSG)",
-            "body": "تالت تقنية معانا هي Static Site Generation (SSG). التقنية دي بقى بتعمل render لصفحات الـ HTML وقت الـ Build للمشروع! يعني الصفحات بتتولد مرة واحدة بس وتتخزن كملفات Static في السيرفر أو على شبكات الـ CDN العالمية.\n\nالميزة الجبارة هنا هي السرعة الخارقة والـ SEO الممتاز وتحقيق علامة 100% في Core Web Vitals لأن السيرفر بيبعت الملفات الجاهزة فوراً، لكن عيبها إن لو البيانات اتغيرت في الـ Database، الصفحة مش هتحدث غير لو عملت Build جديد للموقع بالكامل!\n\nوفي Next.js عشان نستخدم الـ SSG بنعمل fetch مع خيار الكاش force-cache كالتالي:",
-            "codeSnippet": "// Static Site Generation (SSG) in Next.js Server Component\n// يتم توليد صفحات الـ HTML مسبقاً وقت الـ Build وتخزينها على الـ CDN\n\ninterface Project {\n  sectionID: number;\n  name: string;\n}\n\nconst getProjectsSSG = async (): Promise<Project[]> => {\n  try {\n    const res = await fetch(\"https://example.runasp.net/api/Donations/GetAllSections\", {\n      cache: \"force-cache\", // SSG: Runs at build time and cached statically\n    });\n\n    if (!res.ok) {\n      console.warn(\"API returned an error:\", res.status);\n      return [];\n    }\n\n    const data = await res.json();\n    return data;\n  } catch (error) {\n    console.error(error);\n    return [];\n  }\n};\n\nexport default async function SSGBlogPage() {\n  const projects = await getProjectsSSG();\n\n  return (\n    <div className=\"bg-[#EEE] p-4 rounded-lg\">\n      <h2 className=\"text-2xl text-blue-400 font-semibold mb-1\">SSG Technique</h2>\n      <p className=\"text-black/70 leading-6 text-lg mb-5\">\n        أسرع استجابة ممكنة مع كاش دائم للصفحات الجاهزة.\n      </p>\n      <div className=\"bg-white p-4 rounded-lg\">\n        {projects.map((ele: Project) => (\n          <div key={ele.sectionID} className=\"mb-3\">\n            <h3 className=\"text-2xl text-right bg-[#EEE] p-2 rounded-sm\">{ele.name}</h3>\n          </div>\n        ))}\n      </div>\n    </div>\n  );\n}"
-          },
-          {
-            "heading": "4. إعادة التوليد الثابت التدريجي: Incremental Static Regeneration (ISR)",
-            "body": "رابع تقنية معانا هي الـ Incremental Static Regeneration (ISR). وهنا يجي دور التقنية العبقرية دي اللي جمعت بين مميزات الـ SSG وسرعته الخارقة، وبين قدرة الـ SSR على تحديث البيانات!\n\nالـ ISR بتخليك تحدد وقت معين (بالثواني) للصفحة، فـ Next.js يولد الصفحة كـ Static وتفضل سريعة، وأول ما الوقت ده يعدي وحد يطلب الصفحة، بيتعمل لها Revalidation وإعادة بناء في الخلفية وتحديث للبيانات بدون ما تحتاج تعمل Build كامل للمشروع!\n\nوفي الكود المرفق بالأسفل، يظهر الكود المشترك الذي يوضح الفروقات بين خيارات الـ fetch الثلاثة (SSG و ISR و SSR):",
-            "codeSnippet": "// static site generation => ssg/ssr/isr techniques\ninterface Project {\n  sectionID: number;\n  name: string;\n}\n\nconst getProjects = async () => {\n  try {\n    const res = await fetch(\"https://example.runasp.net/api/Donations/GetAllSections\", {\n      // 1. SSG: Runs at build-time (Static Site Generation)\n      // cache: \"force-cache\", \n\n      // 2. ISR: Revalidates on request in the background every 30s\n      next: { revalidate: 30 }, \n\n      // 3. SSR: Runs on every single request in the case of SSR\n      // cache: \"no-store\", \n    });\n\n    if (!res.ok) {\n      console.warn(\"API returned an error:\", res.status);\n      return []; // fallback data\n    }\n\n    const data = await res.json();\n    return data;\n  } catch (error) {\n    console.log(error);\n    return [];\n  }\n};\n\nconst Blog: React.FC = async () => {\n  const projects = await getProjects();\n\n  return (\n    <div className=\"bg-[#EEE] p-4 rounded-lg\">\n      <h2 className=\"text-2xl text-blue-400 font-semibold mb-1\">ISR Technique</h2>\n      <div className=\"bg-white p-4 rounded-lg\">\n        {projects.map((ele: Project) => (\n          <div key={ele.sectionID} className=\"mb-3\">\n            <h3 className=\"text-2xl text-right bg-[#EEE] p-2 rounded-sm\">{ele.name}</h3>\n          </div>\n        ))}\n      </div>\n    </div>\n  );\n};\n\nexport default Blog;"
-          }
-        ],
-        "conclusion": "خلاصة القول يا صديقي: إذا كانت الصفحة لوحة تحكم خاصة (Dashboard) أو تحتاج تفاعلات معقدة مع المتصفح، فـ CSR مع 'use client' هي الخيار الطبيعي. أما إذا كانت صفحة تتغير بياناتها في كل لحظة وتحتاج SEO قوي وفوري، فـ SSR هو الحل. وإذا كانت مقالات مدونة أو صفحات هبوط شبه ثابتة، فـ SSG هو الأسرع والأوفر في الموارد. ولتحقيق المعادلة الذهبية بين السرعة الخارقة وتحديث المحتوى، فإن ISR هو الاختيار الأذكى في Next.js."
-      }
-    },
-    {
-      "id": "blog-1",
-      "slug": "mastering-web-animations-gsap-framer-motion",
-      "titleEn": "Building 60FPS Fluid Web Animations with GSAP & Framer Motion",
-      "titleAr": "بناء أنيميشن وحركات ويب فائقة السلاسة بمعدل 60 إطار باستخدام GSAP و Framer Motion",
-      "excerptEn": "A deep dive into choreographing scroll-triggered animations, GPU acceleration, and micro-interactions that captivate users without sacrificing performance.",
-      "excerptAr": "دليل عملي متقدم لبرمجة حركات السكرول التفاعلية، تسريع العتاد عبر كارت الشاشة GPU، وصناعة تفاعلات حركية مبهرة تحافظ على سرعة الموقع القصوى.",
-      "coverImage": "https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&w=1200&q=80",
-      "categoryEn": "Web Animations",
-      "categoryAr": "تحريك الويب",
-      "tags": [
-        "GSAP",
-        "Framer Motion",
-        "WebGL",
-        "UX Design"
-      ],
+      "createdAt": "2026-09-05T20:07:24.882219+00:00",
+      "updatedAt": "2026-09-05T20:07:23.267+00:00",
+      "likes": 1,
       "author": {
         "name": "Mohamed H. Mowafy",
         "roleEn": "Front-End Developer",
         "roleAr": "مطور واجهات أمامية",
-        "avatar": "/me.png"
-      },
-      "readTimeEn": "5 min read",
-      "readTimeAr": "5 دقائق قراءة",
-      "publishedAt": "2026-03",
-      "contentEn": {
-        "intro": "Web animations are no longer just eye candy—when implemented with intentionality, they establish visual hierarchy, guide user attention, and elevate brand perception to an elite tier.",
-        "sections": [
-          {
-            "heading": "1. The Anatomy of 60FPS: Transform & Opacity Only",
-            "body": "The golden rule of browser rendering is avoiding Layout recalculations and Paint cycles inside animation loops. Always animate GPU-composited CSS properties: transform (translate3d, scale, rotate) and opacity. Avoid animating top, left, width, or margin.",
-            "codeSnippet": "// High-performance Framer Motion config\n<motion.div\n  initial={{ opacity: 0, y: 30 }}\n  whileInView={{ opacity: 1, y: 0 }}\n  viewport={{ once: true, margin: \"-50px\" }}\n  transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}\n/>"
-          },
-          {
-            "heading": "2. Combining GSAP ScrollTrigger with Virtual Smooth Scrolling",
-            "body": "When using libraries like Lenis for momentum scrolling, synchronize your GSAP tickers with Lenis's requestAnimationFrame cycle. This guarantees zero frame jitter and fluid interpolation across high-refresh-rate displays.",
-            "codeSnippet": "lenis.on('scroll', ScrollTrigger.update);\ngsap.ticker.add((time) => {\n  lenis.raf(time * 1000);\n});"
-          },
-          {
-            "heading": "3. Magnetic Micro-Interactions",
-            "body": "Buttons that gently pull towards the mouse cursor make interfaces feel tactile and responsive. Using spring physics damping creates organic inertia that users instinctively appreciate."
-          }
-        ],
-        "conclusion": "Great animations don't scream for attention—they whisper elegance and enhance every interaction with precision."
-      },
-      "contentAr": {
-        "intro": "لم تعد حركات الويب مجرد عناصر جمالية تزيينية، بل أصبحت لغة تفاعلية تؤسس التسلسل الهرمي للمعلومات، وتوجه انتباه المستخدمين، وتضفي على العلامة التجارية طابعاً استثنائياً وفخماً.",
-        "sections": [
-          {
-            "heading": "1. سرعة 60 إطار في الثانية: الاعتماد فقط على Transform و Opacity",
-            "body": "القاعدة الذهبية في محركات تصفح الويب هي تجنب إعادة حساب المخطط (Layout Thrashing) ودورات الرسم (Repaints) أثناء تشغيل الأنيميشن. احرص دائماً على تحريك الخصائص التي يتعامل معها كارت الشاشة (GPU) مباشرة مثل transform و opacity وتجنب تماماً تحريك width أو margin.",
-            "codeSnippet": "// إعداد Framer Motion عالي الكفاءة\n<motion.div\n  initial={{ opacity: 0, y: 30 }}\n  whileInView={{ opacity: 1, y: 0 }}\n  viewport={{ once: true, margin: \"-50px\" }}\n  transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}\n/>"
-          },
-          {
-            "heading": "2. دمج GSAP ScrollTrigger مع السكرول الناعم",
-            "body": "عند استخدام مكتبات مثل Lenis للتحكم في سلاسة التمرير، يجب مزامنة ساعة GSAP مع حلقة requestAnimationFrame الخاصة بـ Lenis، مما يمنع أي تقطيع أو تداخل في الإطارات على الشاشات ذات التردد العالي (120Hz+).",
-            "codeSnippet": "lenis.on('scroll', ScrollTrigger.update);\ngsap.ticker.add((time) => {\n  lenis.raf(time * 1000);\n});"
-          },
-          {
-            "heading": "3. التفاعلات المغناطيسية للأزرار",
-            "body": "الأزرار التي تتحرك بنعومة وتنجذب نحو مؤشر الماوس عند الاقتراب منها تمنح المستخدم شعوراً بالحيوية واللمس الواقعي، مما يرفع معدل التفاعل والنقر بشكل ملحوظ."
-          }
-        ],
-        "conclusion": "الحركات الاستثنائية لا تصرخ لجذب الانتباه، بل تهمس بالأناقة والدقة في كل تفصيل تفاعلي داخل الموقع."
-      }
-    },
-    {
-      "id": "blog-2",
-      "slug": "nextjs-app-router-performance-guide",
-      "titleEn": "Next.js App Router: Performance, SSR & Server Components",
-      "titleAr": "معمارية Next.js App Router: أسرار الأداء العالي ومكونات الخادم",
-      "excerptEn": "How to properly leverage React Server Components, streaming SSR, and edge caching to deliver instantaneous page transitions and sub-second load times.",
-      "excerptAr": "كيف تستفيد بالشكل الأمثل من مكونات الخادم React Server Components، التدفق الفوري للنصوص، والتخزين المؤقت لتحقيق تحميل فوري وسرعة تصفح فائقة.",
-      "coverImage": "https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=1200&q=80",
-      "categoryEn": "Next.js",
-      "categoryAr": "نكست جي إس",
-      "tags": [
-        "Next.js",
-        "React 19",
-        "Server Components",
-        "Performance"
-      ],
-      "author": {
-        "name": "Mohamed H. Mowafy",
-        "roleEn": "Front-End Developer",
-        "roleAr": "مطور واجهات أمامية",
-        "avatar": "/me.png"
-      },
-      "readTimeEn": "6 min read",
-      "readTimeAr": "6 دقائق قراءة",
-      "publishedAt": "2026-02",
-      "contentEn": {
-        "intro": "The transition from Pages router to App router revolutionized how we structure production React applications. Understanding when to render on the server vs. client is the key differentiator for top-tier frontend engineers.",
-        "sections": [
-          {
-            "heading": "1. The Boundary Between Server and Client Components",
-            "body": "Keep interactive client components as leaves at the edge of your component tree. The vast majority of layouts, data-fetching components, and SEO wrappers should remain pure Server Components to minimize JavaScript bundle size sent to the client.",
-            "codeSnippet": "// Server Component by default: zero client JS overhead\nexport default async function ProjectsFeed() {\n  const projects = await getProjects();\n  return <ProjectsGrid items={projects} />;\n}"
-          },
-          {
-            "heading": "2. Streaming with Suspense",
-            "body": "Don't let slow database queries block the initial HTML response. Wrap data-heavy widgets in React Suspense boundaries to stream the shell immediately while async chunks load progressively."
-          },
-          {
-            "heading": "3. Image Optimization with Next/Image",
-            "body": "Always define responsive sizes and modern formats (WebP/AVIF). Leveraging proper dimensions eliminates Cumulative Layout Shift (CLS) and preserves pristine Core Web Vitals."
-          }
-        ],
-        "conclusion": "By designing with server-first principles, your web apps stay lightning-fast regardless of project complexity."
-      },
-      "contentAr": {
-        "intro": "مثل الانتقال إلى معمارية App Router في Next.js نقلة نوعية في هندسة تطبيقات React الحديثة. فهم الحدود الفاصلة بين المعالجة على الخادم والتفاعل في المتصفح هو الفارق الحقيقي بين المطور المحترف وغيره.",
-        "sections": [
-          {
-            "heading": "1. الحدود الدقيقة بين Server و Client Components",
-            "body": "اجعل مكونات العميل (Client Components) تقتصر فقط على الأطراف التفاعلية (كالأزرار والنماذج). احتفظ بباقي الهيكل وجلب البيانات كـ Server Components لتقليص حجم حزمة كود الجافاسكريبت المرسلة للمستخدم إلى الصفر تقريباً.",
-            "codeSnippet": "// مكون خادم تلقائياً بدون أي حمولة جافاسكريبت إضافية\nexport default async function ProjectsFeed() {\n  const projects = await getProjects();\n  return <ProjectsGrid items={projects} />;\n}"
-          },
-          {
-            "heading": "2. تقنية البث المباشر التدريجي مع Suspense",
-            "body": "لا تجعل استعلامات قواعد البيانات تعطل إرسال هيكل الصفحة الأولي للمتصفح. استخدم React Suspense لبث الهيكل فوراً في أجزاء من الثانية بينما يتم استكمال جلب البيانات في الخلفية بسلاسة."
-          },
-          {
-            "heading": "3. تحسين الصور ومنع تذبذب الواجهة",
-            "body": "تطبيق قواعد Next/Image مع تحديد الأحجام الصحيحة يمنع ظاهرة انزياح التصميم التراكمي (CLS) ويضمن اجتياز مؤشرات الأداء الحيوية لكبرى محركات البحث."
-          }
-        ],
-        "conclusion": "التفكير بمنطق الخادم أولاً يضمن أن تظل تطبيقاتك فائقة السرعة والاستجابة مهما زاد حجم المشروع والبيانات."
-      }
-    },
-    {
-      "id": "blog-3",
-      "slug": "frontend-ai-tools-workflow-2026",
-      "titleEn": "Supercharging Frontend Workflows with AI: Cursor, Copilot & Modern Tools",
-      "titleAr": "مضاعفة إنتاجية مطور الواجهات باستخدام أدوات الذكاء الاصطناعي الحديثة",
-      "excerptEn": "Practical workflows and prompt engineering strategies using Cursor, Copilot, and LLMs to accelerate component scaffolding, testing, and debugging.",
-      "excerptAr": "استراتيجيات عملية لتسخير أدوات مثل Cursor AI و GitHub Copilot لكتابة واجهات معقدة، كتابة اختبارات شاملة، وحل المشكلات البرمجية في دقائق معدودة.",
-      "coverImage": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=1200&q=80",
-      "categoryEn": "AI Tools",
-      "categoryAr": "أدوات الذكاء الاصطناعي",
-      "tags": [
-        "Cursor",
-        "Copilot",
-        "Claude",
-        "Productivity"
-      ],
-      "author": {
-        "name": "Mohamed H. Mowafy",
-        "roleEn": "Front-End Developer",
-        "roleAr": "مطور واجهات أمامية",
-        "avatar": "/me.png"
-      },
-      "readTimeEn": "4 min read",
-      "readTimeAr": "4 دقائق قراءة",
-      "publishedAt": "2026-01",
-      "contentEn": {
-        "intro": "AI won't replace frontend engineers, but engineers leveraging AI effectively will replace those who don't. Here is how I integrate modern AI tools into daily production workflows.",
-        "sections": [
-          {
-            "heading": "1. Context-Aware Code Generation with Cursor & Claude",
-            "body": "The superpower of Cursor is referencing relevant files (@file) and types directly in your queries. Instead of vague prompts, feed the exact TypeScript interfaces and design tokens to generate production-ready components instantly."
-          },
-          {
-            "heading": "2. Rapid Prototyping & Edge Cases Detection",
-            "body": "Use AI to think through boundary conditions: empty states, network error recoveries, RTL layout flipping, and accessible aria-labels that are often overlooked during initial sprints."
-          },
-          {
-            "heading": "3. Automated Test Suites Generation",
-            "body": "Generating unit tests with Jest and React Testing Library is one of the highest-ROI use cases. AI accurately maps props permutations and user interaction flows."
-          }
-        ],
-        "conclusion": "Embracing AI as an intelligent copilot allows you to focus 90% of your mental energy on architecture, UX aesthetics, and business value."
-      },
-      "contentAr": {
-        "intro": "الذكاء الاصطناعي لن يحل محل مهندسي الواجهات المبدعين، ولكن المطورين الذين يتقنون توظيف أدوات الذكاء الاصطناعي سيتفوقون بفارق هائل على من يتجاهلونها.",
-        "sections": [
-          {
-            "heading": "1. التوليد البرمجي الواعي بالسياق مع Cursor و Claude",
-            "body": "القوة الحقيقية في محرر مثل Cursor تكمن في قدرته على قراءة سياق المشروع بالكامل (@file) وواجهات TypeScript، مما يمكنك من توليد كود نظيف ومتوافق بنسبة 100% مع معايير مشروعك في ثوان."
-          },
-          {
-            "heading": "2. اكتشاف الحالات الاستثنائية ودعم إمكانية الوصول",
-            "body": "يمكنك استخدام نماذج الذكاء الاصطناعي لمراجعة حالات الخطأ (Network Errors)، الشاشات الفارغة (Empty States)، وانعكاس النصوص في وضع اللغة العربية (RTL) دون إغفال أي تفصيلة."
-          },
-          {
-            "heading": "3. كتابة اختبارات الجودة بشكل مؤتمت",
-            "body": "إنتاج اختبارات الوحدة باستخدام Jest و React Testing Library يعتبر من أفضل الاستخدامات التي توفر ساعات طويلة من العمل الروتيني وتضمن استقرار النظام."
-          }
-        ],
-        "conclusion": "استخدام الذكاء الاصطناعي كمساعد ذكي يحرر طاقتك الذهنية للتركيز على المعمارية، جماليات التصميم، وتقديم قيمة حقيقية للمستخدم."
-      }
-    },
-    {
-      "id": "blog-4",
-      "slug": "achieving-95-google-lighthouse-score",
-      "titleEn": "Achieving a 95+ Google Lighthouse Score on Core Web Pages",
-      "titleAr": "كيفية تحقيق تقييم 95+ على Google Lighthouse وتحسين سرعة المواقع",
-      "excerptEn": "Actionable engineering techniques implemented to optimize Core Web Vitals (LCP, INP, CLS) and deliver blazing-fast web experiences.",
-      "excerptAr": "تقنيات هندسية عملية طبقتها لتحسين مؤشرات الأداء الحيوية والوصول لعلامة 95+ في سرعة وتجربة المستخدم.",
-      "coverImage": "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=1200&q=80",
-      "categoryEn": "Performance",
-      "categoryAr": "الأداء والسرعة",
-      "tags": [
-        "Lighthouse",
-        "Web Vitals",
-        "Optimization",
-        "SEO"
-      ],
-      "author": {
-        "name": "Mohamed H. Mowafy",
-        "roleEn": "Front-End Developer",
-        "roleAr": "مطور واجهات أمامية",
-        "avatar": "/me.png"
-      },
-      "readTimeEn": "5 min read",
-      "readTimeAr": "5 دقائق قراءة",
-      "publishedAt": "2025-12",
-      "contentEn": {
-        "intro": "Every 100ms delay in website response time reduces conversion rates by up to 7%. Here is the exact performance playbook we used to maintain consistent 95+ scores on Google Lighthouse.",
-        "sections": [
-          {
-            "heading": "1. Eliminating Largest Contentful Paint (LCP) Delays",
-            "body": "Preload your hero resources, utilize modern WebP/AVIF compression with strict quality settings (80%), and inline critical CSS to ensure the above-the-fold content paints under 1.2s."
-          },
-          {
-            "heading": "2. Optimizing Interaction to Next Paint (INP)",
-            "body": "Break down long-running JavaScript execution tasks using scheduler.yield() or requestIdleCallback. Never block the main thread with heavy computation during user inputs."
-          },
-          {
-            "heading": "3. Zero Cumulative Layout Shift (CLS)",
-            "body": "Always reserve explicit aspect-ratio boxes for images, video embeds, and dynamic widgets to prevent sudden jarring page shifts while resources stream in."
-          }
-        ],
-        "conclusion": "Speed is a feature and a brand statement. Exceptional performance paired with beautiful aesthetics creates unforgettable user journeys."
-      },
-      "contentAr": {
-        "intro": "كل تأخير مقداره 100 ميلي ثانية في تحميل الموقع يكلف فقدان ما يصل إلى 7% من تفاعل العملاء. إليك الدليل الهندسي الذي طبقته للحفاظ على تقييم 95+ في مؤشرات Google Lighthouse العالمية.",
-        "sections": [
-          {
-            "heading": "1. تسريع ظهور المحتوى الرئيسي (LCP)",
-            "body": "التحميل المسبق (Preload) لخطوط الهيرو وصوره الأساسية، استخدام صيغ حديثة مثل WebP مع ضغط ذكي بنسبة 80%، وتضمين الـ CSS الحرج يضمن رسم الصفحة الأولى للمستخدم في أقل من ثانية واحدة."
-          },
-          {
-            "heading": "2. استجابة التفاعل الفورية (INP)",
-            "body": "تقسيم المهام البرمجية الثقيلة عبر requestIdleCallback أو خيوط معالجة فرعية، وتجنب تعطيل الـ Main Thread لضمان استجابة سريعة جداً لنقرات وتمرير المستخدم."
-          },
-          {
-            "heading": "3. استقرار الواجهة ومنع التذبذب (CLS)",
-            "body": "تحديد نسب أبعاد صريحة (aspect-ratio) للصور ومقاطع الفيديو قبل تحميلها يمنع أي انزياح مفاجئ في موضع العناصر أثناء التصفح."
-          }
-        ],
-        "conclusion": "السرعة الفائقة ليست تفصيلاً ثانوياً، بل هي ميزة أساسية ورسالة واضحة لجودة واحترافية علامتك التجارية."
+        "avatar": "/avatar.png"
       }
     }
   ],

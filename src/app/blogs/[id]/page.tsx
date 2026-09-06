@@ -3,14 +3,22 @@ import type { Metadata } from "next";
 import { portfolioStore } from "@/lib/store";
 import BlogDetailClient from "./BlogDetailClient";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 interface Props {
   params: Promise<{ id: string }>;
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { id } = await params;
+  const cleanId = decodeURIComponent(id).trim().toLowerCase();
   const blogs = await portfolioStore.getBlogs();
-  const blog = blogs.find((b: any) => b.id === id || b.slug === id);
+  const blog = blogs.find((b: any) => {
+    const bId = (b.id || "").toLowerCase().trim();
+    const bSlug = (b.slug || "").toLowerCase().trim();
+    return bId === cleanId || bSlug === cleanId;
+  });
 
   if (!blog) {
     return {
@@ -69,8 +77,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function BlogDetailPage({ params }: Props) {
   const { id } = await params;
+  const cleanId = decodeURIComponent(id).trim().toLowerCase();
   const blogs = await portfolioStore.getBlogs();
-  const blog = blogs.find((b: any) => b.id === id || b.slug === id);
+  const blog = blogs.find((b: any) => {
+    const bId = (b.id || "").toLowerCase().trim();
+    const bSlug = (b.slug || "").toLowerCase().trim();
+    return bId === cleanId || bSlug === cleanId;
+  });
 
   const jsonLd = blog
     ? {

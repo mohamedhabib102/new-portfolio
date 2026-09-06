@@ -24,20 +24,49 @@ export default function BlogsClient({ initialBlogs }: BlogsClientProps) {
   const { blogs: dynamicBlogs, isLoading } = useBlogs();
   const [activeCategory, setActiveCategory] = useState<string>("all");
 
-  const blogs = dynamicBlogs && dynamicBlogs.length > 0 ? dynamicBlogs : initialBlogs || [];
+  const blogs = !isLoading ? (dynamicBlogs || []) : (initialBlogs || dynamicBlogs || []);
 
-  const categories = [
-    { id: "all", labelEn: "All Posts", labelAr: "جميع المقالات" },
-    { id: "Web Animations", labelEn: "Animations", labelAr: "التحريك" },
-    { id: "Next.js", labelEn: "Next.js", labelAr: "نكست جي إس" },
-    { id: "AI Tools", labelEn: "AI Tools", labelAr: "الذكاء الاصطناعي" },
-    { id: "Performance", labelEn: "Performance", labelAr: "تحسين الأداء" },
-  ];
+  // 1. Dynamically derive categories ONLY from categories that exist in active blogs
+  const categories = React.useMemo(() => {
+    const map = new Map<string, { id: string; labelEn: string; labelAr: string }>();
+    blogs.forEach((b: any) => {
+      const catEn = (b.categoryEn || b.category || "").trim();
+      const catAr = (b.categoryAr || b.category || catEn).trim();
+      if (catEn && !map.has(catEn)) {
+        map.set(catEn, {
+          id: catEn,
+          labelEn: catEn,
+          labelAr: catAr,
+        });
+      }
+    });
 
-  const filteredBlogs =
-    activeCategory === "all"
-      ? blogs
-      : blogs.filter((b: any) => b.categoryEn === activeCategory);
+    return [
+      { id: "all", labelEn: "All Posts", labelAr: "جميع المقالات" },
+      ...Array.from(map.values()),
+    ];
+  }, [blogs]);
+
+  // Reset activeCategory if it doesn't exist in the current categories
+  React.useEffect(() => {
+    if (activeCategory !== "all" && !categories.some((c) => c.id === activeCategory)) {
+      setActiveCategory("all");
+    }
+  }, [categories, activeCategory]);
+
+  // 2. Filter blogs by active category (case-insensitive & bilingual matching + tags support)
+  const filteredBlogs = React.useMemo(() => {
+    if (activeCategory === "all") return blogs;
+    const target = activeCategory.toLowerCase().trim();
+    return blogs.filter((b: any) => {
+      const catEn = (b.categoryEn || b.category || "").toLowerCase().trim();
+      const catAr = (b.categoryAr || b.category || "").toLowerCase().trim();
+      const tagMatch = Array.isArray(b.tags) && b.tags.some(
+        (t: string) => typeof t === "string" && t.toLowerCase().trim() === target
+      );
+      return catEn === target || catAr === target || tagMatch;
+    });
+  }, [blogs, activeCategory]);
 
   return (
     <main className="min-h-screen bg-black text-white selection:bg-blue-600 selection:text-white">

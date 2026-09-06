@@ -249,7 +249,7 @@ function readLocalStore(): LocalStoreData {
         siteConfig: { ...defaultSiteConfig, ...(parsed.siteConfig || {}) },
         experiences: Array.isArray(parsed.experiences) ? parsed.experiences : defaultExperiences,
         projects: Array.isArray(parsed.projects) && parsed.projects.length > 0 ? parsed.projects : initialProjects,
-        blogs: Array.isArray(parsed.blogs) && parsed.blogs.length > 0 ? parsed.blogs : blogsData,
+        blogs: Array.isArray(parsed.blogs) ? parsed.blogs : [],
         skills: Array.isArray(parsed.skills) && parsed.skills.length > 0 ? parsed.skills : defaultSkills,
         messages: Array.isArray(parsed.messages) ? parsed.messages : [],
       };
@@ -262,7 +262,7 @@ function readLocalStore(): LocalStoreData {
     siteConfig: defaultSiteConfig,
     experiences: defaultExperiences,
     projects: initialProjects,
-    blogs: blogsData,
+    blogs: [],
     skills: defaultSkills,
     messages: [
       {
@@ -561,21 +561,18 @@ export const portfolioStore = {
               likes: likesCount,
             };
           });
-          const defaultList = blogsData;
-          const nonSupabase = defaultList.filter(
-            (lb: any) => !formatted.some((sb: any) => sb.id === lb.id || sb.slug === lb.slug)
-          );
-          const fullList = [...formatted, ...nonSupabase];
+
+          // Single source of truth: strictly return what is in Supabase
           const store = readLocalStore();
-          store.blogs = fullList as any;
+          store.blogs = formatted as any;
           writeLocalStore(store);
-          return fullList as any;
+          return formatted as any;
         }
       } catch (err) {
         console.warn("[Supabase] getBlogs fallback:", err);
       }
     }
-    return readLocalStore().blogs;
+    return readLocalStore().blogs || [];
   },
 
   saveBlog: async (blogData: any) => {
@@ -618,7 +615,7 @@ export const portfolioStore = {
 
     if (supabase) {
       try {
-        await supabase.from("Blog").upsert({
+        const payload: any = {
           id: fullBlog.id,
           slug: fullBlog.slug,
           titleEn: fullBlog.titleEn,
@@ -637,7 +634,14 @@ export const portfolioStore = {
           readTimeAr: fullBlog.readTimeAr || "5 دقائق قراءة",
           publishedAt: fullBlog.publishedAt,
           updatedAt: new Date().toISOString(),
-        });
+          likes: fullBlog.likes,
+        };
+
+        const { error: upsertErr } = await supabase.from("Blog").upsert(payload);
+        if (upsertErr && upsertErr.message?.includes("likes")) {
+          delete payload.likes;
+          await supabase.from("Blog").upsert(payload);
+        }
       } catch (err) {
         console.warn("[Supabase] saveBlog error:", err);
       }
@@ -648,23 +652,48 @@ export const portfolioStore = {
 
   likeBlog: async (idOrSlug: string, increment: number = 1): Promise<{ likes: number }> => {
     const store = readLocalStore();
-    const blogIdx = store.blogs.findIndex((b: any) => b.id === idOrSlug || b.slug === idOrSlug);
+    const blogIdx = (store.blogs || []).findIndex((b: any) => b.id === idOrSlug || b.slug === idOrSlug);
     let newLikes = 1;
+    let targetId = idOrSlug;
+
     if (blogIdx >= 0) {
       const current = typeof store.blogs[blogIdx].likes === "number" ? store.blogs[blogIdx].likes : 0;
       newLikes = Math.max(0, current + increment);
       store.blogs[blogIdx].likes = newLikes;
+      targetId = store.blogs[blogIdx].id;
       writeLocalStore(store);
+    }
 
-      if (supabase) {
-        try {
-          await supabase
-            .from("Blog")
-            .update({ likes: newLikes, updatedAt: new Date().toISOString() })
-            .eq("id", store.blogs[blogIdx].id);
-        } catch (err) {
-          console.warn("[Supabase] likeBlog error:", err);
+    if (supabase) {
+      try {
+        const { data: dbBlog } = await supabase
+          .from("Blog")
+          .select("id, likes")
+          .or(`id.eq.${idOrSlug},slug.eq.${idOrSlug}`)
+          .maybeSingle();
+
+        if (dbBlog) {
+          targetId = dbBlog.id;
+          const currentDbLikes: number =
+            typeof dbBlog.likes === "number"
+              ? dbBlog.likes
+              : blogIdx >= 0 && typeof store.blogs[blogIdx]?.likes === "number"
+              ? (store.blogs[blogIdx].likes as number)
+              : 0;
+          newLikes = Math.max(0, currentDbLikes + increment);
         }
+
+        const { error } = await supabase
+          .from("Blog")
+          .update({ likes: newLikes, updatedAt: new Date().toISOString() })
+          .eq("id", targetId);
+
+        if (!error && blogIdx >= 0) {
+          store.blogs[blogIdx].likes = newLikes;
+          writeLocalStore(store);
+        }
+      } catch (err) {
+        console.warn("[Supabase] likeBlog error:", err);
       }
     }
     return { likes: newLikes };

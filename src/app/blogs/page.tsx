@@ -3,6 +3,9 @@ import type { Metadata } from "next";
 import { portfolioStore } from "@/lib/store";
 import BlogsClient from "./BlogsClient";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 export const metadata: Metadata = {
   title: "Engineering Blog & Technical Insights | Mohamed H. Mowafy",
   description:
