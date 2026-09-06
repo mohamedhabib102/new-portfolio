@@ -9,10 +9,14 @@ export async function GET(
   context: { params: Promise<{ id: string }> }
 ) {
   const { id } = await context.params;
+  const cleanId = typeof id === "string" ? decodeURIComponent(id).trim().toLowerCase() : "";
 
   try {
     const blogs = await portfolioStore.getBlogs();
-    const blog = blogs.find((b: any) => b.id === id || b.slug === id);
+    const blog = blogs.find((b: any) => 
+      (b.id || "").toLowerCase() === cleanId || 
+      (b.slug || "").toLowerCase() === cleanId
+    );
 
     if (!blog) {
       return NextResponse.json(
@@ -39,6 +43,7 @@ export async function POST(
   context: { params: Promise<{ id: string }> }
 ) {
   const { id } = await context.params;
+  const cleanId = typeof id === "string" ? decodeURIComponent(id).trim() : "";
 
   try {
     let increment = 1;
@@ -53,7 +58,7 @@ export async function POST(
       // Empty or non-JSON body defaults to +1 like
     }
 
-    const result = await portfolioStore.likeBlog(id, increment);
+    const result = await portfolioStore.likeBlog(cleanId, increment);
 
     return NextResponse.json({
       success: true,

@@ -651,51 +651,55 @@ export const portfolioStore = {
   },
 
   likeBlog: async (idOrSlug: string, increment: number = 1): Promise<{ likes: number }> => {
-    const store = readLocalStore();
-    const blogIdx = (store.blogs || []).findIndex((b: any) => b.id === idOrSlug || b.slug === idOrSlug);
+    const clean = idOrSlug.trim();
+    let targetId = clean;
     let newLikes = 1;
-    let targetId = idOrSlug;
-
-    if (blogIdx >= 0) {
-      const current = typeof store.blogs[blogIdx].likes === "number" ? store.blogs[blogIdx].likes : 0;
-      newLikes = Math.max(0, current + increment);
-      store.blogs[blogIdx].likes = newLikes;
-      targetId = store.blogs[blogIdx].id;
-      writeLocalStore(store);
-    }
 
     if (supabase) {
       try {
-        const { data: dbBlog } = await supabase
+        let { data: dbBlog } = await supabase
           .from("Blog")
           .select("id, likes")
-          .or(`id.eq.${idOrSlug},slug.eq.${idOrSlug}`)
+          .eq("id", clean)
           .maybeSingle();
+
+        if (!dbBlog) {
+          const { data: dbBySlug } = await supabase
+            .from("Blog")
+            .select("id, likes")
+            .eq("slug", clean)
+            .maybeSingle();
+          dbBlog = dbBySlug;
+        }
 
         if (dbBlog) {
           targetId = dbBlog.id;
-          const currentDbLikes: number =
-            typeof dbBlog.likes === "number"
-              ? dbBlog.likes
-              : blogIdx >= 0 && typeof store.blogs[blogIdx]?.likes === "number"
-              ? (store.blogs[blogIdx].likes as number)
-              : 0;
+          const currentDbLikes = typeof dbBlog.likes === "number" ? dbBlog.likes : 0;
           newLikes = Math.max(0, currentDbLikes + increment);
-        }
 
-        const { error } = await supabase
-          .from("Blog")
-          .update({ likes: newLikes, updatedAt: new Date().toISOString() })
-          .eq("id", targetId);
+          const { error: updateErr } = await supabase
+            .from("Blog")
+            .update({ likes: newLikes, updatedAt: new Date().toISOString() })
+            .eq("id", targetId);
 
-        if (!error && blogIdx >= 0) {
-          store.blogs[blogIdx].likes = newLikes;
-          writeLocalStore(store);
+          if (updateErr) {
+            console.warn("[Supabase] likeBlog update error:", updateErr);
+          }
         }
       } catch (err) {
         console.warn("[Supabase] likeBlog error:", err);
       }
     }
+
+    const store = readLocalStore();
+    const blogIdx = (store.blogs || []).findIndex(
+      (b: any) => b.id === clean || b.slug === clean || b.id === targetId
+    );
+    if (blogIdx >= 0) {
+      store.blogs[blogIdx].likes = newLikes;
+      writeLocalStore(store);
+    }
+
     return { likes: newLikes };
   },
 
