@@ -541,16 +541,26 @@ export const portfolioStore = {
       try {
         const { data, error } = await supabase.from("Blog").select("*").order("createdAt", { ascending: false });
         if (!error && Array.isArray(data)) {
-          const formatted = data.map((b) => ({
-            ...b,
-            author: {
-              name: b.authorName || "Mohamed H. Mowafy",
-              roleEn: b.authorRole || "Front-End Developer",
-              roleAr: "مطور واجهات أمامية",
-              avatar: "/avatar.png",
-            },
-            likes: typeof b.likes === "number" ? b.likes : 0,
-          }));
+          const currentStore = readLocalStore();
+          const formatted = data.map((b) => {
+            const localMatch = (currentStore.blogs || []).find((lb: any) => lb.id === b.id || lb.slug === b.slug);
+            const likesCount = typeof b.likes === "number" && b.likes !== null
+              ? b.likes
+              : typeof localMatch?.likes === "number"
+              ? localMatch.likes
+              : 0;
+
+            return {
+              ...b,
+              author: {
+                name: b.authorName || "Mohamed H. Mowafy",
+                roleEn: b.authorRole || "Front-End Developer",
+                roleAr: "مطور واجهات أمامية",
+                avatar: "/avatar.png",
+              },
+              likes: likesCount,
+            };
+          });
           const defaultList = blogsData;
           const nonSupabase = defaultList.filter(
             (lb: any) => !formatted.some((sb: any) => sb.id === lb.id || sb.slug === lb.slug)
