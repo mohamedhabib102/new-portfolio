@@ -23,16 +23,22 @@ export const metadata: Metadata = {
   },
 };
 
+// SSG with ISR: Static generation revalidated every 10 days (864,000s) or immediately on new build
+export const revalidate = 864000;
+
 export default async function HomePage() {
-  const siteConfig = await portfolioStore.getSiteConfig();
+  const [siteConfig, projects] = await Promise.all([
+    portfolioStore.getSiteConfig(),
+    portfolioStore.getProjects(),
+  ]);
 
   return (
     <main className="relative flex min-h-screen flex-col bg-white text-neutral-900 selection:bg-blue-600 selection:text-white">
       {/* 1. Hero Section: render dynamic config instantly on server, ZERO flicker or lag */}
       <HeroSection initialConfig={siteConfig} />
 
-      {/* 2. Impressive Works / Projects Section */}
-      <ProjectsSection />
+      {/* 2. Impressive Works / Projects Section (SSR: rendered instantly on server) */}
+      <ProjectsSection initialProjects={projects} />
 
       {/* 3. Contact Section */}
       <ContactSection />

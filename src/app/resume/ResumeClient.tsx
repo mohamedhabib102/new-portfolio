@@ -115,6 +115,11 @@ export default function ResumeClient() {
         </div>
       </motion.header>
 
+      {/* Floating Navigation Dock (Sticks 20px from top on scroll) */}
+      <div className="w-full flex justify-center py-2 mb-4">
+        <FloatingDock />
+      </div>
+
       {/* 2. Hero & Status Announcement */}
       <section className="relative w-full max-w-5xl mx-auto px-6 sm:px-10 pt-6 pb-16 text-center select-none">
         {/* Glow backdrop decoration */}
@@ -277,11 +282,6 @@ export default function ResumeClient() {
               </motion.div>
             );
           })}
-        </div>
-
-        {/* Floating Dock integration */}
-        <div className="flex justify-center mt-16">
-          <FloatingDock />
         </div>
       </section>
 

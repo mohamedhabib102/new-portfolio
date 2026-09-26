@@ -101,6 +101,11 @@ export default function BlogDetailClient({ id, initialBlog }: BlogDetailClientPr
         <LanguageToggle />
       </motion.header>
 
+      {/* Floating Navigation Dock (Sticks 20px from top on scroll) */}
+      <div className="w-full flex justify-center py-3">
+        <FloatingDock />
+      </div>
+
       {/* 2. Article Content Container */}
       <article className="max-w-4xl mx-auto px-6 sm:px-10 pt-12 pb-24">
         {/* Meta row: Category, Read time, Date */}
@@ -296,11 +301,6 @@ export default function BlogDetailClient({ id, initialBlog }: BlogDetailClientPr
           />
         </motion.div>
       </article>
-
-      {/* Floating Dock at bottom center of the article */}
-      <div className="w-full flex justify-center pb-12">
-        <FloatingDock />
-      </div>
 
       {/* Reusable Contact Section */}
       <ContactSection />

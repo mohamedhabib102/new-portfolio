@@ -1,6 +1,7 @@
 import fs from "fs";
 import path from "path";
 import { supabase } from "./supabase";
+import { prisma } from "./prisma";
 import { initialProjects } from "@/app/api/projects/route";
 import { blogsData } from "@/features/blogs/data/blogsData";
 
@@ -52,6 +53,14 @@ export interface ClientMessageData {
   phone?: string | null;
   message: string;
   createdAt: string;
+}
+
+export interface NewsletterSubscriberData {
+  id: string;
+  email: string;
+  active: boolean;
+  createdAt: string;
+  updatedAt?: string;
 }
 
 const defaultExperiences: ExperienceData[] = [
@@ -238,6 +247,7 @@ interface LocalStoreData {
   blogs: typeof blogsData;
   skills: SkillItemData[];
   messages: ClientMessageData[];
+  subscribers: NewsletterSubscriberData[];
 }
 
 function readLocalStore(): LocalStoreData {
@@ -252,6 +262,7 @@ function readLocalStore(): LocalStoreData {
         blogs: Array.isArray(parsed.blogs) ? parsed.blogs : [],
         skills: Array.isArray(parsed.skills) && parsed.skills.length > 0 ? parsed.skills : defaultSkills,
         messages: Array.isArray(parsed.messages) ? parsed.messages : [],
+        subscribers: Array.isArray(parsed.subscribers) ? parsed.subscribers : [],
       };
     }
   } catch (e) {
@@ -274,6 +285,7 @@ function readLocalStore(): LocalStoreData {
         createdAt: new Date().toISOString(),
       },
     ],
+    subscribers: [],
   };
 
   writeLocalStore(initial);
@@ -871,5 +883,153 @@ export const portfolioStore = {
     }
     return true;
   },
+
+  // 7. Newsletter Subscribers
+  getSubscribers: async (): Promise<NewsletterSubscriberData[]> => {
+    // 1. Try Prisma Client
+    try {
+      const dbSubs = await prisma.newsletterSubscriber.findMany({
+        where: { active: true },
+        orderBy: { createdAt: "desc" },
+      });
+      if (Array.isArray(dbSubs) && dbSubs.length > 0) {
+        return dbSubs.map((s) => ({
+          id: s.id,
+          email: s.email,
+          active: s.active,
+          createdAt: s.createdAt.toISOString(),
+          updatedAt: s.updatedAt.toISOString(),
+        }));
+      }
+    } catch {
+      // Graceful fallback to Supabase or local store
+    }
+
+    // 2. Try Supabase Client
+    if (supabase) {
+      try {
+        const { data, error } = await supabase
+          .from("NewsletterSubscriber")
+          .select("*")
+          .eq("active", true)
+          .order("createdAt", { ascending: false });
+        if (!error && Array.isArray(data) && data.length > 0) {
+          return data;
+        }
+      } catch (err) {
+        console.warn("[Supabase] getSubscribers fallback:", err);
+      }
+    }
+
+    // 3. Local fallback
+    const local = readLocalStore();
+    return (local.subscribers || []).filter((s) => s.active);
+  },
+
+  addSubscriber: async (
+    email: string
+  ): Promise<{ success: boolean; status: "created" | "already_subscribed" | "reactivated"; data?: NewsletterSubscriberData }> => {
+    const cleanEmail = email.trim().toLowerCase();
+    const store = readLocalStore();
+    if (!store.subscribers) store.subscribers = [];
+
+    // Check if already in local
+    const existingLocal = store.subscribers.find((s) => s.email.toLowerCase() === cleanEmail);
+    if (existingLocal && existingLocal.active) {
+      return { success: true, status: "already_subscribed", data: existingLocal };
+    }
+
+    const now = new Date().toISOString();
+    let subscriber: NewsletterSubscriberData;
+
+    if (existingLocal && !existingLocal.active) {
+      existingLocal.active = true;
+      existingLocal.updatedAt = now;
+      subscriber = existingLocal;
+    } else {
+      subscriber = {
+        id: `sub-${Date.now()}`,
+        email: cleanEmail,
+        active: true,
+        createdAt: now,
+        updatedAt: now,
+      };
+      store.subscribers.unshift(subscriber);
+    }
+    writeLocalStore(store);
+
+    // 1. Try Prisma Client
+    try {
+      const upserted = await prisma.newsletterSubscriber.upsert({
+        where: { email: cleanEmail },
+        update: { active: true },
+        create: {
+          id: subscriber.id,
+          email: cleanEmail,
+          active: true,
+        },
+      });
+      return {
+        success: true,
+        status: existingLocal ? "reactivated" : "created",
+        data: {
+          id: upserted.id,
+          email: upserted.email,
+          active: upserted.active,
+          createdAt: upserted.createdAt.toISOString(),
+          updatedAt: upserted.updatedAt.toISOString(),
+        },
+      };
+    } catch {
+      // Continue to Supabase / local
+    }
+
+    // 2. Try Supabase Client
+    if (supabase) {
+      try {
+        await supabase.from("NewsletterSubscriber").upsert({
+          id: subscriber.id,
+          email: subscriber.email,
+          active: true,
+          updatedAt: now,
+        });
+      } catch (err) {
+        console.warn("[Supabase] addSubscriber error:", err);
+      }
+    }
+
+    return {
+      success: true,
+      status: existingLocal ? "reactivated" : "created",
+      data: subscriber,
+    };
+  },
+
+  deleteSubscriber: async (idOrEmail: string): Promise<boolean> => {
+    const target = idOrEmail.trim().toLowerCase();
+    const store = readLocalStore();
+    if (store.subscribers) {
+      store.subscribers = store.subscribers.filter((s) => s.id !== target && s.email.toLowerCase() !== target);
+      writeLocalStore(store);
+    }
+
+    try {
+      await prisma.newsletterSubscriber.deleteMany({
+        where: {
+          OR: [{ id: target }, { email: target }],
+        },
+      });
+    } catch {}
+
+    if (supabase) {
+      try {
+        await supabase.from("NewsletterSubscriber").delete().or(`id.eq.${target},email.eq.${target}`);
+      } catch (err) {
+        console.warn("[Supabase] deleteSubscriber error:", err);
+      }
+    }
+    return true;
+  },
 };
+
 

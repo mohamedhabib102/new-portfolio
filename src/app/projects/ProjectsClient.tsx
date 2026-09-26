@@ -3,7 +3,6 @@
 import React from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { useProjects } from "@/features/projects/hooks/useProjects";
 import ProjectCard from "@/features/projects/components/ProjectCard";
 import { useTranslation } from "@/i18n/LanguageContext";
 import { useLoading } from "@/components/providers/LoadingContext";
@@ -18,12 +17,12 @@ interface ProjectsClientProps {
   initialProjects?: any[];
 }
 
-export default function ProjectsClient({ initialProjects }: ProjectsClientProps) {
+export default function ProjectsClient({ initialProjects = [] }: ProjectsClientProps) {
   const { t, isRtl } = useTranslation();
   const { isLoaded } = useLoading();
-  const { data: dynamicProjects, isLoading } = useProjects(false);
 
-  const projects = dynamicProjects && dynamicProjects.length > 0 ? dynamicProjects : initialProjects;
+  // Pure Next.js SSG with ISR data (zero client-side fetching delay)
+  const projects = initialProjects || [];
 
   return (
     <main className="min-h-screen bg-white text-neutral-900 selection:bg-blue-600 selection:text-white">
@@ -46,6 +45,11 @@ export default function ProjectsClient({ initialProjects }: ProjectsClientProps)
           <LanguageToggle variant="light" />
         </div>
       </motion.header>
+
+      {/* Floating Navigation Dock (Sticks 20px from top on scroll) */}
+      <div className="w-full flex justify-center py-4">
+        <FloatingDock />
+      </div>
 
       {/* Main Content */}
       <div className="max-w-7xl mx-auto px-6 sm:px-12 pt-14 pb-20">
@@ -73,14 +77,7 @@ export default function ProjectsClient({ initialProjects }: ProjectsClientProps)
 
         {/* Projects Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 sm:gap-10">
-          {isLoading && (!projects || projects.length === 0) ? (
-            Array.from({ length: 4 }).map((_, i) => (
-              <div key={i} className="flex flex-col gap-3 animate-pulse">
-                <div className="w-full aspect-[16/10] bg-neutral-100 rounded-3xl" />
-                <div className="h-5 bg-neutral-100 rounded w-1/3" />
-              </div>
-            ))
-          ) : projects && projects.length > 0 ? (
+          {projects && projects.length > 0 ? (
             projects.map((project: any, index: number) => (
               <ProjectCard key={project.id} project={project} index={index} />
             ))
@@ -92,11 +89,6 @@ export default function ProjectsClient({ initialProjects }: ProjectsClientProps)
             </div>
           )}
         </div>
-      </div>
-
-      {/* Floating Navigation Dock */}
-      <div className="w-full flex justify-center pb-12">
-        <FloatingDock />
       </div>
 
       {/* Reusable Contact Section */}

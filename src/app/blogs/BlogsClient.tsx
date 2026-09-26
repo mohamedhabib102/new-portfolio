@@ -12,6 +12,7 @@ import FloatingDock from "@/components/ui/FloatingDock";
 import ContactSection from "@/features/contact/components/ContactSection";
 import FooterSection from "@/features/footer/components/FooterSection";
 import BlogCard from "@/features/blogs/components/BlogCard";
+import NewsletterSection from "@/features/blogs/components/NewsletterSection";
 import { useBlogs } from "@/hooks/useBlogs";
 
 interface BlogsClientProps {
@@ -192,10 +193,13 @@ export default function BlogsClient({ initialBlogs }: BlogsClientProps) {
         </div>
       </section>
 
-      {/* 3. Reusable Contact Section */}
+      {/* 3. Newsletter Subscription Section */}
+      <NewsletterSection />
+
+      {/* 4. Reusable Contact Section */}
       <ContactSection />
 
-      {/* 4. Reusable Footer Section */}
+      {/* 5. Reusable Footer Section */}
       <FooterSection />
     </main>
   );

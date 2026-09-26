@@ -110,20 +110,31 @@ CREATE TABLE IF NOT EXISTS public."ContactMessage" (
     "createdAt" TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
 );
 
--- 7. Enable Row Level Security (RLS)
+-- 7. Newsletter Subscribers Table
+CREATE TABLE IF NOT EXISTS public."NewsletterSubscriber" (
+    "id" TEXT PRIMARY KEY,
+    "email" TEXT UNIQUE NOT NULL,
+    "active" BOOLEAN DEFAULT true,
+    "createdAt" TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL,
+    "updatedAt" TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
+);
+
+-- 8. Enable Row Level Security (RLS)
 ALTER TABLE public."SiteConfig" ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public."Project" ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public."Blog" ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public."Experience" ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public."Skill" ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public."ContactMessage" ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public."NewsletterSubscriber" ENABLE ROW LEVEL SECURITY;
 
--- 8. Drop Existing Policies (if any) to prevent duplicate errors
+-- 9. Drop Existing Policies (if any) to prevent duplicate errors
 DROP POLICY IF EXISTS "Public Read SiteConfig" ON public."SiteConfig";
 DROP POLICY IF EXISTS "Public Read Project" ON public."Project";
 DROP POLICY IF EXISTS "Public Read Blog" ON public."Blog";
 DROP POLICY IF EXISTS "Public Read Experience" ON public."Experience";
 DROP POLICY IF EXISTS "Public Read Skill" ON public."Skill";
+DROP POLICY IF EXISTS "Public Read NewsletterSubscriber" ON public."NewsletterSubscriber";
 
 DROP POLICY IF EXISTS "Allow All SiteConfig" ON public."SiteConfig";
 DROP POLICY IF EXISTS "Allow All Project" ON public."Project";
@@ -131,13 +142,15 @@ DROP POLICY IF EXISTS "Allow All Blog" ON public."Blog";
 DROP POLICY IF EXISTS "Allow All Experience" ON public."Experience";
 DROP POLICY IF EXISTS "Allow All Skill" ON public."Skill";
 DROP POLICY IF EXISTS "Allow All ContactMessage" ON public."ContactMessage";
+DROP POLICY IF EXISTS "Allow All NewsletterSubscriber" ON public."NewsletterSubscriber";
 
--- 9. Create Policies safely
+-- 10. Create Policies safely
 CREATE POLICY "Public Read SiteConfig" ON public."SiteConfig" FOR SELECT USING (true);
 CREATE POLICY "Public Read Project" ON public."Project" FOR SELECT USING (true);
 CREATE POLICY "Public Read Blog" ON public."Blog" FOR SELECT USING (true);
 CREATE POLICY "Public Read Experience" ON public."Experience" FOR SELECT USING (true);
 CREATE POLICY "Public Read Skill" ON public."Skill" FOR SELECT USING (true);
+CREATE POLICY "Public Read NewsletterSubscriber" ON public."NewsletterSubscriber" FOR SELECT USING (true);
 
 CREATE POLICY "Allow All SiteConfig" ON public."SiteConfig" FOR ALL USING (true) WITH CHECK (true);
 CREATE POLICY "Allow All Project" ON public."Project" FOR ALL USING (true) WITH CHECK (true);
@@ -145,6 +158,7 @@ CREATE POLICY "Allow All Blog" ON public."Blog" FOR ALL USING (true) WITH CHECK 
 CREATE POLICY "Allow All Experience" ON public."Experience" FOR ALL USING (true) WITH CHECK (true);
 CREATE POLICY "Allow All Skill" ON public."Skill" FOR ALL USING (true) WITH CHECK (true);
 CREATE POLICY "Allow All ContactMessage" ON public."ContactMessage" FOR ALL USING (true) WITH CHECK (true);
+CREATE POLICY "Allow All NewsletterSubscriber" ON public."NewsletterSubscriber" FOR ALL USING (true) WITH CHECK (true);
 
 -- 10. Supabase Storage Bucket & Direct Upload Policy
 INSERT INTO storage.buckets (id, name, public)

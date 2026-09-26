@@ -83,3 +83,12 @@ model ContactMessage {
   message   String   @db.Text
   createdAt DateTime @default(now())
 }
+
+model NewsletterSubscriber {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+

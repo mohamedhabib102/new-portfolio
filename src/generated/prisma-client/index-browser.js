@@ -143,6 +143,7 @@ exports.Prisma.ProjectScalarFieldEnum = {
   videoUrl: 'videoUrl',
   liveUrl: 'liveUrl',
   githubUrl: 'githubUrl',
+  githubPrivate: 'githubPrivate',
   tags: 'tags',
   featured: 'featured',
   order: 'order',
@@ -168,6 +169,7 @@ exports.Prisma.BlogScalarFieldEnum = {
   readTimeEn: 'readTimeEn',
   readTimeAr: 'readTimeAr',
   publishedAt: 'publishedAt',
+  likes: 'likes',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -192,6 +194,14 @@ exports.Prisma.ContactMessageScalarFieldEnum = {
   phone: 'phone',
   message: 'message',
   createdAt: 'createdAt'
+};
+
+exports.Prisma.NewsletterSubscriberScalarFieldEnum = {
+  id: 'id',
+  email: 'email',
+  active: 'active',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 };
 
 exports.Prisma.SortOrder = {
@@ -225,7 +235,8 @@ exports.Prisma.ModelName = {
   Project: 'Project',
   Blog: 'Blog',
   SkillCategory: 'SkillCategory',
-  ContactMessage: 'ContactMessage'
+  ContactMessage: 'ContactMessage',
+  NewsletterSubscriber: 'NewsletterSubscriber'
 };
 
 /**

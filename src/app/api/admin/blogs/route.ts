@@ -1,10 +1,25 @@
 import { NextRequest, NextResponse } from "next/server";
 import { portfolioStore } from "@/lib/store";
+import { sendNewBlogNotification } from "@/lib/mailer";
 
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
     const saved = await portfolioStore.saveBlog(body);
+
+    // Asynchronously dispatch newsletter emails to all active subscribers without blocking response
+    (async () => {
+      try {
+        const subscribers = await portfolioStore.getSubscribers();
+        const emails = subscribers.map((s) => s.email).filter(Boolean);
+        if (emails.length > 0) {
+          await sendNewBlogNotification(saved, emails);
+        }
+      } catch (mailErr) {
+        console.error("[Blog Newsletter Dispatch Error]:", mailErr);
+      }
+    })();
+
     return NextResponse.json({
       success: true,
       data: saved,

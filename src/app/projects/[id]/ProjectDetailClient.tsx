@@ -69,6 +69,11 @@ export default function ProjectDetailClient({ id, initialProject }: ProjectDetai
         </div>
       </motion.header>
 
+      {/* Floating Navigation Dock (Sticks 20px from top on scroll) */}
+      <div className="w-full flex justify-center py-4">
+        <FloatingDock />
+      </div>
+
       {/* 2. Project Content with Mount Animations */}
       <article className="max-w-6xl mx-auto px-6 sm:px-10 pt-12 pb-20">
         {/* Title & Tags */}
@@ -277,11 +282,6 @@ export default function ProjectDetailClient({ id, initialProject }: ProjectDetai
           );
         })()}
       </article>
-
-      {/* Floating Navigation Dock */}
-      <div className="w-full flex justify-center pb-12">
-        <FloatingDock />
-      </div>
 
       {/* Reusable Contact Section */}
       <ContactSection />

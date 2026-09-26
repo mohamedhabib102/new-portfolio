@@ -1,37 +1,35 @@
 "use client";
 
-import React from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { useProjects } from "../hooks/useProjects";
 import ProjectCard from "./ProjectCard";
 import { useTranslation } from "@/i18n/LanguageContext";
 import { FiArrowUpRight } from "react-icons/fi";
 
-export default function ProjectsSection() {
+export default function ProjectsSection({ initialProjects = [] }: { initialProjects?: any[] }) {
   const { t, isRtl } = useTranslation();
-  const { data: projects, isLoading } = useProjects(false);
 
-  // Exactly 4 projects on homepage as requested
-  const homeProjects = projects ? projects.slice(0, 4) : [];
+  // Pure Next.js SSG with ISR data (zero client-side fetching delay)
+  const allProjects = initialProjects || [];
+  const homeProjects = allProjects.slice(0, 4);
 
   return (
     <section
       id="works"
-      className="relative w-full pt-16 sm:pt-24 pb-14 px-6 sm:px-12 lg:px-20 bg-white text-neutral-900"
+      className="relative w-full pt-28 sm:pt-40 pb-16 px-6 sm:px-12 lg:px-20 bg-white text-neutral-900"
     >
       <div className="max-w-7xl mx-auto flex flex-col">
-        {/* 1. Top Split Intro matching Figma Image 3 (Scroll Animated) */}
+        {/* 1. Top Split Intro with ample clearance for top floating dock */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-60px" }}
           transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-          className="grid grid-cols-1 md:grid-cols-12 gap-8 items-start mb-16 sm:mb-20"
+          className="grid grid-cols-1 md:grid-cols-12 gap-8 items-start mb-16 sm:mb-24"
         >
           {/* Left Intro */}
           <div className="md:col-span-8 lg:col-span-8">
-            <p className="text-xl sm:text-2xl md:text-[27px] font-normal leading-[1.35] text-neutral-900 tracking-tight">
+            <p className="text-xl sm:text-2xl md:text-[27px] font-normal leading-[1.4] text-neutral-900 tracking-tight">
               {t.drivenByCuriosity}
             </p>
           </div>
@@ -55,32 +53,25 @@ export default function ProjectsSection() {
           </div>
         </motion.div>
 
-        {/* 2. Heading row: 'Impressive Works' and user's personal description */}
+        {/* 2. Heading row: 'Impressive Works' and user's personal description with generous vertical space */}
         <motion.div
           initial={{ opacity: 0, y: 25 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-50px" }}
           transition={{ duration: 0.6, delay: 0.1 }}
-          className="flex flex-col gap-2 mb-10 sm:mb-12"
+          className="flex flex-col gap-3 mb-12 sm:mb-16"
         >
           <h2 className="text-4xl sm:text-5xl md:text-[56px] font-medium tracking-tight text-neutral-950 leading-tight">
             {t.impressiveWorks}
           </h2>
-          <p className="text-sm sm:text-base text-neutral-600 font-normal max-w-2xl leading-relaxed">
+          <p className="text-sm sm:text-base text-neutral-600 font-normal max-w-2xl leading-relaxed mt-2 sm:mt-4">
             {t.projectsPersonalNote}
           </p>
         </motion.div>
 
         {/* 3. Projects 2x2 Grid (Only 4 on Homepage) */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 sm:gap-10">
-          {isLoading ? (
-            Array.from({ length: 4 }).map((_, i) => (
-              <div key={i} className="flex flex-col gap-3 animate-pulse">
-                <div className="w-full aspect-[16/10] bg-neutral-100 rounded-3xl" />
-                <div className="h-5 bg-neutral-100 rounded w-1/3" />
-              </div>
-            ))
-          ) : homeProjects.length > 0 ? (
+          {homeProjects.length > 0 ? (
             homeProjects.map((project, index) => (
               <ProjectCard key={project.id} project={project} index={index} />
             ))
@@ -94,7 +85,7 @@ export default function ProjectsSection() {
         </div>
 
         {/* 4. 'Explore more' button */}
-        {projects && projects.length > 4 && (
+        {allProjects && allProjects.length > 4 && (
           <motion.div
             initial={{ opacity: 0, y: 15 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -108,7 +99,7 @@ export default function ProjectsSection() {
               className="inline-flex items-center gap-2 px-5 py-2 rounded-full border border-neutral-300 bg-white hover:bg-neutral-50 text-[13px] font-normal text-neutral-800 transition-colors shadow-xs hover:scale-105 active:scale-95"
             >
               <span className="w-1.5 h-1.5 rounded-full bg-black inline-block" />
-              <span>{t.exploreMore} ({projects.length})</span>
+              <span>{t.exploreMore} ({allProjects.length})</span>
             </Link>
           </motion.div>
         )}

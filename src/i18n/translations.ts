@@ -19,13 +19,30 @@ export const translations = {
     liveDemo: "Live Preview",
     sourceCode: "Source Code",
     
-    // Contact Section
+    // Contact & Free Consultation Section
     thatsAllForNow: "That's all for now.",
     gotAProject: "Got a project in mind?",
     letsTalk: "Let's talk",
     getInTouch: "Get in touch",
     emailLabel: "Email:",
     phoneLabel: "Phone:",
+    consultationBadge: "100% Free Strategy Session • 30 Minutes",
+    consultationTitle: "Transform your vision into high-impact digital reality.",
+    consultationSubtitle: "Have a new product idea, or looking to supercharge your current platform's speed, UI/UX, and scalability? Book a zero-obligation 30-minute consultation. We'll map out your technical architecture, review your design, and outline a realistic roadmap.",
+    consultationBenefit1Title: "Tech Architecture Audit",
+    consultationBenefit1Desc: "In-depth review of frontend performance, Next.js stack, and user experience.",
+    consultationBenefit2Title: "Tailored Delivery Roadmap",
+    consultationBenefit2Desc: "Clear milestones, realistic estimates, and cost-effective execution strategy.",
+    consultationBenefit3Title: "Zero-Obligation Strategy",
+    consultationBenefit3Desc: "Direct, actionable advice you can keep and apply immediately, whether we work together or not.",
+    bookConsultationBtn: "Book Free Consultation",
+    toggleFormOpen: "Book Free Consultation",
+    toggleFormClose: "Close Form",
+    projectTypeLabel: "Project Scope",
+    projectTypeNew: "New Web Application",
+    projectTypeRevamp: "Revamp & Performance Boost",
+    projectTypeConsulting: "Technical Consultation",
+    whatsAppDirect: "Chat on WhatsApp",
     
     // Footer CTA
     ctaSubtitle: "READY TO COLLABORATE?",
@@ -61,6 +78,18 @@ export const translations = {
     minRead: "min read",
     writtenBy: "Written by",
     authorRole: "Front-End Developer",
+
+    // Newsletter Section
+    newsletterBadge: "STAY IN THE LOOP",
+    newsletterTitle: "Subscribe to Technical Insights",
+    newsletterSubtitle: "Get notified when I publish new in-depth technical deep dives on Next.js, React, performance, and UI architecture. No spam, ever.",
+    newsletterInputPlaceholder: "Enter your email address...",
+    newsletterButton: "Subscribe",
+    newsletterSubscribing: "Subscribing...",
+    newsletterSuccess: "Thanks for subscribing! Check your inbox soon.",
+    newsletterAlreadySubscribed: "You are already subscribed to the newsletter!",
+    newsletterError: "Something went wrong. Please check your email and try again.",
+    newsletterDisclaimer: "Join fellow developers receiving hand-crafted technical insights.",
   },
   ar: {
     // Header & Hero
@@ -80,13 +109,30 @@ export const translations = {
     liveDemo: "معاينة حية",
     sourceCode: "الكود المصدري",
     
-    // Contact Section
+    // Contact & Free Consultation Section
     thatsAllForNow: "هذا كل شيء في الوقت الحالي.",
     gotAProject: "لديك مشروع في ذهنك؟",
     letsTalk: "دعنا نتحدث",
     getInTouch: "تواصل معي",
     emailLabel: "البريد الإلكتروني:",
     phoneLabel: "الهاتف:",
+    consultationBadge: "استشارة استراتيجية مجانية 100% • 30 دقيقة",
+    consultationTitle: "جاهز تحوّل فكرتك لمنصة رقمية استثنائية وعالية الأداء؟",
+    consultationSubtitle: "سواء كنت تؤسس مشروعاً جديداً، أو ترغب في مضاعفة سرعة وأداء وتجربة منصتك الحالية لتنافس بقوة في السوق — دعنا نتحدث مجاناً لمدة 30 دقيقة لنناقش كل الجوانب التقنية ونضع خطة عمل واضحة تناسب أهدافك بدون أي التزام.",
+    consultationBenefit1Title: "فحص تقني ومعماري شامل",
+    consultationBenefit1Desc: "مراجعة فنية لأداء الواجهات وتجربة المستخدم وأحدث معايير الويب وسرعة التحميل.",
+    consultationBenefit2Title: "خطة تنفيذ وجدول زمني مدروس",
+    consultationBenefit2Desc: "تحديد مراحل المشروع بدقة مع تقدير واقعي للوقت والتكلفة لتجنب أي هدر.",
+    consultationBenefit3Title: "جلسة مباشرة وبدون أي التزام",
+    consultationBenefit3Desc: "نصائح تقنية واستراتيجية قابلة للتطبيق فوراً، سواء اخترت العمل معي أو بمفردك.",
+    bookConsultationBtn: "احجز استشارتك المجانية الآن",
+    toggleFormOpen: "احجز استشارة مجانية لمشروعك",
+    toggleFormClose: "إغلاق النموذج",
+    projectTypeLabel: "نوع المشروع",
+    projectTypeNew: "بناء مشروع جديد بالكامل",
+    projectTypeRevamp: "تطوير وتحسين منصة قائمة",
+    projectTypeConsulting: "استشارة تقنية وهندسية",
+    whatsAppDirect: "تواصل فوري عبر واتساب",
     
     // Footer CTA
     ctaSubtitle: "مستعد للانطلاق؟",
@@ -122,5 +168,17 @@ export const translations = {
     minRead: "دقائق قراءة",
     writtenBy: "بقلم",
     authorRole: "مطور واجهات أمامية",
+
+    // Newsletter Section
+    newsletterBadge: "كن أول من يعلم",
+    newsletterTitle: "اشترك في النشرة البريدية",
+    newsletterSubtitle: "احصل على إشعار فوري عند نشر مقالات هندسية متعمقة حول Next.js، React، تحسين الأداء وتجارب الويب الحديثة. بدون أي إعلانات مزعجة.",
+    newsletterInputPlaceholder: "أدخل بريدك الإلكتروني هنا...",
+    newsletterButton: "اشتراك",
+    newsletterSubscribing: "جاري الاشتراك...",
+    newsletterSuccess: "تم اشتراكك بنجاح! ستصلك أحدث المقالات أولاً بأول.",
+    newsletterAlreadySubscribed: "أنت مشترك بالفعل في النشرة البريدية!",
+    newsletterError: "حدث خطأ غير متوقع، يرجى التحقق من بريدك والمحاولة ثانية.",
+    newsletterDisclaimer: "انضم إلى نخبة من المطورين الذين يتلقون خلاصات برمجية حصرية.",
   },
 };

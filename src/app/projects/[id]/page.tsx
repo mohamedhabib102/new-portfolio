@@ -7,6 +7,26 @@ interface Props {
   params: Promise<{ id: string }>;
 }
 
+// SSG with ISR: Revalidate every 10 days (864,000 seconds). Also updated whenever build runs or new data is added.
+export const revalidate = 864000;
+export const dynamicParams = true;
+
+export async function generateStaticParams() {
+  const projects = await portfolioStore.getProjects();
+  const params: { id: string }[] = [];
+
+  for (const project of projects) {
+    if (project.id) {
+      params.push({ id: String(project.id) });
+    }
+    if (project.slug && project.slug !== project.id) {
+      params.push({ id: String(project.slug) });
+    }
+  }
+
+  return params;
+}
+
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { id } = await params;
   const projects = await portfolioStore.getProjects();
