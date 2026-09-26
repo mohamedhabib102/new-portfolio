@@ -86,20 +86,7 @@ export default function ContactSection() {
           transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
           className="flex flex-col gap-2 max-w-4xl"
         >
-          {/* Subtle Free Consultation Badge */}
-          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-blue-50 border border-blue-200/80 text-blue-600 text-xs font-medium w-fit mb-1">
-            <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75" />
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-blue-600" />
-            </span>
-            <span>
-              {isAr
-                ? "استشارة برمجية واستراتيجية مجانية • 30 دقيقة"
-                : "Free Technical & Strategy Consultation • 30 Mins"}
-            </span>
-          </div>
-
-          <span className="text-xs sm:text-[13px] text-neutral-500 tracking-wide font-normal">
+          <span className="text-xs sm:text-[13px] text-neutral-600 tracking-wide font-normal">
             {t.thatsAllForNow}
           </span>
 
