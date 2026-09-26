@@ -152,24 +152,7 @@ export default function ProjectDetailClient({ id, initialProject }: ProjectDetai
             </a>
           )}
 
-          {project.githubPrivate ? (
-            <div
-              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-neutral-900 border border-neutral-700 text-neutral-200 font-normal text-xs sm:text-sm shadow-sm select-none"
-              title={
-                language === "ar"
-                  ? "الكود المصدري خاص ومحمي باتفاقية سرية مع العميل / الشركة"
-                  : "Source code is private and protected by NDA / Client Agreement"
-              }
-            >
-              <FiLock className="w-3.5 h-3.5 text-amber-400" />
-              <FiGithub className="w-3.5 h-3.5 text-neutral-400" />
-              <span>
-                {language === "ar"
-                  ? "مستودع خاص (مشروع عميل / كود غير متاح للعامة)"
-                  : "Private Repository (Client NDA Protected)"}
-              </span>
-            </div>
-          ) : project.githubUrl ? (
+          {project.githubUrl && !project.githubPrivate ? (
             <a
               href={project.githubUrl}
               target="_blank"
@@ -179,7 +162,24 @@ export default function ProjectDetailClient({ id, initialProject }: ProjectDetai
               <FiGithub className="w-3.5 h-3.5" />
               <span>{t.sourceCode}</span>
             </a>
-          ) : null}
+          ) : (
+            <div
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-neutral-100 border border-neutral-300 text-neutral-700 font-normal text-xs sm:text-sm shadow-xs select-none"
+              title={
+                language === "ar"
+                  ? "الكود المصدري خاص ومحمي باتفاقية سرية مع العميل / الشركة"
+                  : "Source code is private and protected by NDA / Client Agreement"
+              }
+            >
+              <FiLock className="w-3.5 h-3.5 text-amber-600" />
+              <FiGithub className="w-3.5 h-3.5 text-neutral-600" />
+              <span>
+                {language === "ar"
+                  ? "الكود المصدري غير متاح (مستودع خاص / مشروع عميل)"
+                  : "Source Code Unavailable (Private / Client Project)"}
+              </span>
+            </div>
+          )}
         </motion.div>
 
         {/* 3. Rich Features & Key Highlights */}
