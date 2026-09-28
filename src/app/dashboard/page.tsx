@@ -36,6 +36,8 @@ import {
   FiCheck,
   FiX,
   FiTag,
+  FiSend,
+  FiUsers,
 } from "react-icons/fi";
 
 export default function DashboardPage() {
@@ -44,7 +46,7 @@ export default function DashboardPage() {
   const [passcode, setPasscode] = useState("");
   const [authError, setAuthError] = useState("");
   const [activeTab, setActiveTab] = useState<
-    "hero" | "about" | "skills" | "experiences" | "projects" | "blogs" | "footer" | "messages"
+    "hero" | "about" | "skills" | "experiences" | "projects" | "blogs" | "footer" | "messages" | "subscribers"
   >("hero");
 
   const [isLoading, setIsLoading] = useState(true);
@@ -54,7 +56,9 @@ export default function DashboardPage() {
   // File Input Refs
   const heroFileRef = useRef<HTMLInputElement | null>(null);
   const projectVideoFileRef = useRef<HTMLInputElement | null>(null);
+  const projectImagesFileRef = useRef<HTMLInputElement | null>(null);
   const blogCoverFileRef = useRef<HTMLInputElement | null>(null);
+  const [newProjectImageUrl, setNewProjectImageUrl] = useState("");
 
   // Site Config State
   const [siteConfig, setSiteConfig] = useState({
@@ -79,6 +83,11 @@ export default function DashboardPage() {
   const [blogs, setBlogs] = useState<any[]>([]);
   const [skills, setSkills] = useState<any[]>([]);
   const [messages, setMessages] = useState<any[]>([]);
+  const [subscribers, setSubscribers] = useState<any[]>([]);
+  const [newSubscriberEmail, setNewSubscriberEmail] = useState("");
+  const [isAddingSubscriber, setIsAddingSubscriber] = useState(false);
+  const [subscriberSearch, setSubscriberSearch] = useState("");
+  const [isSendingTestTo, setIsSendingTestTo] = useState<string | null>(null);
 
   // Experience Modal State
   const [isExpModalOpen, setIsExpModalOpen] = useState(false);
@@ -118,6 +127,7 @@ export default function DashboardPage() {
     descriptionEn: "",
     descriptionAr: "",
     videoUrl: "",
+    images: [],
     liveUrl: "",
     githubUrl: "",
     githubPrivate: false,
@@ -199,6 +209,7 @@ export default function DashboardPage() {
         setBlogs(res.data.data.blogs || []);
         setSkills(res.data.data.skills || []);
         setMessages(res.data.data.messages || []);
+        setSubscribers(res.data.data.subscribers || []);
       }
     } catch (e) {
       console.warn("Could not load admin data:", e);
@@ -271,6 +282,36 @@ export default function DashboardPage() {
     if (url) {
       setEditingProject((prev: any) => ({ ...prev, videoUrl: url }));
     }
+  };
+
+  const handleProjectImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const url = await uploadFile(file);
+    if (url) {
+      setEditingProject((prev: any) => ({
+        ...prev,
+        images: [...(Array.isArray(prev.images) ? prev.images : []), url],
+      }));
+    }
+    // reset input so same file can be selected if needed
+    if (e.target) e.target.value = "";
+  };
+
+  const addProjectImageUrl = () => {
+    if (!newProjectImageUrl.trim()) return;
+    setEditingProject((prev: any) => ({
+      ...prev,
+      images: [...(Array.isArray(prev.images) ? prev.images : []), newProjectImageUrl.trim()],
+    }));
+    setNewProjectImageUrl("");
+  };
+
+  const removeProjectImage = (index: number) => {
+    setEditingProject((prev: any) => ({
+      ...prev,
+      images: (Array.isArray(prev.images) ? prev.images : []).filter((_: any, i: number) => i !== index),
+    }));
   };
 
   const handleBlogCoverUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -436,6 +477,7 @@ export default function DashboardPage() {
     try {
       const cleanedProject = {
         ...editingProject,
+        images: Array.isArray(editingProject.images) ? editingProject.images.filter(Boolean) : [],
         featuresEn: (Array.isArray(editingProject.featuresEn) ? editingProject.featuresEn : [])
           .map((f: string) => f.trim())
           .filter(Boolean),
@@ -507,6 +549,58 @@ export default function DashboardPage() {
     } catch (e) {
       triggerToast(isRtl ? "فشل حذف الرسالة" : "Failed to delete message");
       loadDashboardData();
+    }
+  };
+
+  // 8. Newsletter Subscribers Handlers
+  const handleAddSubscriber = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newSubscriberEmail.trim() || isAddingSubscriber) return;
+    setIsAddingSubscriber(true);
+    try {
+      const res = await apiClient.post("/api/admin/subscribers", {
+        email: newSubscriberEmail.trim(),
+      });
+      if (res.data?.success) {
+        triggerToast(isRtl ? (res.data.message || "تمت إضافة المشترك بنجاح!") : "Subscriber added successfully!");
+        setNewSubscriberEmail("");
+        loadDashboardData();
+      } else {
+        triggerToast(res.data?.error || (isRtl ? "فشل إضافة المشترك" : "Failed to add subscriber"));
+      }
+    } catch (err: any) {
+      triggerToast(err?.response?.data?.error || (isRtl ? "حدث خطأ أثناء الإضافة" : "Error adding subscriber"));
+    } finally {
+      setIsAddingSubscriber(false);
+    }
+  };
+
+  const handleDeleteSubscriber = async (id: string, email: string) => {
+    if (!confirm(isRtl ? "هل أنت متأكد من حذف هذا المشترك من النشرة؟" : "Are you sure you want to remove this subscriber?")) return;
+    try {
+      setSubscribers((prev) => prev.filter((s) => s.id !== id && s.email.toLowerCase() !== email.toLowerCase()));
+      await apiClient.delete(`/api/admin/subscribers?id=${encodeURIComponent(id || "")}&email=${encodeURIComponent(email || "")}`);
+      triggerToast(isRtl ? "تم حذف المشترك بنجاح!" : "Subscriber removed successfully!");
+      loadDashboardData();
+    } catch (err) {
+      triggerToast(isRtl ? "فشل حذف المشترك" : "Failed to remove subscriber");
+      loadDashboardData();
+    }
+  };
+
+  const handleSendTestToSubscriber = async (targetEmail: string) => {
+    setIsSendingTestTo(targetEmail);
+    try {
+      const res = await apiClient.post("/api/admin/mailer/test", { email: targetEmail });
+      if (res.data?.success) {
+        triggerToast(isRtl ? `تم إرسال بريد تجريبي بنجاح إلى ${targetEmail}!` : `Test email delivered to ${targetEmail}!`);
+      } else {
+        triggerToast(res.data?.error || (isRtl ? "فشل إرسال البريد التجريبي" : "Failed to send test email"));
+      }
+    } catch (err: any) {
+      triggerToast(err?.response?.data?.error || (isRtl ? "حدث خطأ في الإرسال" : "Error sending email"));
+    } finally {
+      setIsSendingTestTo(null);
     }
   };
 
@@ -753,6 +847,23 @@ export default function DashboardPage() {
             {messages.length > 0 && (
               <span className="px-2 py-0.5 rounded-full text-[10px] bg-blue-500 text-white font-semibold">
                 {messages.length}
+              </span>
+            )}
+          </button>
+
+          <button
+            onClick={() => setActiveTab("subscribers")}
+            className={`flex items-center justify-between px-4 py-3 rounded-2xl text-xs sm:text-sm font-medium transition-all cursor-pointer whitespace-nowrap ${
+              activeTab === "subscribers" ? "bg-white text-black shadow-lg scale-[1.02]" : "bg-white/5 text-neutral-400 hover:bg-white/10"
+            }`}
+          >
+            <div className="flex items-center gap-3">
+              <FiSend className="w-4 h-4" />
+              <span>{isRtl ? "مشتركو النشرة البريدية" : "Newsletter Subscribers"}</span>
+            </div>
+            {subscribers.length > 0 && (
+              <span className="px-2 py-0.5 rounded-full text-[10px] bg-emerald-500/20 text-emerald-400 font-semibold border border-emerald-500/30">
+                {subscribers.length}
               </span>
             )}
           </button>
@@ -1170,6 +1281,7 @@ export default function DashboardPage() {
                       descriptionEn: "",
                       descriptionAr: "",
                       videoUrl: "",
+                      images: [],
                       liveUrl: "",
                       githubUrl: "",
                       githubPrivate: false,
@@ -1240,6 +1352,7 @@ export default function DashboardPage() {
                           onClick={() => {
                             setEditingProject({
                               ...proj,
+                              images: Array.isArray(proj.images) ? proj.images : [],
                               githubPrivate: proj.githubPrivate ?? false,
                               tags: Array.isArray(proj.tags) ? proj.tags.join(", ") : (proj.tags || ""),
                               featuresEn: Array.isArray(proj.featuresEn) && proj.featuresEn.length > 0 ? proj.featuresEn : [""],
@@ -1512,6 +1625,155 @@ export default function DashboardPage() {
                       <p className="text-xs text-neutral-300 leading-relaxed whitespace-pre-line">{m.message}</p>
                     </div>
                   ))
+                )}
+              </div>
+            </motion.div>
+          )}
+
+          {/* TAB 9: NEWSLETTER SUBSCRIBERS */}
+          {activeTab === "subscribers" && (
+            <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col gap-6">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div>
+                  <h3 className="text-xl font-medium text-white mb-1">
+                    {isRtl ? "مشتركو النشرة البريدية (Newsletter Subscribers)" : "Newsletter Subscribers"}
+                  </h3>
+                  <p className="text-xs text-neutral-400">
+                    {isRtl
+                      ? "إدارة جميع الإيميلات المشتركة في المدونة ومزامنتها سحابياً مع Supabase."
+                      : "Manage subscribed readers and synchronize with Supabase cloud database."}
+                  </p>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-medium">
+                    <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                    <span>{subscribers.length} {isRtl ? "مشترك نشط" : "Active Subscribers"}</span>
+                  </span>
+                </div>
+              </div>
+
+              {/* Add New Subscriber Form */}
+              <div className="p-5 sm:p-6 rounded-2xl bg-[#12141c] border border-white/10 shadow-xl">
+                <h4 className="text-xs font-semibold uppercase tracking-wider text-neutral-400 mb-3">
+                  {isRtl ? "إضافة مشترك جديد يدوياً" : "Add Subscriber Manually"}
+                </h4>
+                <form onSubmit={handleAddSubscriber} className="flex flex-col sm:flex-row gap-3">
+                  <div className="flex-1 relative">
+                    <FiMail className={`absolute top-1/2 -translate-y-1/2 text-neutral-500 w-4 h-4 ${isRtl ? "right-3.5" : "left-3.5"}`} />
+                    <input
+                      type="email"
+                      required
+                      value={newSubscriberEmail}
+                      onChange={(e) => setNewSubscriberEmail(e.target.value)}
+                      placeholder="reader@example.com"
+                      className={`w-full py-2.5 rounded-xl bg-white/5 border border-white/10 text-white placeholder-neutral-500 text-xs focus:outline-none focus:border-blue-500 font-mono ${
+                        isRtl ? "pr-10 pl-3.5" : "pl-10 pr-3.5"
+                      }`}
+                    />
+                  </div>
+                  <button
+                    type="submit"
+                    disabled={isAddingSubscriber || !newSubscriberEmail.trim()}
+                    className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 disabled:opacity-50 text-white font-medium text-xs transition-all shadow-md cursor-pointer shrink-0"
+                  >
+                    {isAddingSubscriber ? (
+                      <div className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                    ) : (
+                      <FiPlus className="w-4 h-4" />
+                    )}
+                    <span>{isRtl ? "إضافة المشترك" : "Add Subscriber"}</span>
+                  </button>
+                </form>
+              </div>
+
+              {/* Search & List */}
+              <div className="flex flex-col gap-3">
+                <div className="flex items-center justify-between gap-4">
+                  <div className="relative flex-1 max-w-sm">
+                    <FiSearch className={`absolute top-1/2 -translate-y-1/2 text-neutral-500 w-3.5 h-3.5 ${isRtl ? "right-3.5" : "left-3.5"}`} />
+                    <input
+                      type="text"
+                      value={subscriberSearch}
+                      onChange={(e) => setSubscriberSearch(e.target.value)}
+                      placeholder={isRtl ? "بحث في إيميلات المشتركين..." : "Search subscriber emails..."}
+                      className={`w-full py-2 rounded-xl bg-white/5 border border-white/10 text-white placeholder-neutral-500 text-xs focus:outline-none focus:border-blue-500 ${
+                        isRtl ? "pr-9 pl-3" : "pl-9 pr-3"
+                      }`}
+                    />
+                  </div>
+                  <span className="text-[11px] text-neutral-500 font-mono">
+                    {subscribers.filter((s) => s.email.toLowerCase().includes(subscriberSearch.toLowerCase())).length} / {subscribers.length}
+                  </span>
+                </div>
+
+                {subscribers.length === 0 ? (
+                  <div className="p-8 rounded-2xl bg-[#12141c] border border-white/10 text-center text-xs text-neutral-400">
+                    {isRtl ? "لا يوجد مشتركون في النشرة حتى الآن." : "No newsletter subscribers yet."}
+                  </div>
+                ) : (
+                  <div className="flex flex-col gap-2">
+                    {subscribers
+                      .filter((s) => s.email.toLowerCase().includes(subscriberSearch.toLowerCase()))
+                      .map((sub, idx) => (
+                        <div
+                          key={sub.id || sub.email}
+                          className="p-4 rounded-2xl bg-[#12141c] border border-white/10 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-md hover:border-white/20 transition-all group"
+                        >
+                          <div className="flex items-center gap-3">
+                            <div className="w-8 h-8 rounded-xl bg-blue-600/10 border border-blue-500/20 text-blue-400 flex items-center justify-center text-xs font-mono font-bold shrink-0">
+                              #{idx + 1}
+                            </div>
+                            <div>
+                              <div className="flex items-center gap-2">
+                                <span className="text-xs sm:text-sm font-semibold text-white font-mono">{sub.email}</span>
+                                <span className="px-2 py-0.5 rounded-full text-[10px] bg-emerald-500/15 text-emerald-400 font-medium border border-emerald-500/20">
+                                  {isRtl ? "نشط" : "Active"}
+                                </span>
+                              </div>
+                              <div className="text-[11px] text-neutral-500 flex items-center gap-1.5 mt-0.5">
+                                <FiClock className="w-3 h-3" />
+                                <span>
+                                  {isRtl ? "تاريخ الاشتراك:" : "Subscribed:"}{" "}
+                                  {new Date(sub.createdAt).toLocaleDateString(isRtl ? "ar-EG" : "en-US", {
+                                    year: "numeric",
+                                    month: "short",
+                                    day: "numeric",
+                                    hour: "2-digit",
+                                    minute: "2-digit",
+                                  })}
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+
+                          <div className="flex items-center gap-2 self-end sm:self-center">
+                            <button
+                              type="button"
+                              onClick={() => handleSendTestToSubscriber(sub.email)}
+                              disabled={isSendingTestTo === sub.email}
+                              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 text-neutral-300 text-xs transition-colors cursor-pointer border border-white/10 disabled:opacity-50"
+                              title={isRtl ? "إرسال إيميل تجريبي لهذا المشترك" : "Send test email to subscriber"}
+                            >
+                              {isSendingTestTo === sub.email ? (
+                                <div className="w-3 h-3 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                              ) : (
+                                <FiSend className="w-3 h-3 text-blue-400" />
+                              )}
+                              <span>{isRtl ? "اختبار إرسال" : "Test Email"}</span>
+                            </button>
+
+                            <button
+                              type="button"
+                              onClick={() => handleDeleteSubscriber(sub.id, sub.email)}
+                              className="p-1.5 rounded-xl bg-red-500/10 hover:bg-red-500/20 text-red-400 transition-colors cursor-pointer"
+                              title={isRtl ? "حذف المشترك" : "Delete Subscriber"}
+                            >
+                              <FiTrash2 className="w-3.5 h-3.5" />
+                            </button>
+                          </div>
+                        </div>
+                      ))}
+                  </div>
                 )}
               </div>
             </motion.div>
@@ -1975,6 +2237,94 @@ export default function DashboardPage() {
                     placeholder="/test.mp4 or Supabase video URL"
                     className="w-full px-3.5 py-2 rounded-xl bg-white/5 border border-white/10 text-white text-xs focus:outline-none focus:border-blue-500 font-mono"
                   />
+                </div>
+
+                {/* Gallery Images (Multiple Photos under the video in details page) */}
+                <div className="p-4 rounded-2xl bg-white/[0.03] border border-white/10 flex flex-col gap-3">
+                  <div className="flex items-center justify-between">
+                    <label className="text-xs font-medium text-white flex items-center gap-2">
+                      <FiImage className="w-4 h-4 text-cyan-400" />
+                      <span>{isRtl ? "صور المشروع الإضافية (معرض الصور تحت الفيديو)" : "Project Gallery Photos (Under Video Showcase)"}</span>
+                    </label>
+                    <input
+                      type="file"
+                      ref={projectImagesFileRef}
+                      onChange={handleProjectImageUpload}
+                      accept="image/*"
+                      className="hidden"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => projectImagesFileRef.current?.click()}
+                      className="px-3 py-1.5 rounded-xl bg-cyan-600/20 hover:bg-cyan-600/30 text-cyan-300 text-xs font-medium transition-colors cursor-pointer border border-cyan-500/30 flex items-center gap-1.5"
+                    >
+                      <FiPlus className="w-3.5 h-3.5" />
+                      <span>{isRtl ? "رفع صورة إضافية" : "Upload Image"}</span>
+                    </button>
+                  </div>
+
+                  <p className="text-[11px] text-neutral-400">
+                    {isRtl
+                      ? "الفيديو يظل هو الغلاف الرئيسي، وهذه الصور ستظهر تحت الفيديو في تفاصيل المشروع بحيث يتمكن الزائر من الضغط على أي صورة لعرضها مكان الفيديو."
+                      : "The video remains the default cover. These images appear below it, letting visitors click any thumbnail to preview it in place of the video."}
+                  </p>
+
+                  {/* Add image via direct URL */}
+                  <div className="flex items-center gap-2">
+                    <input
+                      type="text"
+                      value={newProjectImageUrl}
+                      onChange={(e) => setNewProjectImageUrl(e.target.value)}
+                      placeholder={isRtl ? "أو الصق رابط صورة هنا (https://...)" : "Or paste image URL here (https://...)"}
+                      className="flex-1 px-3.5 py-2 rounded-xl bg-white/5 border border-white/10 text-white text-xs focus:outline-none focus:border-blue-500 font-mono"
+                    />
+                    <button
+                      type="button"
+                      onClick={addProjectImageUrl}
+                      className="px-3.5 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-medium transition-colors cursor-pointer shrink-0"
+                    >
+                      {isRtl ? "إضافة رابط" : "Add URL"}
+                    </button>
+                  </div>
+
+                  {/* Display Uploaded Gallery Thumbnails */}
+                  {Array.isArray(editingProject.images) && editingProject.images.length > 0 ? (
+                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-2">
+                      {editingProject.images.map((imgUrl: string, imgIdx: number) => (
+                        <div
+                          key={imgIdx}
+                          className="group relative aspect-video rounded-xl overflow-hidden bg-neutral-900 border border-white/15 shadow-sm"
+                        >
+                          <Image
+                            src={imgUrl}
+                            alt={`Project image ${imgIdx + 1}`}
+                            fill
+                            unoptimized
+                            className="object-cover"
+                          />
+                          <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
+                            <button
+                              type="button"
+                              onClick={() => removeProjectImage(imgIdx)}
+                              className="p-1.5 rounded-lg bg-red-600 text-white hover:bg-red-700 transition-colors shadow-md cursor-pointer"
+                              title={isRtl ? "حذف الصورة" : "Remove Image"}
+                            >
+                              <FiTrash2 className="w-3.5 h-3.5" />
+                            </button>
+                          </div>
+                          <span className="absolute bottom-1 left-1 px-1.5 py-0.5 rounded text-[9px] bg-black/70 text-white font-mono">
+                            #{imgIdx + 1}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="text-center py-4 border border-dashed border-white/10 rounded-xl">
+                      <span className="text-xs text-neutral-500">
+                        {isRtl ? "لا توجد صور إضافية مضافة بعد لهذا المشروع" : "No gallery images added yet"}
+                      </span>
+                    </div>
+                  )}
                 </div>
 
                 {/* Descriptions */}

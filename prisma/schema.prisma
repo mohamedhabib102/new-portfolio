@@ -29,6 +29,7 @@ model Project {
   descriptionEn String   @db.Text
   descriptionAr String   @db.Text
   videoUrl      String
+  images        String[] @default([])
   liveUrl       String?
   githubUrl     String?
   githubPrivate Boolean  @default(false)

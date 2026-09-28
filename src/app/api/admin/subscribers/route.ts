@@ -18,19 +18,55 @@ export async function GET() {
   }
 }
 
+export async function POST(request: NextRequest) {
+  try {
+    const body = await request.json().catch(() => ({}));
+    const { email } = body;
+
+    if (!email || typeof email !== "string") {
+      return NextResponse.json(
+        { success: false, error: "Valid email is required" },
+        { status: 400 }
+      );
+    }
+
+    const trimmedEmail = email.trim().toLowerCase();
+    const result = await portfolioStore.addSubscriber(trimmedEmail);
+
+    return NextResponse.json({
+      success: true,
+      data: result.data,
+      status: result.status,
+      message:
+        result.status === "already_subscribed"
+          ? "المشترك موجود بالفعل في القائمة"
+          : "تمت إضافة المشترك بنجاح",
+    });
+  } catch (error) {
+    console.error("[Admin Subscribers POST Error]:", error);
+    return NextResponse.json(
+      { success: false, error: "Failed to add subscriber" },
+      { status: 500 }
+    );
+  }
+}
+
 export async function DELETE(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
-    const idOrEmail = searchParams.get("id") || searchParams.get("email");
+    const id = searchParams.get("id");
+    const email = searchParams.get("email");
 
-    if (!idOrEmail) {
+    if (!id && !email) {
       return NextResponse.json(
         { success: false, error: "Subscriber ID or Email is required" },
         { status: 400 }
       );
     }
 
-    await portfolioStore.deleteSubscriber(idOrEmail);
+    if (email) await portfolioStore.deleteSubscriber(email);
+    if (id && id !== email) await portfolioStore.deleteSubscriber(id);
+
     return NextResponse.json({
       success: true,
       message: "Subscriber deleted successfully",

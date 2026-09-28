@@ -3,13 +3,14 @@ import { portfolioStore } from "@/lib/store";
 
 export async function GET() {
   try {
-    const [siteConfig, experiences, projects, blogs, skills, messages] = await Promise.all([
+    const [siteConfig, experiences, projects, blogs, skills, messages, subscribers] = await Promise.all([
       portfolioStore.getSiteConfig(),
       portfolioStore.getExperiences(),
       portfolioStore.getProjects(),
       portfolioStore.getBlogs(),
       portfolioStore.getSkills(),
       portfolioStore.getMessages(),
+      portfolioStore.getSubscribers(),
     ]);
 
     return NextResponse.json({
@@ -21,6 +22,7 @@ export async function GET() {
         blogs,
         skills,
         messages,
+        subscribers,
       },
     });
   } catch (error) {

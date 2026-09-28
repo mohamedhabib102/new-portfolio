@@ -77,13 +77,6 @@ export default function FloatingDock({ className = "" }: FloatingDockProps) {
       isExternal: false,
     },
     {
-      id: "resume",
-      label: t.dockResume,
-      icon: <IoDocumentTextOutline className="w-4 h-4 sm:w-5 sm:h-5" />,
-      href: "/resume",
-      isExternal: false,
-    },
-    {
       id: "blogs",
       label: t.dockBlogs,
       icon: <IoReaderOutline className="w-4 h-4 sm:w-5 sm:h-5" />,

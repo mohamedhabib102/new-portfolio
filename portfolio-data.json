@@ -59,6 +59,7 @@
       "createdAt": "2026-09-04T19:03:36.84857+00:00",
       "updatedAt": "2026-09-04T19:44:20.916+00:00",
       "githubPrivate": false,
+      "images": [],
       "featuresEn": [
         "Eliminated heavy loading bottlenecks and optimized scripts for instantaneous page delivery",
         "Overhauled blog typography with rich Word-style formatting for headings, lead paragraphs, styled quotes, and links",
@@ -99,6 +100,7 @@
       "createdAt": "2026-09-04T19:03:37.423162+00:00",
       "updatedAt": "2026-09-04T19:44:21.949+00:00",
       "githubPrivate": false,
+      "images": [],
       "featuresEn": [
         "Full Lifecycle Execution: Custom Figma UI/UX architecture translated into a modular Vue.js frontend",
         "Multi-Role Permission Architecture: Dedicated portals for Buyers, Owners, Brokers, Companies, and Super-Admin",
@@ -138,6 +140,7 @@
       "createdAt": "2026-09-04T17:01:13.127516+00:00",
       "updatedAt": "2026-09-04T19:44:24.153+00:00",
       "githubPrivate": false,
+      "images": [],
       "featuresEn": [
         "Direct Craftsman Booking: Seamless service requests and communication between clients and verified technicians",
         "Strict Identity Verification: Rigorous background verification workflows before technician profile publishing",
@@ -177,6 +180,7 @@
       "createdAt": "2026-09-04T17:04:45.381158+00:00",
       "updatedAt": "2026-09-04T19:44:25.056+00:00",
       "githubPrivate": false,
+      "images": [],
       "featuresEn": [
         "Quran Reader & Typography: Clean, accessible Arabic font rendering and surah navigation",
         "Synchronized Audio Streaming: Global audio playback with reciter selection and smooth streaming",
@@ -498,11 +502,18 @@
   ],
   "subscribers": [
     {
-      "id": "sub-1789413394019",
+      "id": "sub-1790626529616",
+      "email": "byaalkhy43@gmail.com",
+      "active": true,
+      "createdAt": "2026-09-28T20:15:29.616Z",
+      "updatedAt": "2026-09-28T20:15:29.616Z"
+    },
+    {
+      "id": "sub-1790626331820",
       "email": "mowafy.dev@gmail.com",
       "active": true,
-      "createdAt": "2026-09-14T19:16:34.019Z",
-      "updatedAt": "2026-09-14T19:16:34.019Z"
+      "createdAt": "2026-09-28T20:12:11.820Z",
+      "updatedAt": "2026-09-28T20:12:11.820Z"
     }
   ]
 }

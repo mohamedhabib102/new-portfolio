@@ -162,7 +162,7 @@ export default function AboutClient({ initialConfig, initialExperiences }: About
         </div>
       </section>
 
-      {/* 3. Vertical Experience Timeline Section */}
+      {/* 3. Clean Vertical Experience Timeline Section */}
       <section className="relative w-full py-20 px-6 sm:px-12 lg:px-20 bg-black">
         <div className="max-w-4xl mx-auto">
           {/* Section Title */}
@@ -188,61 +188,71 @@ export default function AboutClient({ initialConfig, initialExperiences }: About
                 : "border-l border-white/20 ml-4 sm:ml-6 pl-8 sm:pl-12"
             }`}
           >
-            {experiences.map((exp: any, idx: number) => (
-              <motion.div
-                key={idx}
-                initial={{ opacity: 0, y: 40 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.2 }}
-                transition={{ duration: 0.7, delay: idx * 0.15, ease: [0.16, 1, 0.3, 1] }}
-                className="relative flex flex-col gap-4 group"
-              >
-                {/* Glowing Dot on the Vertical Line */}
-                <div
-                  className={`absolute top-1.5 w-4 h-4 rounded-full bg-white border-4 border-black shadow-[0_0_12px_rgba(255,255,255,0.8)] group-hover:scale-125 transition-transform duration-300 ${
-                    isRtl
-                      ? "-right-[41px] sm:-right-[57px]"
-                      : "-left-[41px] sm:-left-[57px]"
-                  }`}
-                />
+            {experiences.map((exp: any, idx: number) => {
+              const skillsList = Array.isArray(exp.skills)
+                ? exp.skills
+                : typeof exp.skills === "string"
+                ? exp.skills.split(",").map((s: string) => s.trim()).filter(Boolean)
+                : [];
 
-                {/* Period Badge */}
-                <span className="text-xs sm:text-sm font-mono text-neutral-400">
-                  {exp.period}
-                </span>
-
-                {/* Role & Company */}
-                <div>
-                  <h3 className="text-2xl sm:text-3xl font-medium text-white tracking-tight">
-                    {language === "ar" ? exp.roleAr : exp.roleEn}
-                  </h3>
-                  <p className="text-sm sm:text-base font-normal text-blue-400 mt-1">
-                    @ {exp.company}
-                  </p>
-                </div>
-
-                {/* Description */}
-                <p
-                  className={`text-sm sm:text-base text-neutral-300 max-w-2xl font-light ${
-                    isRtl ? "leading-[1.85]" : "leading-relaxed"
-                  }`}
+              return (
+                <motion.div
+                  key={exp.id || idx}
+                  initial={{ opacity: 0, y: 40 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, amount: 0.2 }}
+                  transition={{ duration: 0.7, delay: idx * 0.15, ease: [0.16, 1, 0.3, 1] }}
+                  className="relative flex flex-col gap-4 group"
                 >
-                  {language === "ar" ? exp.descAr : exp.descEn}
-                </p>
+                  {/* Glowing Dot on the Vertical Line */}
+                  <div
+                    className={`absolute top-1.5 w-4 h-4 rounded-full bg-white border-4 border-black shadow-[0_0_12px_rgba(255,255,255,0.8)] group-hover:scale-125 transition-transform duration-300 ${
+                      isRtl
+                        ? "-right-[41px] sm:-right-[57px]"
+                        : "-left-[41px] sm:-left-[57px]"
+                    }`}
+                  />
 
-                {/* Skills tags */}
-                <div className="flex flex-wrap gap-2 pt-2">
-                  {exp.skills && exp.skills.map((skill: string, i: number) => (
-                    <span
-                      key={i}
-                      className="px-3 py-1 text-xs font-normal rounded-full bg-white/5 border border-white/10 text-neutral-300"
-                    >
-                      {skill}
-                    </span>
-                  ))}
-                </div>
-              </motion.div>
-            ))}
+                  {/* Period Badge */}
+                  <span className="text-xs sm:text-sm font-mono text-neutral-400">
+                    {exp.period}
+                  </span>
+
+                  {/* Role & Company in its correct original place */}
+                  <div>
+                    <h3 className="text-2xl sm:text-3xl font-medium text-white tracking-tight">
+                      {language === "ar" ? exp.roleAr : exp.roleEn}
+                    </h3>
+                    <p className="text-sm sm:text-base font-normal text-blue-400 mt-1">
+                      @ {exp.company}
+                    </p>
+                  </div>
+
+                  {/* Description */}
+                  <p
+                    className={`text-sm sm:text-base text-neutral-300 max-w-2xl font-light ${
+                      isRtl ? "leading-[1.85]" : "leading-relaxed"
+                    }`}
+                  >
+                    {language === "ar" ? exp.descAr : exp.descEn}
+                  </p>
+
+                  {/* Skills tags */}
+                  {skillsList.length > 0 && (
+                    <div className="flex flex-wrap gap-2 pt-2">
+                      {skillsList.map((skill: string, i: number) => (
+                        <span
+                          key={i}
+                          className="px-3 py-1 text-xs font-normal rounded-full bg-white/5 border border-white/10 text-neutral-300 hover:text-white hover:border-white/25 transition-colors"
+                        >
+                          {skill}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+                </motion.div>
+              );
+            })}
           </div>
         </div>
       </section>

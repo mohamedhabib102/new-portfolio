@@ -20,15 +20,27 @@ export interface MailerBlogPayload {
  * Creates Nodemailer transporter using SMTP configuration from environment variables.
  */
 function createTransporter() {
-  const host = process.env.SMTP_HOST || "smtp.gmail.com";
-  const port = Number(process.env.SMTP_PORT) || 465;
-  const secure = process.env.SMTP_SECURE === "true" || port === 465;
   const user = process.env.SMTP_USER;
   const pass = process.env.SMTP_PASS;
 
   if (!user || !pass) {
     return null;
   }
+
+  // Gmail-optimized configuration
+  if (user.includes("@gmail.com")) {
+    return nodemailer.createTransport({
+      service: "gmail",
+      auth: {
+        user,
+        pass,
+      },
+    });
+  }
+
+  const host = process.env.SMTP_HOST || "smtp.gmail.com";
+  const port = Number(process.env.SMTP_PORT) || 465;
+  const secure = process.env.SMTP_SECURE === "true" || port === 465;
 
   return nodemailer.createTransport({
     host,
@@ -47,7 +59,7 @@ function createTransporter() {
 function generateBlogEmailTemplate(blog: MailerBlogPayload, siteUrl: string) {
   const blogUrl = `${siteUrl}/blogs/${blog.slug || blog.id}`;
   const authorName = blog.authorName || "Mohamed H. Mowafy";
-  const authorRole = blog.authorRole || "Front-End Developer";
+  const authorRole = blog.authorRole || "Software Engineer";
   const category = blog.categoryAr || blog.categoryEn || "مقالة تقنية";
   const readTime = blog.readTimeAr || blog.readTimeEn || "5 دقائق قراءة";
   const coverImageUrl = blog.coverImage
@@ -173,6 +185,19 @@ function generateBlogEmailTemplate(blog: MailerBlogPayload, siteUrl: string) {
 `;
 }
 
+function getFromAddress(): string {
+  const user = process.env.SMTP_USER || "mowafy.dev@gmail.com";
+  const rawFrom = process.env.EMAIL_FROM;
+  if (!rawFrom) {
+    return `"Mohamed H. Mowafy" <${user}>`;
+  }
+  const clean = rawFrom.replace(/\\"/g, '"').trim();
+  if (clean.includes("<") && clean.includes(">")) {
+    return clean;
+  }
+  return `"${clean}" <${user}>`;
+}
+
 /**
  * Dispatches automated new blog post notification to all subscribers via Nodemailer.
  */
@@ -195,37 +220,145 @@ export async function sendNewBlogNotification(blog: MailerBlogPayload, recipient
   }
 
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://mohamedmowafydev.vercel.app";
-  const senderEmail = process.env.EMAIL_FROM || process.env.SMTP_USER;
-  const authorName = blog.authorName || "Mohamed H. Mowafy";
-  const from = senderEmail?.includes("<") ? senderEmail : `"${authorName}" <${senderEmail}>`;
-
-  const subject = `🚀 مقال جديد: ${blog.titleAr || blog.titleEn}`;
+  const from = getFromAddress();
+  const subject = `مقال جديد: ${blog.titleAr || blog.titleEn}`;
   const htmlContent = generateBlogEmailTemplate(blog, siteUrl);
+  const textContent = `${blog.titleAr || blog.titleEn}\n\n${blog.excerptAr || blog.excerptEn}\n\nلقراءة المقال كاملاً: ${siteUrl}/blogs/${blog.slug || blog.id}`;
 
-  // Send in batches using BCC to protect user privacy and respect SMTP rate limits
-  const BATCH_SIZE = 50;
   let totalSent = 0;
 
-  for (let i = 0; i < recipientEmails.length; i += BATCH_SIZE) {
-    const batch = recipientEmails.slice(i, i + BATCH_SIZE);
+  const sendPromises = recipientEmails.map(async (recipient) => {
     try {
-      await transporter.sendMail({
+      const info = await transporter.sendMail({
         from,
-        to: senderEmail, // Sender in 'To' field
-        bcc: batch,      // Recipients in 'Bcc' to keep emails private
+        to: recipient,
+        replyTo: process.env.SMTP_USER || "mowafy.dev@gmail.com",
         subject,
+        text: textContent,
         html: htmlContent,
       });
-      totalSent += batch.length;
-      console.log(`[Nodemailer] Successfully sent new blog email batch (${batch.length} recipients)`);
+      console.log(`[Nodemailer] Successfully sent blog notification to: ${recipient}, MessageID: ${info.messageId}`);
+      return { success: true, recipient };
     } catch (err) {
-      console.error(`[Nodemailer] Failed to send email batch:`, err);
+      console.error(`[Nodemailer] Failed to send email to ${recipient}:`, err);
+      return { success: false, recipient, error: err };
     }
-  }
+  });
+
+  const results = await Promise.allSettled(sendPromises);
+  totalSent = results.filter((r) => r.status === "fulfilled" && (r.value as any).success).length;
 
   return {
     success: true,
     totalSent,
     message: `Sent new blog notifications to ${totalSent} subscribers.`,
   };
+}
+
+/**
+ * Sends an instant welcome/confirmation email to a new subscriber.
+ */
+export async function sendWelcomeSubscriberEmail(subscriberEmail: string) {
+  try {
+    const transporter = createTransporter();
+    if (!transporter) {
+      console.warn(
+        "[Nodemailer] SMTP_USER or SMTP_PASS not defined. Welcome email skipped safely."
+      );
+      return { success: false, reason: "SMTP_CREDENTIALS_MISSING" };
+    }
+
+    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://mohamedmowafydev.vercel.app";
+    const from = getFromAddress();
+    const subject = "🎉 تم اشتراكك بنجاح في النشرة البريدية | Mohamed H. Mowafy";
+
+    const htmlContent = `
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>أهلاً بك في النشرة البريدية</title>
+  <style>
+    body { margin: 0; padding: 40px 15px; background-color: #090a0f; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; color: #f3f4f6; }
+    .email-container { max-width: 580px; margin: 0 auto; background-color: #12141c; border-radius: 20px; overflow: hidden; border: 1px solid rgba(255, 255, 255, 0.08); }
+    .btn-primary { display: inline-block; background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%); color: #ffffff !important; font-weight: 600; font-size: 14px; padding: 13px 30px; text-decoration: none; border-radius: 9999px; }
+  </style>
+</head>
+<body>
+  <div class="email-container">
+    <div style="padding: 28px 32px; border-bottom: 1px solid rgba(255, 255, 255, 0.07); background: linear-gradient(180deg, rgba(37, 99, 235, 0.12) 0%, transparent 100%); text-align: right;">
+      <span style="font-size: 18px; font-weight: 700; color: #ffffff;">Mohamed H. Mowafy</span>
+      <div style="font-size: 12px; color: #94a3b8; margin-top: 2px;">Software Engineer</div>
+    </div>
+
+    <div style="padding: 36px 32px; text-align: right;">
+      <div style="display: inline-block; background: rgba(37, 99, 235, 0.15); color: #60a5fa; border: 1px solid rgba(37, 99, 235, 0.3); font-size: 11px; padding: 4px 10px; border-radius: 9999px; font-weight: 600; margin-bottom: 16px;">
+        ✨ تم تأكيد اشتراكك
+      </div>
+
+      <h1 style="font-size: 22px; font-weight: 700; color: #ffffff; margin: 0 0 16px 0; line-height: 1.4;">
+        أهلاً بك في نشرتي البريدية! 🎉
+      </h1>
+
+      <p style="font-size: 15px; line-height: 1.8; color: #cbd5e1; margin: 0 0 16px 0;">
+        شكراً لاشتراكك! يسعدني جداً انضمامك. ستصلك أحدث المقالات التقنية، وخلاصة التجارب والحلول البرمجية العملية، وأفضل الممارسات في هندسة وتطوير البرمجيات مباشرة إلى بريدك فور نشرها.
+      </p>
+
+      <div style="padding: 16px 20px; background: rgba(255, 255, 255, 0.03); border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.06); margin-bottom: 24px;">
+        <p style="font-size: 13px; color: #94a3b8; margin: 0; line-height: 1.6;">
+          💡 <strong>ماذا تتوقع؟</strong> مقالات تقنية نوعية، حلول برمجية حقيقية، وأفكار مفيدة لتطوير مهاراتك التقنية، دون أي رسائل مزعجة أو ترويجية.
+        </p>
+      </div>
+
+      <div style="text-align: center; margin: 28px 0 10px 0;">
+        <a href="${siteUrl}/blogs" target="_blank" class="btn-primary">
+          استكشف أحدث المقالات الآن ←
+        </a>
+      </div>
+    </div>
+
+    <div style="padding: 20px 32px; background-color: #0c0d14; border-top: 1px solid rgba(255, 255, 255, 0.06); text-align: center;">
+      <p style="font-size: 11px; color: #64748b; margin: 0;">
+        تم إرسال هذا البريد إلى <strong>${subscriberEmail}</strong> لأنك قمت بالاشتراك في مدونة Mohamed H. Mowafy.
+      </p>
+    </div>
+  </div>
+</body>
+</html>
+    `;
+
+    const textContent = `أهلاً بك في النشرة البريدية للمهندس محمد موافي!\n\nشكراً لاشتراكك! يسعدني جداً انضمامك. ستصلك أحدث المقالات التقنية، وخلاصة التجارب والحلول البرمجية العملية، وأفضل الممارسات في هندسة وتطوير البرمجيات مباشرة إلى بريدك فور نشرها.\n\nاستكشف أحدث المقالات: ${siteUrl}/blogs`;
+
+    await transporter.sendMail({
+      from,
+      to: subscriberEmail,
+      replyTo: process.env.SMTP_USER || "mowafy.dev@gmail.com",
+      subject,
+      text: textContent,
+      html: htmlContent,
+    });
+
+    console.log(`[Nodemailer] Welcome email sent successfully to ${subscriberEmail}`);
+    return { success: true };
+  } catch (error: any) {
+    console.error("[Nodemailer] Failed to send welcome email:", error);
+    return { success: false, error: error?.message };
+  }
+}
+
+/**
+ * Diagnostic tool to verify SMTP credentials connection.
+ */
+export async function verifySmtpConnection() {
+  const transporter = createTransporter();
+  if (!transporter) {
+    return { success: false, message: "SMTP_USER or SMTP_PASS missing" };
+  }
+  try {
+    await transporter.verify();
+    return { success: true, message: "SMTP server connection verified successfully!" };
+  } catch (err: any) {
+    return { success: false, message: err?.message || "Failed to connect to SMTP server" };
+  }
 }

@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import { useTranslation } from "@/i18n/LanguageContext";
 import { FiCornerDownRight } from "react-icons/fi";
 import { IoLogoWhatsapp, IoLogoGithub, IoLogoLinkedin } from "react-icons/io5";
+import ShapeDivider from "@/components/ui/ShapeDivider";
 
 import { useSiteConfig, SiteConfig } from "@/hooks/useSiteConfig";
 
@@ -28,8 +29,11 @@ export default function FooterSection({ initialConfig }: { initialConfig?: SiteC
   const whatsappNum = (config.whatsappNumber || "201027227796").replace(/[^0-9]/g, "");
 
   return (
-    <footer className="relative w-full bg-black text-white px-6 sm:px-12 lg:px-20 pt-16 sm:pt-24 pb-14 sm:pb-20 select-none overflow-hidden">
-      <div className="max-w-7xl mx-auto flex flex-col justify-between min-h-[440px] sm:min-h-[500px]">
+    <footer className="relative w-full bg-black text-white px-6 sm:px-12 lg:px-20 pt-20 sm:pt-32 pb-14 sm:pb-20 select-none overflow-hidden">
+      {/* Top Wave Shape Divider dipping from the white section above into the black footer */}
+      <ShapeDivider position="top" color="fill-white" />
+
+      <div className="max-w-7xl mx-auto flex flex-col justify-between min-h-[440px] sm:min-h-[500px] relative z-20">
         {/* Top row: Catchy Subtitle & White Circular Skills Button */}
         <motion.div
           initial={{ opacity: 0, y: 25 }}

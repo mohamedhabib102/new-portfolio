@@ -451,6 +451,7 @@ export const portfolioStore = {
             const local = store.projects.find((p: any) => p.id === d.id || p.slug === d.slug);
             return {
               ...d,
+              images: Array.isArray(d.images) && d.images.length > 0 ? d.images : (local?.images || []),
               githubPrivate: d.githubPrivate ?? local?.githubPrivate ?? false,
               featuresEn: d.featuresEn || local?.featuresEn,
               featuresAr: d.featuresAr || local?.featuresAr,
@@ -483,6 +484,11 @@ export const portfolioStore = {
       ...projectData,
       id,
       slug,
+      images: Array.isArray(projectData.images)
+        ? projectData.images
+        : typeof projectData.images === "string" && projectData.images.trim()
+        ? projectData.images.split(",").map((s: string) => s.trim()).filter(Boolean)
+        : [],
       githubPrivate: Boolean(projectData.githubPrivate),
       tags: Array.isArray(projectData.tags) ? projectData.tags : (projectData.tags || "").split(",").map((s: string) => s.trim()).filter(Boolean),
       featured: projectData.featured ?? true,
@@ -507,6 +513,7 @@ export const portfolioStore = {
           descriptionEn: fullProject.descriptionEn,
           descriptionAr: fullProject.descriptionAr,
           videoUrl: fullProject.videoUrl || "",
+          images: fullProject.images || [],
           liveUrl: fullProject.liveUrl || null,
           githubUrl: fullProject.githubUrl || null,
           tags: fullProject.tags,
@@ -521,8 +528,10 @@ export const portfolioStore = {
         });
 
         if (upsertErr) {
-          // If githubPrivate column is not in schema cache, fallback to base payload
-          await supabase.from("Project").upsert(payload);
+          // If images column is not yet in Supabase schema cache, fallback to payload without images
+          const fallbackPayload = { ...payload };
+          delete fallbackPayload.images;
+          await supabase.from("Project").upsert(fallbackPayload);
         }
       } catch (err) {
         console.warn("[Supabase] saveProject error:", err);
@@ -827,7 +836,11 @@ export const portfolioStore = {
   getMessages: async (): Promise<ClientMessageData[]> => {
     if (supabase) {
       try {
-        const { data, error } = await supabase.from("ContactMessage").select("*").order("createdAt", { ascending: false });
+        const { data, error } = await supabase
+          .from("ContactMessage")
+          .select("*")
+          .neq("name", "NEWSLETTER_SUBSCRIBER")
+          .order("createdAt", { ascending: false });
         if (!error && Array.isArray(data)) {
           return data;
         }
@@ -835,7 +848,7 @@ export const portfolioStore = {
         console.warn("[Supabase] getMessages fallback:", err);
       }
     }
-    return readLocalStore().messages;
+    return (readLocalStore().messages || []).filter((m) => m.name !== "NEWSLETTER_SUBSCRIBER");
   },
 
   addMessage: async (msg: { name?: string; email: string; phone?: string; message: string }): Promise<ClientMessageData> => {
@@ -1009,7 +1022,9 @@ export const portfolioStore = {
     const target = idOrEmail.trim().toLowerCase();
     const store = readLocalStore();
     if (store.subscribers) {
-      store.subscribers = store.subscribers.filter((s) => s.id !== target && s.email.toLowerCase() !== target);
+      store.subscribers = store.subscribers.filter(
+        (s) => s.id.toLowerCase() !== target && s.email.toLowerCase() !== target
+      );
       writeLocalStore(store);
     }
 

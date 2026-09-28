@@ -141,6 +141,7 @@ exports.Prisma.ProjectScalarFieldEnum = {
   descriptionEn: 'descriptionEn',
   descriptionAr: 'descriptionAr',
   videoUrl: 'videoUrl',
+  images: 'images',
   liveUrl: 'liveUrl',
   githubUrl: 'githubUrl',
   githubPrivate: 'githubPrivate',

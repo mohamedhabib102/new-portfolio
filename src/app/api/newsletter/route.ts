@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { portfolioStore } from "@/lib/store";
+import { sendWelcomeSubscriberEmail } from "@/lib/mailer";
 
 const EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
@@ -30,12 +31,19 @@ export async function POST(request: NextRequest) {
 
     const result = await portfolioStore.addSubscriber(trimmedEmail);
 
+    // Send welcome email directly to ensure delivery
+    try {
+      await sendWelcomeSubscriberEmail(trimmedEmail);
+    } catch (mailErr) {
+      console.error("[Newsletter Welcome Email Error]:", mailErr);
+    }
+
     if (result.status === "already_subscribed") {
       return NextResponse.json({
         success: true,
         status: "already_subscribed",
-        message: "You're already subscribed to our newsletter!",
-        messageAr: "أنت مشترك بالفعل في النشرة البريدية!",
+        message: "You're already subscribed! We've resent the confirmation to your inbox.",
+        messageAr: "أنت مشترك بالفعل! تم إرسال رسالة تأكيد جديدة إلى بريدك الإلكتروني.",
       });
     }
 

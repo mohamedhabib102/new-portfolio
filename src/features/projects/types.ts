@@ -13,6 +13,7 @@ export interface Project {
   descriptionAr: string;
   videoUrl: string;
   posterUrl?: string | null;
+  images?: string[];
   liveUrl?: string | null;
   githubUrl?: string | null;
   githubPrivate?: boolean;

@@ -7,18 +7,18 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const saved = await portfolioStore.saveBlog(body);
 
-    // Asynchronously dispatch newsletter emails to all active subscribers without blocking response
-    (async () => {
-      try {
-        const subscribers = await portfolioStore.getSubscribers();
-        const emails = subscribers.map((s) => s.email).filter(Boolean);
-        if (emails.length > 0) {
-          await sendNewBlogNotification(saved, emails);
-        }
-      } catch (mailErr) {
-        console.error("[Blog Newsletter Dispatch Error]:", mailErr);
+    // Synchronously dispatch newsletter emails to all active subscribers
+    try {
+      const subscribers = await portfolioStore.getSubscribers();
+      const uniqueEmails = Array.from(new Set(subscribers.map((s) => s.email).filter(Boolean)));
+      console.log(`[Blog Newsletter] Dispatching to ${uniqueEmails.length} subscribers:`, uniqueEmails);
+      if (uniqueEmails.length > 0) {
+        const mailResult = await sendNewBlogNotification(saved, uniqueEmails);
+        console.log("[Blog Newsletter Result]:", mailResult);
       }
-    })();
+    } catch (mailErr) {
+      console.error("[Blog Newsletter Dispatch Error]:", mailErr);
+    }
 
     return NextResponse.json({
       success: true,

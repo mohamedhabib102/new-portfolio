@@ -2425,6 +2425,7 @@ export namespace Prisma {
     descriptionEn: number
     descriptionAr: number
     videoUrl: number
+    images: number
     liveUrl: number
     githubUrl: number
     githubPrivate: number
@@ -2487,6 +2488,7 @@ export namespace Prisma {
     descriptionEn?: true
     descriptionAr?: true
     videoUrl?: true
+    images?: true
     liveUrl?: true
     githubUrl?: true
     githubPrivate?: true
@@ -2592,6 +2594,7 @@ export namespace Prisma {
     descriptionEn: string
     descriptionAr: string
     videoUrl: string
+    images: string[]
     liveUrl: string | null
     githubUrl: string | null
     githubPrivate: boolean
@@ -2629,6 +2632,7 @@ export namespace Prisma {
     descriptionEn?: boolean
     descriptionAr?: boolean
     videoUrl?: boolean
+    images?: boolean
     liveUrl?: boolean
     githubUrl?: boolean
     githubPrivate?: boolean
@@ -2647,6 +2651,7 @@ export namespace Prisma {
     descriptionEn?: boolean
     descriptionAr?: boolean
     videoUrl?: boolean
+    images?: boolean
     liveUrl?: boolean
     githubUrl?: boolean
     githubPrivate?: boolean
@@ -2665,6 +2670,7 @@ export namespace Prisma {
     descriptionEn?: boolean
     descriptionAr?: boolean
     videoUrl?: boolean
+    images?: boolean
     liveUrl?: boolean
     githubUrl?: boolean
     githubPrivate?: boolean
@@ -2683,6 +2689,7 @@ export namespace Prisma {
     descriptionEn?: boolean
     descriptionAr?: boolean
     videoUrl?: boolean
+    images?: boolean
     liveUrl?: boolean
     githubUrl?: boolean
     githubPrivate?: boolean
@@ -2693,7 +2700,7 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type ProjectOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "slug" | "titleEn" | "titleAr" | "descriptionEn" | "descriptionAr" | "videoUrl" | "liveUrl" | "githubUrl" | "githubPrivate" | "tags" | "featured" | "order" | "createdAt" | "updatedAt", ExtArgs["result"]["project"]>
+  export type ProjectOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "slug" | "titleEn" | "titleAr" | "descriptionEn" | "descriptionAr" | "videoUrl" | "images" | "liveUrl" | "githubUrl" | "githubPrivate" | "tags" | "featured" | "order" | "createdAt" | "updatedAt", ExtArgs["result"]["project"]>
 
   export type $ProjectPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Project"
@@ -2706,6 +2713,7 @@ export namespace Prisma {
       descriptionEn: string
       descriptionAr: string
       videoUrl: string
+      images: string[]
       liveUrl: string | null
       githubUrl: string | null
       githubPrivate: boolean
@@ -3144,6 +3152,7 @@ export namespace Prisma {
     readonly descriptionEn: FieldRef<"Project", 'String'>
     readonly descriptionAr: FieldRef<"Project", 'String'>
     readonly videoUrl: FieldRef<"Project", 'String'>
+    readonly images: FieldRef<"Project", 'String[]'>
     readonly liveUrl: FieldRef<"Project", 'String'>
     readonly githubUrl: FieldRef<"Project", 'String'>
     readonly githubPrivate: FieldRef<"Project", 'Boolean'>
@@ -7856,6 +7865,7 @@ export namespace Prisma {
     descriptionEn: 'descriptionEn',
     descriptionAr: 'descriptionAr',
     videoUrl: 'videoUrl',
+    images: 'images',
     liveUrl: 'liveUrl',
     githubUrl: 'githubUrl',
     githubPrivate: 'githubPrivate',
@@ -8142,6 +8152,7 @@ export namespace Prisma {
     descriptionEn?: StringFilter<"Project"> | string
     descriptionAr?: StringFilter<"Project"> | string
     videoUrl?: StringFilter<"Project"> | string
+    images?: StringNullableListFilter<"Project">
     liveUrl?: StringNullableFilter<"Project"> | string | null
     githubUrl?: StringNullableFilter<"Project"> | string | null
     githubPrivate?: BoolFilter<"Project"> | boolean
@@ -8160,6 +8171,7 @@ export namespace Prisma {
     descriptionEn?: SortOrder
     descriptionAr?: SortOrder
     videoUrl?: SortOrder
+    images?: SortOrder
     liveUrl?: SortOrderInput | SortOrder
     githubUrl?: SortOrderInput | SortOrder
     githubPrivate?: SortOrder
@@ -8181,6 +8193,7 @@ export namespace Prisma {
     descriptionEn?: StringFilter<"Project"> | string
     descriptionAr?: StringFilter<"Project"> | string
     videoUrl?: StringFilter<"Project"> | string
+    images?: StringNullableListFilter<"Project">
     liveUrl?: StringNullableFilter<"Project"> | string | null
     githubUrl?: StringNullableFilter<"Project"> | string | null
     githubPrivate?: BoolFilter<"Project"> | boolean
@@ -8199,6 +8212,7 @@ export namespace Prisma {
     descriptionEn?: SortOrder
     descriptionAr?: SortOrder
     videoUrl?: SortOrder
+    images?: SortOrder
     liveUrl?: SortOrderInput | SortOrder
     githubUrl?: SortOrderInput | SortOrder
     githubPrivate?: SortOrder
@@ -8225,6 +8239,7 @@ export namespace Prisma {
     descriptionEn?: StringWithAggregatesFilter<"Project"> | string
     descriptionAr?: StringWithAggregatesFilter<"Project"> | string
     videoUrl?: StringWithAggregatesFilter<"Project"> | string
+    images?: StringNullableListFilter<"Project">
     liveUrl?: StringNullableWithAggregatesFilter<"Project"> | string | null
     githubUrl?: StringNullableWithAggregatesFilter<"Project"> | string | null
     githubPrivate?: BoolWithAggregatesFilter<"Project"> | boolean
@@ -8644,6 +8659,7 @@ export namespace Prisma {
     descriptionEn: string
     descriptionAr: string
     videoUrl: string
+    images?: ProjectCreateimagesInput | string[]
     liveUrl?: string | null
     githubUrl?: string | null
     githubPrivate?: boolean
@@ -8662,6 +8678,7 @@ export namespace Prisma {
     descriptionEn: string
     descriptionAr: string
     videoUrl: string
+    images?: ProjectCreateimagesInput | string[]
     liveUrl?: string | null
     githubUrl?: string | null
     githubPrivate?: boolean
@@ -8680,6 +8697,7 @@ export namespace Prisma {
     descriptionEn?: StringFieldUpdateOperationsInput | string
     descriptionAr?: StringFieldUpdateOperationsInput | string
     videoUrl?: StringFieldUpdateOperationsInput | string
+    images?: ProjectUpdateimagesInput | string[]
     liveUrl?: NullableStringFieldUpdateOperationsInput | string | null
     githubUrl?: NullableStringFieldUpdateOperationsInput | string | null
     githubPrivate?: BoolFieldUpdateOperationsInput | boolean
@@ -8698,6 +8716,7 @@ export namespace Prisma {
     descriptionEn?: StringFieldUpdateOperationsInput | string
     descriptionAr?: StringFieldUpdateOperationsInput | string
     videoUrl?: StringFieldUpdateOperationsInput | string
+    images?: ProjectUpdateimagesInput | string[]
     liveUrl?: NullableStringFieldUpdateOperationsInput | string | null
     githubUrl?: NullableStringFieldUpdateOperationsInput | string | null
     githubPrivate?: BoolFieldUpdateOperationsInput | boolean
@@ -8716,6 +8735,7 @@ export namespace Prisma {
     descriptionEn: string
     descriptionAr: string
     videoUrl: string
+    images?: ProjectCreateimagesInput | string[]
     liveUrl?: string | null
     githubUrl?: string | null
     githubPrivate?: boolean
@@ -8734,6 +8754,7 @@ export namespace Prisma {
     descriptionEn?: StringFieldUpdateOperationsInput | string
     descriptionAr?: StringFieldUpdateOperationsInput | string
     videoUrl?: StringFieldUpdateOperationsInput | string
+    images?: ProjectUpdateimagesInput | string[]
     liveUrl?: NullableStringFieldUpdateOperationsInput | string | null
     githubUrl?: NullableStringFieldUpdateOperationsInput | string | null
     githubPrivate?: BoolFieldUpdateOperationsInput | boolean
@@ -8752,6 +8773,7 @@ export namespace Prisma {
     descriptionEn?: StringFieldUpdateOperationsInput | string
     descriptionAr?: StringFieldUpdateOperationsInput | string
     videoUrl?: StringFieldUpdateOperationsInput | string
+    images?: ProjectUpdateimagesInput | string[]
     liveUrl?: NullableStringFieldUpdateOperationsInput | string | null
     githubUrl?: NullableStringFieldUpdateOperationsInput | string | null
     githubPrivate?: BoolFieldUpdateOperationsInput | boolean
@@ -9227,6 +9249,14 @@ export namespace Prisma {
     _max?: NestedDateTimeFilter<$PrismaModel>
   }
 
+  export type StringNullableListFilter<$PrismaModel = never> = {
+    equals?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    has?: string | StringFieldRefInput<$PrismaModel> | null
+    hasEvery?: string[] | ListStringFieldRefInput<$PrismaModel>
+    hasSome?: string[] | ListStringFieldRefInput<$PrismaModel>
+    isEmpty?: boolean
+  }
+
   export type StringNullableFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel> | null
     in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
@@ -9245,14 +9275,6 @@ export namespace Prisma {
   export type BoolFilter<$PrismaModel = never> = {
     equals?: boolean | BooleanFieldRefInput<$PrismaModel>
     not?: NestedBoolFilter<$PrismaModel> | boolean
-  }
-
-  export type StringNullableListFilter<$PrismaModel = never> = {
-    equals?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    has?: string | StringFieldRefInput<$PrismaModel> | null
-    hasEvery?: string[] | ListStringFieldRefInput<$PrismaModel>
-    hasSome?: string[] | ListStringFieldRefInput<$PrismaModel>
-    isEmpty?: boolean
   }
 
   export type IntFilter<$PrismaModel = never> = {
@@ -9279,6 +9301,7 @@ export namespace Prisma {
     descriptionEn?: SortOrder
     descriptionAr?: SortOrder
     videoUrl?: SortOrder
+    images?: SortOrder
     liveUrl?: SortOrder
     githubUrl?: SortOrder
     githubPrivate?: SortOrder
@@ -9595,8 +9618,17 @@ export namespace Prisma {
     set?: Date | string
   }
 
+  export type ProjectCreateimagesInput = {
+    set: string[]
+  }
+
   export type ProjectCreatetagsInput = {
     set: string[]
+  }
+
+  export type ProjectUpdateimagesInput = {
+    set?: string[]
+    push?: string | string[]
   }
 
   export type NullableStringFieldUpdateOperationsInput = {

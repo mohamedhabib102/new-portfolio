@@ -77,3 +77,39 @@
   background: #3b5afb;
   color: #ffffff;
 }
+
+/* Custom Shape Divider */
+.custom-shape-divider-top-1790622473 {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  overflow: hidden;
+  line-height: 0;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.custom-shape-divider-top-1790622473 svg {
+  position: relative;
+  display: block;
+  width: calc(100% + 1.3px);
+  height: 60px;
+}
+
+@media (min-width: 640px) {
+  .custom-shape-divider-top-1790622473 svg {
+    height: 90px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .custom-shape-divider-top-1790622473 svg {
+    height: 120px;
+  }
+}
+
+.custom-shape-divider-top-1790622473 .shape-fill {
+  fill: #000000;
+}
+
