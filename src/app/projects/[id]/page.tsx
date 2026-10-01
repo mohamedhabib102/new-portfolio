@@ -27,6 +27,8 @@ export async function generateStaticParams() {
   return params;
 }
 
+const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL || "https://mohamedmowafydev.vercel.app").replace(/\/$/, "");
+
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { id } = await params;
   const projects = await portfolioStore.getProjects();
@@ -34,7 +36,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   if (!project) {
     return {
-      title: "Project Not Found",
+      title: "Project Not Found | Mohamed H. Mowafy",
       description: "The requested project could not be found in Mohamed H. Mowafy's portfolio.",
       robots: { index: false, follow: true },
     };
@@ -45,12 +47,16 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     project.descriptionEn ||
     project.descriptionAr ||
     `Explore ${project.titleEn}, a high-performance web engineering project developed by Mohamed H. Mowafy.`;
-  const canonicalUrl = `https://mohamedmowafydev.vercel.app/projects/${project.slug || id}`;
+  const canonicalUrl = `${siteUrl}/projects/${project.slug || id}`;
   const keywords = Array.isArray(project.tags)
     ? [...project.tags, "Mohamed H. Mowafy", "Frontend Project", "Web Development", project.titleAr]
     : ["Frontend Project", "Web Development"];
 
-  const previewImage = project.coverImage || "/avatar.png";
+  const previewImage = project.coverImage?.startsWith("http")
+    ? project.coverImage
+    : project.coverImage
+    ? `${siteUrl}${project.coverImage}`
+    : `${siteUrl}/avatar.png`;
 
   return {
     title,
@@ -98,11 +104,11 @@ export default async function ProjectDetailPage({ params }: Props) {
         description: project.descriptionEn || project.descriptionAr,
         applicationCategory: "WebApplication",
         operatingSystem: "All",
-        url: `https://mohamedmowafydev.vercel.app/projects/${project.slug || id}`,
+        url: `${siteUrl}/projects/${project.slug || id}`,
         author: {
           "@type": "Person",
           name: "Mohamed H. Mowafy",
-          url: "https://mohamedmowafydev.vercel.app",
+          url: siteUrl,
         },
         keywords: Array.isArray(project.tags) ? project.tags.join(", ") : "",
       }

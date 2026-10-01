@@ -3,34 +3,49 @@ import type { Metadata } from "next";
 import { portfolioStore } from "@/lib/store";
 import AboutClient from "./AboutClient";
 
+const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL || "https://mohamedmowafydev.vercel.app").replace(/\/$/, "");
+
 export const metadata: Metadata = {
-  title: "About | Mohamed H. Mowafy - Front-End Developer",
+  title: "About | Frontend Engineer & UI Specialist",
   description:
-    "Learn about Mohamed H. Mowafy, a Front-End Engineer focused on building fast, modern, and responsive web applications with React, Next.js, and TypeScript.",
+    "Learn about Mohamed H. Mowafy, an Egypt-based Frontend Engineer focused on crafting high-performance, responsive web applications with Next.js, React, TypeScript, and modern animation systems.",
+  keywords: [
+    "About Mohamed H. Mowafy",
+    "Mohamed Habib Mowafy",
+    "Frontend Engineer Egypt",
+    "عن محمد حبيب موافي",
+    "مهندس واجهات أمامية",
+    "React Developer",
+    "Next.js Developer",
+    "UI/UX Specialist",
+    "TypeScript",
+    "Tailwind CSS",
+  ],
   alternates: {
-    canonical: "https://mohamedmowafydev.vercel.app/about",
+    canonical: `${siteUrl}/about`,
   },
   openGraph: {
-    title: "About Mohamed H. Mowafy | Front-End Developer",
+    title: "About Mohamed H. Mowafy | Frontend Engineer & UI Specialist",
     description:
-      "23-year-old Front-End Developer from Egypt crafting high-performance, interactive user experiences with Next.js, React, and TypeScript.",
-    url: "https://mohamedmowafydev.vercel.app/about",
+      "Frontend Engineer from Egypt crafting high-performance, interactive user experiences with Next.js, React, and TypeScript.",
+    url: `${siteUrl}/about`,
     type: "profile",
+    siteName: "Mohamed H. Mowafy Portfolio",
     images: [
       {
-        url: "https://mohamedmowafydev.vercel.app/me.png",
+        url: `${siteUrl}/me.png`,
         width: 1200,
         height: 630,
-        alt: "Mohamed H. Mowafy",
+        alt: "Mohamed H. Mowafy - Frontend Engineer",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "About Mohamed H. Mowafy | Front-End Developer",
+    title: "About Mohamed H. Mowafy | Frontend Engineer & UI Specialist",
     description:
-      "Front-End Developer crafting high-performance, interactive user experiences with Next.js, React, and TypeScript.",
-    images: ["https://mohamedmowafydev.vercel.app/me.png"],
+      "Frontend Engineer crafting high-performance, interactive user experiences with Next.js, React, and TypeScript.",
+    images: [`${siteUrl}/me.png`],
     creator: "@mohamedhabib102",
   },
 };
@@ -41,5 +56,38 @@ export default async function AboutPage() {
     portfolioStore.getExperiences(),
   ]);
 
-  return <AboutClient initialConfig={initialConfig} initialExperiences={initialExperiences} />;
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "AboutPage",
+    name: "About Mohamed H. Mowafy",
+    url: `${siteUrl}/about`,
+    description:
+      "Biography, background, technical skills, and engineering experience of Frontend Engineer Mohamed H. Mowafy.",
+    mainEntity: {
+      "@type": "Person",
+      name: "Mohamed H. Mowafy",
+      alternateName: "محمد حبيب موافي",
+      jobTitle: "Frontend Engineer & UI Specialist",
+      image: `${siteUrl}/me.png`,
+      url: siteUrl,
+      sameAs: [
+        "https://github.com/mohamedhabib102",
+        "https://www.linkedin.com/in/mohamedhabibmowafy-dev/",
+      ],
+      worksFor: {
+        "@type": "Organization",
+        name: "Serv5",
+      },
+    },
+  };
+
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <AboutClient initialConfig={initialConfig} initialExperiences={initialExperiences} />
+    </>
+  );
 }

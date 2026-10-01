@@ -20,12 +20,15 @@ export interface MailerBlogPayload {
  * Creates Nodemailer transporter using SMTP configuration from environment variables.
  */
 function createTransporter() {
-  const user = process.env.SMTP_USER;
-  const pass = process.env.SMTP_PASS;
+  const user = process.env.SMTP_USER?.trim();
+  const rawPass = process.env.SMTP_PASS;
 
-  if (!user || !pass) {
+  if (!user || !rawPass) {
     return null;
   }
+
+  // Automatically remove spaces and quotes so both "abcd efgh ijkl mnop" and "abcdefghijklmnop" work perfectly
+  const pass = rawPass.replace(/\s+/g, "").replace(/["']/g, "").trim();
 
   // Gmail-optimized configuration
   if (user.includes("@gmail.com")) {

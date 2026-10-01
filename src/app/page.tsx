@@ -6,18 +6,20 @@ import FooterSection from "@/features/footer/components/FooterSection";
 
 import type { Metadata } from "next";
 
+const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL || "https://mohamedmowafydev.vercel.app").replace(/\/$/, "");
+
 export const metadata: Metadata = {
-  title: "Mohamed H. Mowafy | Senior Frontend Engineer & UI Specialist",
+  title: "Mohamed H. Mowafy | Frontend Engineer & UI Specialist",
   description:
-    "Senior Frontend Engineer specializing in Next.js, React 19, TypeScript, GSAP animations, Tailwind CSS, and Web Performance Optimization. Crafting fast, responsive, and pixel-perfect web experiences.",
+    "Frontend Engineer specializing in Next.js, React 19, TypeScript, GSAP animations, Tailwind CSS, and Web Performance Optimization. Crafting fast, responsive, and pixel-perfect web experiences.",
   alternates: {
-    canonical: "https://mohamedmowafydev.vercel.app",
+    canonical: siteUrl,
   },
   openGraph: {
-    title: "Mohamed H. Mowafy | Senior Frontend Engineer & UI Specialist",
+    title: "Mohamed H. Mowafy | Frontend Engineer & UI Specialist",
     description:
-      "Senior Frontend Engineer specializing in Next.js, React 19, TypeScript, and modern web experiences.",
-    url: "https://mohamedmowafydev.vercel.app",
+      "Frontend Engineer specializing in Next.js, React 19, TypeScript, and modern web experiences.",
+    url: siteUrl,
     type: "website",
     images: [{ url: "/avatar.png", width: 800, height: 800, alt: "Mohamed H. Mowafy" }],
   },

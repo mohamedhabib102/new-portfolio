@@ -10,6 +10,8 @@ interface Props {
   params: Promise<{ id: string }>;
 }
 
+const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL || "https://mohamedmowafydev.vercel.app").replace(/\/$/, "");
+
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { id } = await params;
   const cleanId = decodeURIComponent(id).trim().toLowerCase();
@@ -22,23 +24,27 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   if (!blog) {
     return {
-      title: "Article Not Found",
+      title: "Article Not Found | Mohamed H. Mowafy",
       description: "The requested article could not be found in Mohamed H. Mowafy's engineering blog.",
       robots: { index: false, follow: true },
     };
   }
 
-  const title = `${blog.titleEn} | Blog`;
+  const title = blog.titleEn;
   const description =
     blog.excerptEn ||
     blog.excerptAr ||
     `Read ${blog.titleEn}, an engineering article by Mohamed H. Mowafy covering modern web technologies.`;
-  const canonicalUrl = `https://mohamedmowafydev.vercel.app/blogs/${blog.slug || id}`;
+  const canonicalUrl = `${siteUrl}/blogs/${blog.slug || id}`;
   const keywords = Array.isArray(blog.tags)
-    ? [...blog.tags, blog.categoryEn, "Frontend Engineering", "Web Development", "Mohamed H. Mowafy"]
+    ? [...blog.tags, blog.categoryEn, blog.categoryAr, "Frontend Engineering", "Web Development", "Mohamed H. Mowafy", "محمد حبيب موافي"].filter(Boolean)
     : ["Frontend Engineering", "Web Development"];
 
-  const previewImage = blog.coverImage || "/avatar.png";
+  const previewImage = blog.coverImage?.startsWith("http")
+    ? blog.coverImage
+    : blog.coverImage
+    ? `${siteUrl}${blog.coverImage}`
+    : `${siteUrl}/avatar.png`;
 
   return {
     title,
@@ -92,22 +98,22 @@ export default async function BlogDetailPage({ params }: Props) {
         headline: blog.titleEn,
         alternativeHeadline: blog.titleAr,
         description: blog.excerptEn || blog.excerptAr,
-        image: blog.coverImage ? [blog.coverImage] : ["https://mohamedmowafydev.vercel.app/avatar.png"],
+        image: blog.coverImage ? [blog.coverImage] : [`${siteUrl}/avatar.png`],
         datePublished: blog.publishedAt,
-        dateModified: blog.publishedAt,
+        dateModified: blog.updatedAt || blog.publishedAt,
         author: {
           "@type": "Person",
           name: "Mohamed H. Mowafy",
-          url: "https://mohamedmowafydev.vercel.app",
+          url: siteUrl,
         },
         publisher: {
           "@type": "Person",
           name: "Mohamed H. Mowafy",
-          url: "https://mohamedmowafydev.vercel.app",
+          url: siteUrl,
         },
         mainEntityOfPage: {
           "@type": "WebPage",
-          "@id": `https://mohamedmowafydev.vercel.app/blogs/${blog.slug || id}`,
+          "@id": `${siteUrl}/blogs/${blog.slug || id}`,
         },
         keywords: Array.isArray(blog.tags) ? blog.tags.join(", ") : "",
       }

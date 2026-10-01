@@ -21,19 +21,21 @@ const alexandria = Alexandria({
   display: "swap",
 });
 
+const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL || "https://mohamedmowafydev.vercel.app").replace(/\/$/, "");
+
 export const metadata: Metadata = {
-  metadataBase: new URL("https://mohamedmowafydev.vercel.app"),
+  metadataBase: new URL(siteUrl),
   title: {
-    default: "Mohamed H. Mowafy | Senior Frontend Engineer & UI Specialist",
+    default: "Mohamed H. Mowafy | Frontend Engineer & UI Specialist",
     template: "%s | Mohamed H. Mowafy",
   },
   description:
-    "Senior Frontend Engineer specializing in Next.js 16, React 19, TypeScript, Vue.js, GSAP animations, Tailwind CSS, and Web Performance Optimization. Crafting fast, responsive, and pixel-perfect web experiences.",
+    "Frontend Engineer specializing in Next.js 16, React 19, TypeScript, Vue.js, GSAP animations, Tailwind CSS, and Web Performance Optimization. Crafting fast, responsive, and pixel-perfect web experiences.",
   keywords: [
     "Mohamed H. Mowafy",
     "Mohamed Habib Mowafy",
     "Frontend Engineer",
-    "Senior Frontend Developer",
+    "Frontend Developer",
     "مطور واجهات أمامية",
     "مهندس برمجيات",
     "React Developer",
@@ -52,10 +54,10 @@ export const metadata: Metadata = {
   creator: "Mohamed H. Mowafy",
   publisher: "Mohamed H. Mowafy",
   alternates: {
-    canonical: "https://mohamedmowafydev.vercel.app",
+    canonical: siteUrl,
     languages: {
-      "en-US": "https://mohamedmowafydev.vercel.app",
-      "ar-EG": "https://mohamedmowafydev.vercel.app",
+      "en-US": siteUrl,
+      "ar-EG": siteUrl,
     },
   },
   icons: {
@@ -67,11 +69,11 @@ export const metadata: Metadata = {
     type: "website",
     locale: "en_US",
     alternateLocale: ["ar_EG"],
-    url: "https://mohamedmowafydev.vercel.app",
+    url: siteUrl,
     siteName: "Mohamed H. Mowafy - Frontend Engineer Portfolio",
-    title: "Mohamed H. Mowafy | Senior Frontend Engineer & UI Specialist",
+    title: "Mohamed H. Mowafy | Frontend Engineer & UI Specialist",
     description:
-      "Senior Frontend Engineer crafting high-performance, visually striking digital web experiences with Next.js, React, TypeScript, and modern standards.",
+      "Frontend Engineer crafting high-performance, visually striking digital web experiences with Next.js, React, TypeScript, and modern standards.",
     images: [
       {
         url: "/avatar.png",
@@ -83,9 +85,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Mohamed H. Mowafy | Senior Frontend Engineer",
+    title: "Mohamed H. Mowafy | Frontend Engineer",
     description:
-      "Senior Frontend Engineer crafting high-performance, visually striking digital web experiences.",
+      "Frontend Engineer crafting high-performance, visually striking digital web experiences.",
     images: ["/avatar.png"],
     creator: "@mohamedhabib102",
   },
@@ -101,7 +103,7 @@ export const metadata: Metadata = {
     },
   },
   verification: {
-    google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION,
+    google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION || "5TJefwvq2fsHgtEe7a2PhlUC01dm993qbXc3Amto_kI",
   },
 };
 
@@ -110,17 +112,17 @@ const jsonLd = {
   "@graph": [
     {
       "@type": "Person",
-      "@id": "https://mohamedmowafydev.vercel.app/#person",
+      "@id": `${siteUrl}/#person`,
       name: "Mohamed H. Mowafy",
       alternateName: "محمد حبيب موافي",
-      jobTitle: "Senior Frontend Engineer & UI/UX Specialist",
+      jobTitle: "Frontend Engineer & UI/UX Specialist",
       description:
-        "Senior Frontend Developer with expertise in Next.js, React, TypeScript, Vue.js, Tailwind CSS, performance optimization, and fluid web animations.",
-      url: "https://mohamedmowafydev.vercel.app",
-      image: "https://mohamedmowafydev.vercel.app/avatar.png",
+        "Frontend Developer with expertise in Next.js, React, TypeScript, Vue.js, Tailwind CSS, performance optimization, and fluid web animations.",
+      url: siteUrl,
+      image: `${siteUrl}/avatar.png`,
       sameAs: [
         "https://github.com/mohamedhabib102",
-        "https://www.linkedin.com/in/habib-mowafy",
+        "https://www.linkedin.com/in/mohamedhabibmowafy-dev/",
       ],
       knowsAbout: [
         "Frontend Development",
@@ -138,11 +140,11 @@ const jsonLd = {
     },
     {
       "@type": "WebSite",
-      "@id": "https://mohamedmowafydev.vercel.app/#website",
-      url: "https://mohamedmowafydev.vercel.app",
+      "@id": `${siteUrl}/#website`,
+      url: siteUrl,
       name: "Mohamed H. Mowafy - Portfolio",
       publisher: {
-        "@id": "https://mohamedmowafydev.vercel.app/#person",
+        "@id": `${siteUrl}/#person`,
       },
       inLanguage: ["en-US", "ar-EG"],
     },
