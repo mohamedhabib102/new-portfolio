@@ -480,6 +480,7 @@ export const portfolioStore = {
   saveProject: async (projectData: any) => {
     const store = readLocalStore();
     const id = projectData.id || `proj-${Date.now()}`;
+    const slug = projectData.slug || (projectData.titleEn ? projectData.titleEn.toLowerCase().replace(/[^a-z0-9]+/g, "-") : `project-${Date.now()}`);
     const cleanUrl = (url?: string | null) => {
       if (!url) return null;
       let trimmed = url.trim().replace(/\/+$/, "");

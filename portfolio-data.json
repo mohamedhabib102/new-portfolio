@@ -85,14 +85,8 @@
       "descriptionEn": "A high-performance SaaS visual website builder engineered to empower creators, developers, and businesses to build, customize, and publish modern responsive web experiences in minutes with zero code. Packed with an intuitive drag-and-drop canvas, customizable component trees, real-time CSS styling inspector, responsive multi-device previews, clean code generation, and instant cloud publishing.",
       "descriptionAr": "منصة سحابية متطورة (SaaS) لبناء وتصميم مواقع الويب بصرياً وتفاعلياً، تُمكّن المطورين والمستخدمين من تصميم صفحات ويب عصرية فائقة الاستجابة والسرعة دون الحاجة إلى كتابة كود. تحتوي على محرر سحب وإفلات (Drag & Drop Canvas)، هيكلية مكونات ديناميكية، محرر خصائص وتنسيقات CSS فوري، معاينة تفاعلية لكافة الشاشات (Desktop, Tablet, Mobile)، وتوليد كود نظيف مع نشر سحابي فوري.",
       "videoUrl": "/web-builder.mp4",
-      "coverImage": "/buildflow-cover.jpg",
-      "images": [
-        "/buildflow-cover.jpg"
-      ],
       "liveUrl": "https://web-builder-nu-ten.vercel.app/",
       "githubUrl": "https://github.com/mohamedhabib102/buildflow",
-      "githubPrivate": true,
-      "status": "in_development",
       "tags": [
         "SaaS Platform",
         "Next.js",
@@ -105,8 +99,14 @@
       ],
       "featured": true,
       "order": 1,
-      "createdAt": "2026-10-03T11:00:00.000000+00:00",
-      "updatedAt": "2026-10-03T11:00:00.000000+00:00",
+      "createdAt": "2026-10-03T08:38:05.806529+00:00",
+      "updatedAt": "2026-10-03T08:38:05.675+00:00",
+      "githubPrivate": true,
+      "status": "in_development",
+      "coverImage": "/buildflow-cover.jpg",
+      "images": [
+        "https://dibrssekkpsbyhvwwzln.supabase.co/storage/v1/object/public/portfolio-media/1791016677407_hero-new.png"
+      ],
       "featuresEn": [
         "Visual Drag & Drop Canvas: Intuitive layout construction with live reordering and element snapping",
         "Real-time Styling Inspector: Granular CSS control over typography, colors, layout grids, and padding",
