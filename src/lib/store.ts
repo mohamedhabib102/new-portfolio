@@ -451,10 +451,12 @@ export const portfolioStore = {
             const local = store.projects.find((p: any) => p.id === d.id || p.slug === d.slug);
             return {
               ...d,
+              status: d.status || local?.status || "production",
+              coverImage: d.coverImage || local?.coverImage || (Array.isArray(d.images) && d.images[0]) || null,
               images: Array.isArray(d.images) && d.images.length > 0 ? d.images : (local?.images || []),
               githubPrivate: d.githubPrivate ?? local?.githubPrivate ?? false,
-              featuresEn: d.featuresEn || local?.featuresEn,
-              featuresAr: d.featuresAr || local?.featuresAr,
+              featuresEn: d.featuresEn || local?.featuresEn || [],
+              featuresAr: d.featuresAr || local?.featuresAr || [],
             };
           });
 
@@ -484,12 +486,16 @@ export const portfolioStore = {
       ...projectData,
       id,
       slug,
+      coverImage: projectData.coverImage || (Array.isArray(projectData.images) && projectData.images[0]) || null,
       images: Array.isArray(projectData.images)
         ? projectData.images
         : typeof projectData.images === "string" && projectData.images.trim()
         ? projectData.images.split(",").map((s: string) => s.trim()).filter(Boolean)
         : [],
       githubPrivate: Boolean(projectData.githubPrivate),
+      status: projectData.status || "production",
+      featuresEn: Array.isArray(projectData.featuresEn) ? projectData.featuresEn.map((f: string) => f.trim()).filter(Boolean) : [],
+      featuresAr: Array.isArray(projectData.featuresAr) ? projectData.featuresAr.map((f: string) => f.trim()).filter(Boolean) : [],
       tags: Array.isArray(projectData.tags) ? projectData.tags : (projectData.tags || "").split(",").map((s: string) => s.trim()).filter(Boolean),
       featured: projectData.featured ?? true,
       order: projectData.order ?? 0,
@@ -513,24 +519,39 @@ export const portfolioStore = {
           descriptionEn: fullProject.descriptionEn,
           descriptionAr: fullProject.descriptionAr,
           videoUrl: fullProject.videoUrl || "",
+          coverImage: fullProject.coverImage || null,
           images: fullProject.images || [],
           liveUrl: fullProject.liveUrl || null,
           githubUrl: fullProject.githubUrl || null,
+          githubPrivate: fullProject.githubPrivate,
+          status: fullProject.status || "production",
+          featuresEn: fullProject.featuresEn || [],
+          featuresAr: fullProject.featuresAr || [],
           tags: fullProject.tags,
           featured: fullProject.featured,
           order: fullProject.order,
           updatedAt: new Date().toISOString(),
         };
 
-        const { error: upsertErr } = await supabase.from("Project").upsert({
-          ...payload,
-          githubPrivate: fullProject.githubPrivate,
-        });
+        const { error: upsertErr } = await supabase.from("Project").upsert(payload);
 
         if (upsertErr) {
-          // If images column is not yet in Supabase schema cache, fallback to payload without images
-          const fallbackPayload = { ...payload };
-          delete fallbackPayload.images;
+          console.warn("[Supabase] Upsert warning, retrying with core columns fallback:", upsertErr.message);
+          const fallbackPayload: any = {
+            id: fullProject.id,
+            slug: fullProject.slug,
+            titleEn: fullProject.titleEn,
+            titleAr: fullProject.titleAr,
+            descriptionEn: fullProject.descriptionEn,
+            descriptionAr: fullProject.descriptionAr,
+            videoUrl: fullProject.videoUrl || "",
+            liveUrl: fullProject.liveUrl || null,
+            githubUrl: fullProject.githubUrl || null,
+            tags: fullProject.tags,
+            featured: fullProject.featured,
+            order: fullProject.order,
+            updatedAt: new Date().toISOString(),
+          };
           await supabase.from("Project").upsert(fallbackPayload);
         }
       } catch (err) {

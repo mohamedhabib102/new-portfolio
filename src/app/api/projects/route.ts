@@ -4,6 +4,38 @@ import { Project } from "@/features/projects/types";
 
 export const initialProjects: Project[] = [
   {
+    id: "proj-buildflow-builder",
+    slug: "buildflow-saas-web-builder",
+    titleEn: "Buildflow - SaaS Visual Website Builder Platform",
+    titleAr: "منصة Buildflow - أداة سحابية تفاعلية لبناء وتصميم المواقع",
+    descriptionEn: "A high-performance SaaS visual website builder engineered to empower creators, developers, and businesses to build, customize, and publish modern responsive web experiences in minutes with zero code. Packed with an intuitive drag-and-drop canvas, customizable component trees, real-time CSS styling inspector, responsive multi-device previews, clean code generation, and instant cloud publishing.",
+    descriptionAr: "منصة سحابية متطورة (SaaS) لبناء وتصميم مواقع الويب بصرياً وتفاعلياً، تُمكّن المطورين والمستخدمين من تصميم صفحات ويب عصرية فائقة الاستجابة والسرعة دون الحاجة إلى كتابة كود. تحتوي على محرر سحب وإفلات (Drag & Drop Canvas)، هيكلية مكونات ديناميكية، محرر خصائص وتنسيقات CSS فوري، معاينة تفاعلية لكافة الشاشات (Desktop, Tablet, Mobile)، وتوليد كود نظيف مع نشر سحابي فوري.",
+    videoUrl: "/web-builder.mp4",
+    coverImage: "/buildflow-cover.jpg",
+    images: ["/buildflow-cover.jpg"],
+    liveUrl: "https://web-builder-nu-ten.vercel.app/",
+    githubUrl: "https://github.com/mohamedhabib102/buildflow",
+    githubPrivate: true,
+    status: "in_development",
+    tags: ["SaaS Platform", "Next.js", "TypeScript", "Tailwind CSS", "Canvas Builder", "Web Development", "UI/UX", "State Management"],
+    featured: true,
+    order: 1,
+    featuresEn: [
+      "Visual Drag & Drop Canvas: Intuitive layout construction with live reordering and element snapping",
+      "Real-time Styling Inspector: Granular CSS control over typography, colors, layout grids, and padding",
+      "Multi-Device Responsive Previews: Instant switching between Desktop, Tablet, and Mobile viewports",
+      "Clean Code Export & Publishing: Generates clean semantic code ready for instant production deployment",
+      "Reusable Component Architecture: Modular design blocks designed for rapid prototyping and scale"
+    ],
+    featuresAr: [
+      "محرر بصري تفاعلي بالسحب والإفلات: بناء صفحات متكاملة وتنسيق العناصر وترتيبها بكل سلاسة ودقة",
+      "مفتش تنسيقات وتصميم فوري: تحكم دقيق في الألوان، الخطوط، المسافات، وتوزيع شبكات Grid و Flexbox",
+      "معاينة متجاوبة لكافة الأجهزة: تبديل فوري بين أوضاع سطح المكتب، التابلت، وشاشات الهواتف الذكية",
+      "تصدير كود نظيف ونشر سحابي: توليد كود نظيف عالي الأداء مع إمكانية نشر الموقع بنقرة زر",
+      "بنية مكونات برمجية قابلة لإعادة الاستخدام: مكتبة بلوكات وعناصر معيارية لتسريع وتيرة بناء المواقع"
+    ]
+  },
+  {
     id: "proj-serv5-optimization",
     slug: "serv5-platform-optimization",
     titleEn: "Serv5 Corporate Platform & Performance Revamp",
@@ -14,9 +46,10 @@ export const initialProjects: Project[] = [
     liveUrl: "https://serv5.com.eg/",
     githubUrl: null,
     githubPrivate: true,
+    status: "production",
     tags: ["Next.js", "Tailwind CSS", "JavaScript", "Framer Motion", "Performance Optimization", "Next Image", "Responsive Design", "Rich Text Blogs"],
     featured: true,
-    order: 1,
+    order: 2,
     featuresEn: [
       "Eliminated heavy loading bottlenecks and optimized scripts for instantaneous page delivery",
       "Overhauled blog typography with rich Word-style formatting for headings, lead paragraphs, styled quotes, and links",
@@ -43,9 +76,10 @@ export const initialProjects: Project[] = [
     liveUrl: "http://aqaratonline.net/",
     githubUrl: null,
     githubPrivate: true,
+    status: "production",
     tags: ["Vue.js", "UI/UX Design", "Figma", "Tailwind CSS", "JavaScript", "Real Estate Platform", "Multi-Role RBAC", "Super-Admin Dashboard"],
     featured: true,
-    order: 2,
+    order: 3,
     featuresEn: [
       "Full Lifecycle Execution: Custom Figma UI/UX architecture translated into a modular Vue.js frontend",
       "Multi-Role Permission Architecture: Dedicated portals for Buyers, Owners, Brokers, Companies, and Super-Admin",
@@ -72,9 +106,10 @@ export const initialProjects: Project[] = [
     liveUrl: "http://sohighla.vercel.app/",
     githubUrl: "https://github.com/mohamedhabib102/sohighla",
     githubPrivate: false,
+    status: "production",
     tags: ["Next.js", "TypeScript", "Tailwind CSS", "Zustand", "ASP.NET Core", "REST APIs", "UI/UX Design"],
     featured: true,
-    order: 3,
+    order: 4,
     featuresEn: [
       "Direct Craftsman Booking: Seamless service requests and communication between clients and verified technicians",
       "Strict Identity Verification: Rigorous background verification workflows before technician profile publishing",
@@ -101,9 +136,10 @@ export const initialProjects: Project[] = [
     liveUrl: "https://noor-alhuda-lyart.vercel.app/",
     githubUrl: "https://github.com/mohamedhabib102/noor-alhuda",
     githubPrivate: false,
+    status: "production",
     tags: ["Next.js", "TypeScript", "Tailwind CSS", "NextAuth", "Context API", "Framer Motion", "Audio Streaming"],
     featured: true,
-    order: 4,
+    order: 5,
     featuresEn: [
       "Quran Reader & Typography: Clean, accessible Arabic font rendering and surah navigation",
       "Synchronized Audio Streaming: Global audio playback with reciter selection and smooth streaming",

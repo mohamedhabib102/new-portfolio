@@ -33,11 +33,15 @@ CREATE TABLE IF NOT EXISTS public."Project" (
     "descriptionEn" TEXT NOT NULL,
     "descriptionAr" TEXT NOT NULL,
     "videoUrl" TEXT NOT NULL,
+    "coverImage" TEXT,
     "liveUrl" TEXT,
     "githubUrl" TEXT,
     "githubPrivate" BOOLEAN DEFAULT false,
+    "status" TEXT DEFAULT 'production',
     "tags" TEXT[] DEFAULT ARRAY[]::TEXT[],
     "images" TEXT[] DEFAULT ARRAY[]::TEXT[],
+    "featuresEn" TEXT[] DEFAULT ARRAY[]::TEXT[],
+    "featuresAr" TEXT[] DEFAULT ARRAY[]::TEXT[],
     "featured" BOOLEAN DEFAULT true,
     "order" INTEGER DEFAULT 0,
     "createdAt" TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL,
@@ -46,6 +50,10 @@ CREATE TABLE IF NOT EXISTS public."Project" (
 
 ALTER TABLE public."Project" ADD COLUMN IF NOT EXISTS "githubPrivate" BOOLEAN DEFAULT false;
 ALTER TABLE public."Project" ADD COLUMN IF NOT EXISTS "images" TEXT[] DEFAULT ARRAY[]::TEXT[];
+ALTER TABLE public."Project" ADD COLUMN IF NOT EXISTS "coverImage" TEXT;
+ALTER TABLE public."Project" ADD COLUMN IF NOT EXISTS "status" TEXT DEFAULT 'production';
+ALTER TABLE public."Project" ADD COLUMN IF NOT EXISTS "featuresEn" TEXT[] DEFAULT ARRAY[]::TEXT[];
+ALTER TABLE public."Project" ADD COLUMN IF NOT EXISTS "featuresAr" TEXT[] DEFAULT ARRAY[]::TEXT[];
 
 -- 3. Blogs Table
 CREATE TABLE IF NOT EXISTS public."Blog" (

@@ -59,6 +59,8 @@
       "createdAt": "2026-09-04T19:03:36.84857+00:00",
       "updatedAt": "2026-09-04T19:44:20.916+00:00",
       "githubPrivate": false,
+      "status": "production",
+      "coverImage": null,
       "images": [],
       "featuresEn": [
         "Eliminated heavy loading bottlenecks and optimized scripts for instantaneous page delivery",
@@ -73,6 +75,51 @@
         "إصلاح وضبط التصميم المتجاوب (Responsive Design) لكافة الشاشات والهواتف والأجهزة اللوحية بدقة متناهية",
         "استخدام مكون Next.js Image المدمج لمعالجة الصور تلقائياً ومنع تذبذب وانزياح الواجهة (CLS)",
         "إضافة حركات وتفاعلات بصرية سلسة باستخدام Framer Motion وجافاسكريبت الحديثة"
+      ]
+    },
+    {
+      "id": "proj-buildflow-builder",
+      "slug": "buildflow-saas-web-builder",
+      "titleEn": "Buildflow - SaaS Visual Website Builder Platform",
+      "titleAr": "منصة Buildflow - أداة سحابية تفاعلية لبناء وتصميم المواقع",
+      "descriptionEn": "A high-performance SaaS visual website builder engineered to empower creators, developers, and businesses to build, customize, and publish modern responsive web experiences in minutes with zero code. Packed with an intuitive drag-and-drop canvas, customizable component trees, real-time CSS styling inspector, responsive multi-device previews, clean code generation, and instant cloud publishing.",
+      "descriptionAr": "منصة سحابية متطورة (SaaS) لبناء وتصميم مواقع الويب بصرياً وتفاعلياً، تُمكّن المطورين والمستخدمين من تصميم صفحات ويب عصرية فائقة الاستجابة والسرعة دون الحاجة إلى كتابة كود. تحتوي على محرر سحب وإفلات (Drag & Drop Canvas)، هيكلية مكونات ديناميكية، محرر خصائص وتنسيقات CSS فوري، معاينة تفاعلية لكافة الشاشات (Desktop, Tablet, Mobile)، وتوليد كود نظيف مع نشر سحابي فوري.",
+      "videoUrl": "/web-builder.mp4",
+      "coverImage": "/buildflow-cover.jpg",
+      "images": [
+        "/buildflow-cover.jpg"
+      ],
+      "liveUrl": "https://web-builder-nu-ten.vercel.app/",
+      "githubUrl": "https://github.com/mohamedhabib102/buildflow",
+      "githubPrivate": true,
+      "status": "in_development",
+      "tags": [
+        "SaaS Platform",
+        "Next.js",
+        "TypeScript",
+        "Tailwind CSS",
+        "Canvas Builder",
+        "Web Development",
+        "UI/UX",
+        "State Management"
+      ],
+      "featured": true,
+      "order": 1,
+      "createdAt": "2026-10-03T11:00:00.000000+00:00",
+      "updatedAt": "2026-10-03T11:00:00.000000+00:00",
+      "featuresEn": [
+        "Visual Drag & Drop Canvas: Intuitive layout construction with live reordering and element snapping",
+        "Real-time Styling Inspector: Granular CSS control over typography, colors, layout grids, and padding",
+        "Multi-Device Responsive Previews: Instant switching between Desktop, Tablet, and Mobile viewports",
+        "Clean Code Export & Publishing: Generates clean semantic code ready for instant production deployment",
+        "Reusable Component Architecture: Modular design blocks designed for rapid prototyping and scale"
+      ],
+      "featuresAr": [
+        "محرر بصري تفاعلي بالسحب والإفلات: بناء صفحات متكاملة وتنسيق العناصر وترتيبها بكل سلاسة ودقة",
+        "مفتش تنسيقات وتصميم فوري: تحكم دقيق في الألوان، الخطوط، المسافات، وتوزيع شبكات Grid و Flexbox",
+        "معاينة متجاوبة لكافة الأجهزة: تبديل فوري بين أوضاع سطح المكتب، التابلت، وشاشات الهواتف الذكية",
+        "تصدير كود نظيف ونشر سحابي: توليد كود نظيف عالي الأداء مع إمكانية نشر الموقع بنقرة زر",
+        "بنية مكونات برمجية قابلة لإعادة الاستخدام: مكتبة بلوكات وعناصر معيارية لتسريع وتيرة بناء المواقع"
       ]
     },
     {
@@ -100,6 +147,8 @@
       "createdAt": "2026-09-04T19:03:37.423162+00:00",
       "updatedAt": "2026-09-04T19:44:21.949+00:00",
       "githubPrivate": false,
+      "status": "production",
+      "coverImage": null,
       "images": [],
       "featuresEn": [
         "Full Lifecycle Execution: Custom Figma UI/UX architecture translated into a modular Vue.js frontend",
@@ -140,6 +189,8 @@
       "createdAt": "2026-09-04T17:01:13.127516+00:00",
       "updatedAt": "2026-09-04T19:44:24.153+00:00",
       "githubPrivate": false,
+      "status": "production",
+      "coverImage": null,
       "images": [],
       "featuresEn": [
         "Direct Craftsman Booking: Seamless service requests and communication between clients and verified technicians",
@@ -180,6 +231,8 @@
       "createdAt": "2026-09-04T17:04:45.381158+00:00",
       "updatedAt": "2026-09-04T19:44:25.056+00:00",
       "githubPrivate": false,
+      "status": "production",
+      "coverImage": null,
       "images": [],
       "featuresEn": [
         "Quran Reader & Typography: Clean, accessible Arabic font rendering and surah navigation",

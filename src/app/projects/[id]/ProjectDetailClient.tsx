@@ -66,7 +66,14 @@ export default function ProjectDetailClient({ id, initialProject }: ProjectDetai
 
   const title = language === "ar" ? project.titleAr : project.titleEn;
   const description = language === "ar" ? project.descriptionAr : project.descriptionEn;
-  const galleryImages: string[] = Array.isArray(project.images) ? project.images.filter(Boolean) : [];
+  const galleryImages: string[] = Array.from(
+    new Set(
+      [
+        ...(project.coverImage ? [project.coverImage] : []),
+        ...(Array.isArray(project.images) ? project.images.filter(Boolean) : []),
+      ]
+    )
+  );
 
   const handleCopyCode = (code: string, idx: number) => {
     if (typeof navigator !== "undefined" && navigator.clipboard) {
@@ -112,8 +119,20 @@ export default function ProjectDetailClient({ id, initialProject }: ProjectDetai
           transition={{ duration: 0.7, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
           className="mb-8"
         >
-          {/* Tags */}
+          {/* Tags & Status Badge */}
           <div className="flex flex-wrap items-center gap-2 mb-4">
+            {project.status === "in_development" ? (
+              <span className="px-3.5 py-1 text-xs font-semibold rounded-full bg-amber-500/15 text-amber-700 border border-amber-500/30 flex items-center gap-1.5 shadow-xs">
+                <span className="w-2 h-2 rounded-full bg-amber-500 animate-pulse" />
+                <span>{language === "ar" ? "قيد التطوير المستمر (In Development)" : "Under Active Development"}</span>
+              </span>
+            ) : (
+              <span className="px-3 py-1 text-xs font-medium rounded-full bg-emerald-500/10 text-emerald-700 border border-emerald-500/30 flex items-center gap-1.5">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                <span>{language === "ar" ? "برودكشن / منشور" : "Production"}</span>
+              </span>
+            )}
+
             {project.tags && project.tags.map((tag: string) => (
               <span
                 key={tag}
@@ -143,6 +162,23 @@ export default function ProjectDetailClient({ id, initialProject }: ProjectDetai
           >
             {description}
           </p>
+
+          {/* Development Notice Banner */}
+          {project.status === "in_development" && (
+            <div className="mt-6 p-4 rounded-2xl bg-amber-500/10 border border-amber-500/25 flex items-start gap-3">
+              <span className="p-2 rounded-xl bg-amber-500/20 text-amber-600 shrink-0 mt-0.5">
+                <FiLayers className="w-4 h-4" />
+              </span>
+              <div className="text-xs sm:text-sm text-neutral-800 leading-relaxed">
+                <strong className="font-semibold text-neutral-950 block mb-0.5">
+                  {language === "ar" ? "مشروع قيد التطوير البرمجي النشط" : "Active Development & Continuous Deployment"}
+                </strong>
+                {language === "ar"
+                  ? "يتم بناء وتحديث هذه المنصة السحابية بشكل مستمر، ويمكنك معاينة التجربة الحية الحالية عبر رابط Live Preview ومتابعة كافة الإضافات القادمة."
+                  : "This platform is actively undergoing engineering iterations. You can explore the live demo via Live Preview to test features as they launch."}
+              </div>
+            </div>
+          )}
         </motion.div>
 
         {/* 3. Interactive Main Media Showcase Stage */}
@@ -164,6 +200,7 @@ export default function ProjectDetailClient({ id, initialProject }: ProjectDetai
               >
                 <video
                   src={project.videoUrl || "/test.mp4"}
+                  poster={project.coverImage || (galleryImages.length > 0 ? galleryImages[0] : undefined)}
                   autoPlay
                   loop
                   muted

@@ -56,6 +56,7 @@ export default function DashboardPage() {
   // File Input Refs
   const heroFileRef = useRef<HTMLInputElement | null>(null);
   const projectVideoFileRef = useRef<HTMLInputElement | null>(null);
+  const projectCoverFileRef = useRef<HTMLInputElement | null>(null);
   const projectImagesFileRef = useRef<HTMLInputElement | null>(null);
   const blogCoverFileRef = useRef<HTMLInputElement | null>(null);
   const [newProjectImageUrl, setNewProjectImageUrl] = useState("");
@@ -127,10 +128,12 @@ export default function DashboardPage() {
     descriptionEn: "",
     descriptionAr: "",
     videoUrl: "",
+    coverImage: "",
     images: [],
     liveUrl: "",
     githubUrl: "",
     githubPrivate: false,
+    status: "production", // "production" | "in_development"
     tags: "",
     featured: true,
     order: 0,
@@ -281,6 +284,15 @@ export default function DashboardPage() {
     const url = await uploadFile(file);
     if (url) {
       setEditingProject((prev: any) => ({ ...prev, videoUrl: url }));
+    }
+  };
+
+  const handleProjectCoverUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const url = await uploadFile(file);
+    if (url) {
+      setEditingProject((prev: any) => ({ ...prev, coverImage: url }));
     }
   };
 
@@ -477,6 +489,8 @@ export default function DashboardPage() {
     try {
       const cleanedProject = {
         ...editingProject,
+        status: editingProject.status || "production",
+        coverImage: editingProject.coverImage || (Array.isArray(editingProject.images) && editingProject.images[0]) || null,
         images: Array.isArray(editingProject.images) ? editingProject.images.filter(Boolean) : [],
         featuresEn: (Array.isArray(editingProject.featuresEn) ? editingProject.featuresEn : [])
           .map((f: string) => f.trim())
@@ -1281,10 +1295,12 @@ export default function DashboardPage() {
                       descriptionEn: "",
                       descriptionAr: "",
                       videoUrl: "",
+                      coverImage: "",
                       images: [],
                       liveUrl: "",
                       githubUrl: "",
                       githubPrivate: false,
+                      status: "production",
                       tags: "",
                       featured: true,
                       order: projects.length + 1,
@@ -1307,23 +1323,54 @@ export default function DashboardPage() {
                 {projects.map((proj) => (
                   <div
                     key={proj.id}
-                    className="p-5 rounded-3xl bg-[#12141c] border border-white/10 flex flex-col justify-between gap-4 shadow-xl"
+                    className="p-5 rounded-3xl bg-[#12141c] border border-white/10 flex flex-col justify-between gap-4 shadow-xl relative"
                   >
                     <div className="relative w-full aspect-video rounded-2xl overflow-hidden bg-black border border-white/10">
                       {proj.videoUrl ? (
                         <video
                           src={proj.videoUrl}
+                          poster={proj.coverImage || (Array.isArray(proj.images) ? proj.images[0] : undefined)}
                           autoPlay
                           loop
                           muted
                           playsInline
                           className="w-full h-full object-cover"
                         />
+                      ) : proj.coverImage || (Array.isArray(proj.images) && proj.images[0]) ? (
+                        <Image
+                          src={proj.coverImage || proj.images[0]}
+                          alt={proj.titleEn}
+                          fill
+                          unoptimized
+                          className="object-cover"
+                        />
                       ) : (
                         <div className="w-full h-full flex items-center justify-center text-xs text-neutral-500">
-                          {isRtl ? "لا يوجد فيديو بعد" : "No video uploaded"}
+                          {isRtl ? "لا يوجد فيديو أو غلاف بعد" : "No video or cover uploaded"}
                         </div>
                       )}
+
+                      {/* Top Badges: Status (Under Dev vs Production) & Private Repo */}
+                      <div className="absolute top-3 left-3 right-3 flex items-center justify-between gap-2 z-10 pointer-events-none">
+                        {proj.status === "in_development" ? (
+                          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-medium bg-amber-500/90 text-black shadow-md backdrop-blur-md">
+                            <span className="w-1.5 h-1.5 rounded-full bg-black animate-pulse" />
+                            <span>{isRtl ? "تحت التطوير (WIP)" : "In Development"}</span>
+                          </span>
+                        ) : (
+                          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-medium bg-emerald-500/90 text-black shadow-md backdrop-blur-md">
+                            <span className="w-1.5 h-1.5 rounded-full bg-black" />
+                            <span>{isRtl ? "برودكشن / منشور" : "Production"}</span>
+                          </span>
+                        )}
+
+                        {proj.githubPrivate && (
+                          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-medium bg-black/75 text-amber-300 border border-amber-500/40 backdrop-blur-md">
+                            <FiLock className="w-3 h-3 text-amber-400" />
+                            <span>{isRtl ? "مستودع خاص (عميل)" : "Private Repo"}</span>
+                          </span>
+                        )}
+                      </div>
                     </div>
 
                     <div>
@@ -1331,12 +1378,6 @@ export default function DashboardPage() {
                         <h4 className="text-lg font-medium text-white">
                           {isRtl ? proj.titleAr : proj.titleEn}
                         </h4>
-                        {proj.githubPrivate && (
-                          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-medium bg-amber-500/15 text-amber-400 border border-amber-500/30 shrink-0">
-                            <FiLock className="w-3 h-3" />
-                            <span>{isRtl ? "مستودع خاص (عميل)" : "Private Repo"}</span>
-                          </span>
-                        )}
                       </div>
                       <p className="text-xs text-neutral-400 line-clamp-2">
                         {isRtl ? proj.descriptionAr : proj.descriptionEn}
@@ -1352,6 +1393,8 @@ export default function DashboardPage() {
                           onClick={() => {
                             setEditingProject({
                               ...proj,
+                              status: proj.status || "production",
+                              coverImage: proj.coverImage || (Array.isArray(proj.images) ? proj.images[0] : ""),
                               images: Array.isArray(proj.images) ? proj.images : [],
                               githubPrivate: proj.githubPrivate ?? false,
                               tags: Array.isArray(proj.tags) ? proj.tags.join(", ") : (proj.tags || ""),
@@ -2207,6 +2250,71 @@ export default function DashboardPage() {
                   </div>
                 </div>
 
+                {/* Project Lifecycle Status: Production vs Under Development */}
+                <div className="p-4 rounded-2xl bg-white/[0.03] border border-white/10 flex flex-col gap-3">
+                  <div>
+                    <label className="text-xs font-semibold text-white flex items-center gap-2">
+                      <span className="w-2 h-2 rounded-full bg-blue-400" />
+                      <span>{isRtl ? "حالة المشروع البرمجية (Status)" : "Project Lifecycle Status"}</span>
+                    </label>
+                    <p className="text-[11px] text-neutral-400 mt-0.5">
+                      {isRtl
+                        ? "حدد ما إذا كان المشروع مكتملاً وفي مرحلة الإنتاج (Production) أو لا يزال قيد التطوير النشط (In Development)."
+                        : "Choose whether this project is deployed in Production or currently Under Active Development."}
+                    </p>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+                    {/* Production Option */}
+                    <button
+                      type="button"
+                      onClick={() => setEditingProject({ ...editingProject, status: "production" })}
+                      className={`p-3.5 rounded-xl border flex items-center justify-between transition-all cursor-pointer text-left ${
+                        editingProject.status === "production"
+                          ? "bg-emerald-500/15 border-emerald-500/50 text-white shadow-lg shadow-emerald-950/20"
+                          : "bg-white/5 border-white/10 text-neutral-400 hover:bg-white/10"
+                      }`}
+                    >
+                      <div className="flex items-center gap-3">
+                        <span className="w-3 h-3 rounded-full bg-emerald-400 shrink-0" />
+                        <div>
+                          <div className="text-xs font-semibold text-white">
+                            {isRtl ? "برودكشن / مكتمل (Live Production)" : "Live Production"}
+                          </div>
+                          <div className="text-[10px] text-neutral-400">
+                            {isRtl ? "المشروع متاح ويعمل بكامل وظائفه" : "Fully completed and deployed"}
+                          </div>
+                        </div>
+                      </div>
+                      {editingProject.status === "production" && <FiCheck className="w-4 h-4 text-emerald-400" />}
+                    </button>
+
+                    {/* Under Development Option */}
+                    <button
+                      type="button"
+                      onClick={() => setEditingProject({ ...editingProject, status: "in_development" })}
+                      className={`p-3.5 rounded-xl border flex items-center justify-between transition-all cursor-pointer text-left ${
+                        editingProject.status === "in_development"
+                          ? "bg-amber-500/15 border-amber-500/50 text-white shadow-lg shadow-amber-950/20"
+                          : "bg-white/5 border-white/10 text-neutral-400 hover:bg-white/10"
+                      }`}
+                    >
+                      <div className="flex items-center gap-3">
+                        <span className="w-3 h-3 rounded-full bg-amber-400 animate-pulse shrink-0" />
+                        <div>
+                          <div className="text-xs font-semibold text-amber-300">
+                            {isRtl ? "تحت التطوير (Under Development)" : "Under Active Development"}
+                          </div>
+                          <div className="text-[10px] text-neutral-400">
+                            {isRtl ? "المشروع قيد العمل ويتم إضافة ميزات جديدة له" : "Work in progress with ongoing features"}
+                          </div>
+                        </div>
+                      </div>
+                      {editingProject.status === "in_development" && <FiCheck className="w-4 h-4 text-amber-400" />}
+                    </button>
+                  </div>
+                </div>
+
                 {/* Video Upload & URL */}
                 <div className="p-4 rounded-2xl bg-white/[0.03] border border-white/10 flex flex-col gap-3">
                   <div className="flex items-center justify-between">
@@ -2239,6 +2347,73 @@ export default function DashboardPage() {
                   />
                 </div>
 
+                {/* Project Cover / Poster Image (غلاف وبوستر الفيديو) */}
+                <div className="p-4 rounded-2xl bg-white/[0.03] border border-white/10 flex flex-col gap-3">
+                  <div className="flex items-center justify-between">
+                    <label className="text-xs font-medium text-white flex items-center gap-2">
+                      <FiImage className="w-4 h-4 text-amber-400" />
+                      <span>{isRtl ? "صورة غلاف المشروع والبوستر (Project Cover / Poster)" : "Project Cover Image & Poster"}</span>
+                    </label>
+                    <input
+                      type="file"
+                      ref={projectCoverFileRef}
+                      onChange={handleProjectCoverUpload}
+                      accept="image/*"
+                      className="hidden"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => projectCoverFileRef.current?.click()}
+                      className="px-3 py-1.5 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 text-xs font-medium transition-colors cursor-pointer border border-amber-500/30 flex items-center gap-1.5"
+                    >
+                      <FiUploadCloud className="w-3.5 h-3.5" />
+                      <span>{isRtl ? "رفع غلاف من جهازك" : "Upload Cover Image"}</span>
+                    </button>
+                  </div>
+
+                  <p className="text-[11px] text-neutral-400">
+                    {isRtl
+                      ? "هذه الصورة تُعرض كبوستر للفيديو قبل تشغيله، وكغلاف أساسي في بطاقات المشاريع ومشاركات السوشيال ميديا وتضمن ظهور المشروع بشكل احترافي في كل الحالات."
+                      : "This image acts as the video poster before playback, and as a fallback cover in project cards and social previews."}
+                  </p>
+
+                  <div className="flex items-center gap-2">
+                    <input
+                      type="text"
+                      value={editingProject.coverImage || ""}
+                      onChange={(e) => setEditingProject({ ...editingProject, coverImage: e.target.value })}
+                      placeholder="/buildflow-cover.jpg or https://..."
+                      className="flex-1 px-3.5 py-2 rounded-xl bg-white/5 border border-white/10 text-white text-xs focus:outline-none focus:border-blue-500 font-mono"
+                    />
+                    {editingProject.coverImage && (
+                      <button
+                        type="button"
+                        onClick={() => setEditingProject({ ...editingProject, coverImage: "" })}
+                        className="px-3 py-2 rounded-xl bg-red-500/20 text-red-300 hover:bg-red-500/30 text-xs transition-colors cursor-pointer"
+                        title={isRtl ? "إزالة الغلاف" : "Clear Cover"}
+                      >
+                        <FiX className="w-3.5 h-3.5" />
+                      </button>
+                    )}
+                  </div>
+
+                  {/* Live Cover Preview */}
+                  {editingProject.coverImage && (
+                    <div className="relative w-full max-w-sm aspect-video rounded-xl overflow-hidden bg-neutral-900 border border-white/20 shadow-md mt-1">
+                      <Image
+                        src={editingProject.coverImage}
+                        alt="Project Cover Preview"
+                        fill
+                        unoptimized
+                        className="object-cover"
+                      />
+                      <span className="absolute bottom-2 left-2 px-2 py-0.5 rounded text-[10px] bg-black/80 text-amber-300 font-mono border border-amber-500/30">
+                        {isRtl ? "معاينة الغلاف الحالي" : "Current Cover Preview"}
+                      </span>
+                    </div>
+                  )}
+                </div>
+
                 {/* Gallery Images (Multiple Photos under the video in details page) */}
                 <div className="p-4 rounded-2xl bg-white/[0.03] border border-white/10 flex flex-col gap-3">
                   <div className="flex items-center justify-between">
@@ -2265,8 +2440,8 @@ export default function DashboardPage() {
 
                   <p className="text-[11px] text-neutral-400">
                     {isRtl
-                      ? "الفيديو يظل هو الغلاف الرئيسي، وهذه الصور ستظهر تحت الفيديو في تفاصيل المشروع بحيث يتمكن الزائر من الضغط على أي صورة لعرضها مكان الفيديو."
-                      : "The video remains the default cover. These images appear below it, letting visitors click any thumbnail to preview it in place of the video."}
+                      ? "الفيديو يظل هو المشغل الرئيسي، وهذه الصور تظهر تحت الفيديو في تفاصيل المشروع مع إمكانية تعيين أي منها كصورة غلاف مباشرة."
+                      : "The video remains the main player. These images appear in the details gallery and can also be set as cover."}
                   </p>
 
                   {/* Add image via direct URL */}
@@ -2290,33 +2465,52 @@ export default function DashboardPage() {
                   {/* Display Uploaded Gallery Thumbnails */}
                   {Array.isArray(editingProject.images) && editingProject.images.length > 0 ? (
                     <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-2">
-                      {editingProject.images.map((imgUrl: string, imgIdx: number) => (
-                        <div
-                          key={imgIdx}
-                          className="group relative aspect-video rounded-xl overflow-hidden bg-neutral-900 border border-white/15 shadow-sm"
-                        >
-                          <Image
-                            src={imgUrl}
-                            alt={`Project image ${imgIdx + 1}`}
-                            fill
-                            unoptimized
-                            className="object-cover"
-                          />
-                          <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
-                            <button
-                              type="button"
-                              onClick={() => removeProjectImage(imgIdx)}
-                              className="p-1.5 rounded-lg bg-red-600 text-white hover:bg-red-700 transition-colors shadow-md cursor-pointer"
-                              title={isRtl ? "حذف الصورة" : "Remove Image"}
-                            >
-                              <FiTrash2 className="w-3.5 h-3.5" />
-                            </button>
+                      {editingProject.images.map((imgUrl: string, imgIdx: number) => {
+                        const isCurrentCover = editingProject.coverImage === imgUrl;
+                        return (
+                          <div
+                            key={imgIdx}
+                            className={`group relative aspect-video rounded-xl overflow-hidden bg-neutral-900 border transition-all shadow-sm ${
+                              isCurrentCover ? "border-amber-500 ring-2 ring-amber-500/30" : "border-white/15"
+                            }`}
+                          >
+                            <Image
+                              src={imgUrl}
+                              alt={`Project image ${imgIdx + 1}`}
+                              fill
+                              unoptimized
+                              className="object-cover"
+                            />
+                            <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center gap-1.5 p-1">
+                              {!isCurrentCover && (
+                                <button
+                                  type="button"
+                                  onClick={() => setEditingProject({ ...editingProject, coverImage: imgUrl })}
+                                  className="px-2 py-1 rounded-md bg-amber-500 text-black text-[10px] font-semibold hover:bg-amber-400 transition-colors shadow-md cursor-pointer"
+                                >
+                                  {isRtl ? "تعيين كغلاف" : "Set Cover"}
+                                </button>
+                              )}
+                              <button
+                                type="button"
+                                onClick={() => removeProjectImage(imgIdx)}
+                                className="p-1 rounded-md bg-red-600 text-white hover:bg-red-700 transition-colors shadow-md cursor-pointer"
+                                title={isRtl ? "حذف الصورة" : "Remove Image"}
+                              >
+                                <FiTrash2 className="w-3.5 h-3.5" />
+                              </button>
+                            </div>
+                            <span className="absolute bottom-1 left-1 px-1.5 py-0.5 rounded text-[9px] bg-black/70 text-white font-mono">
+                              #{imgIdx + 1}
+                            </span>
+                            {isCurrentCover && (
+                              <span className="absolute top-1 right-1 px-1.5 py-0.5 rounded text-[9px] bg-amber-500 text-black font-semibold">
+                                {isRtl ? "غلاف" : "Cover"}
+                              </span>
+                            )}
                           </div>
-                          <span className="absolute bottom-1 left-1 px-1.5 py-0.5 rounded text-[9px] bg-black/70 text-white font-mono">
-                            #{imgIdx + 1}
-                          </span>
-                        </div>
-                      ))}
+                        );
+                      })}
                     </div>
                   ) : (
                     <div className="text-center py-4 border border-dashed border-white/10 rounded-xl">

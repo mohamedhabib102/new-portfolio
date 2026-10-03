@@ -42,6 +42,7 @@ export default function ProjectCard({ project, index }: ProjectCardProps) {
         <video
           ref={videoRef}
           src={project.videoUrl || "/test.mp4"}
+          poster={project.coverImage || (Array.isArray(project.images) && project.images[0]) || undefined}
           autoPlay
           loop
           muted
@@ -52,14 +53,28 @@ export default function ProjectCard({ project, index }: ProjectCardProps) {
         {/* Hover Gradient Overlay */}
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 
-        {/* Top Badges: Gallery photos count + Private NDA badge */}
-        <div className="absolute top-3.5 left-3.5 z-10 flex items-center gap-2">
-          {imageCount > 0 && (
-            <span className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-black/65 backdrop-blur-md border border-white/20 text-white text-[11px] font-mono shadow-sm">
-              <FiImage className="w-3 h-3 text-cyan-400" />
-              <span>+{imageCount} {language === "ar" ? "صور" : "photos"}</span>
-            </span>
-          )}
+        {/* Top Badges: Status (Under Dev vs Production) + Gallery photos count + Private NDA badge */}
+        <div className="absolute top-3.5 left-3.5 right-3.5 z-10 flex items-center justify-between pointer-events-none">
+          <div className="flex items-center gap-2">
+            {project.status === "in_development" ? (
+              <span className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/95 backdrop-blur-md text-black text-[11px] font-semibold shadow-md">
+                <span className="w-1.5 h-1.5 rounded-full bg-black animate-pulse" />
+                <span>{language === "ar" ? "تحت التطوير" : "In Development"}</span>
+              </span>
+            ) : (
+              <span className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-black/60 backdrop-blur-md border border-white/20 text-emerald-400 text-[10px] font-mono shadow-sm">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+                <span>{language === "ar" ? "برودكشن" : "Production"}</span>
+              </span>
+            )}
+
+            {imageCount > 0 && (
+              <span className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-black/65 backdrop-blur-md border border-white/20 text-white text-[11px] font-mono shadow-sm">
+                <FiImage className="w-3 h-3 text-cyan-400" />
+                <span>+{imageCount} {language === "ar" ? "صور" : "photos"}</span>
+              </span>
+            )}
+          </div>
 
           {project.githubPrivate && (
             <span className="flex items-center gap-1 px-2.5 py-1 rounded-full bg-black/65 backdrop-blur-md border border-amber-400/30 text-amber-300 text-[10px] font-mono shadow-sm">

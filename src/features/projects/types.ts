@@ -12,6 +12,7 @@ export interface Project {
   descriptionEn: string;
   descriptionAr: string;
   videoUrl: string;
+  coverImage?: string | null;
   posterUrl?: string | null;
   images?: string[];
   liveUrl?: string | null;
@@ -20,6 +21,7 @@ export interface Project {
   tags: string[];
   featured: boolean;
   order: number;
+  status?: "production" | "in_development" | string;
   featuresEn?: string[];
   featuresAr?: string[];
   sectionsEn?: ProjectSection[];
