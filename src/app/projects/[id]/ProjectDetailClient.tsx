@@ -66,14 +66,10 @@ export default function ProjectDetailClient({ id, initialProject }: ProjectDetai
 
   const title = language === "ar" ? project.titleAr : project.titleEn;
   const description = language === "ar" ? project.descriptionAr : project.descriptionEn;
-  const galleryImages: string[] = Array.from(
-    new Set(
-      [
-        ...(project.coverImage ? [project.coverImage] : []),
-        ...(Array.isArray(project.images) ? project.images.filter(Boolean) : []),
-      ]
-    )
-  );
+  const galleryImages: string[] =
+    Array.isArray(project.images) && project.images.length > 0
+      ? project.images.filter(Boolean)
+      : (project.coverImage ? [project.coverImage] : []);
 
   const handleCopyCode = (code: string, idx: number) => {
     if (typeof navigator !== "undefined" && navigator.clipboard) {

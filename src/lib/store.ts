@@ -452,8 +452,8 @@ export const portfolioStore = {
             return {
               ...d,
               status: d.status || local?.status || "production",
-              coverImage: d.coverImage || local?.coverImage || (Array.isArray(d.images) && d.images[0]) || null,
-              images: Array.isArray(d.images) && d.images.length > 0 ? d.images : (local?.images || []),
+              coverImage: d.coverImage !== undefined ? d.coverImage : (local?.coverImage || null),
+              images: Array.isArray(d.images) ? d.images : (local?.images || []),
               githubPrivate: d.githubPrivate ?? local?.githubPrivate ?? false,
               featuresEn: (Array.isArray(d.featuresEn) && d.featuresEn.length > 0) ? d.featuresEn : (local?.featuresEn || []),
               featuresAr: (Array.isArray(d.featuresAr) && d.featuresAr.length > 0) ? d.featuresAr : (local?.featuresAr || []),
@@ -480,18 +480,28 @@ export const portfolioStore = {
   saveProject: async (projectData: any) => {
     const store = readLocalStore();
     const id = projectData.id || `proj-${Date.now()}`;
-    const slug = projectData.slug || (projectData.titleEn ? projectData.titleEn.toLowerCase().replace(/[^a-z0-9]+/g, "-") : `project-${Date.now()}`);
+    const cleanUrl = (url?: string | null) => {
+      if (!url) return null;
+      let trimmed = url.trim().replace(/\/+$/, "");
+      if (trimmed && !trimmed.startsWith("http://") && !trimmed.startsWith("https://") && !trimmed.startsWith("/")) {
+        trimmed = "/" + trimmed;
+      }
+      return trimmed || null;
+    };
+
+    const rawImages = Array.isArray(projectData.images)
+      ? projectData.images
+      : typeof projectData.images === "string" && projectData.images.trim()
+      ? projectData.images.split(",").map((s: string) => s.trim()).filter(Boolean)
+      : [];
 
     const fullProject = {
       ...projectData,
       id,
       slug,
-      coverImage: projectData.coverImage || (Array.isArray(projectData.images) && projectData.images[0]) || null,
-      images: Array.isArray(projectData.images)
-        ? projectData.images
-        : typeof projectData.images === "string" && projectData.images.trim()
-        ? projectData.images.split(",").map((s: string) => s.trim()).filter(Boolean)
-        : [],
+      videoUrl: cleanUrl(projectData.videoUrl) || "",
+      coverImage: cleanUrl(projectData.coverImage),
+      images: rawImages.map(cleanUrl).filter(Boolean),
       githubPrivate: Boolean(projectData.githubPrivate),
       status: projectData.status || "production",
       featuresEn: Array.isArray(projectData.featuresEn) ? projectData.featuresEn.map((f: string) => f.trim()).filter(Boolean) : [],

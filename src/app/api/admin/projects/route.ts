@@ -1,10 +1,21 @@
 import { NextRequest, NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import { portfolioStore } from "@/lib/store";
 
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
     const saved = await portfolioStore.saveProject(body);
+
+    try {
+      if (saved?.slug) revalidatePath(`/projects/${saved.slug}`);
+      if (saved?.id) revalidatePath(`/projects/${saved.id}`);
+      revalidatePath("/projects");
+      revalidatePath("/");
+    } catch (e) {
+      console.warn("Revalidation notice:", e);
+    }
+
     return NextResponse.json({
       success: true,
       data: saved,
@@ -30,6 +41,14 @@ export async function DELETE(request: NextRequest) {
       );
     }
     await portfolioStore.deleteProject(id);
+
+    try {
+      revalidatePath("/projects");
+      revalidatePath("/");
+    } catch (e) {
+      console.warn("Revalidation notice:", e);
+    }
+
     return NextResponse.json({
       success: true,
       message: "Project deleted successfully!",

@@ -487,11 +487,23 @@ export default function DashboardPage() {
     e.preventDefault();
     setIsSaving(true);
     try {
+      const cleanUrl = (url?: string | null) => {
+        if (!url) return "";
+        let trimmed = url.trim().replace(/\/+$/, "");
+        if (trimmed && !trimmed.startsWith("http://") && !trimmed.startsWith("https://") && !trimmed.startsWith("/")) {
+          trimmed = "/" + trimmed;
+        }
+        return trimmed;
+      };
+
       const cleanedProject = {
         ...editingProject,
         status: editingProject.status || "production",
-        coverImage: editingProject.coverImage || (Array.isArray(editingProject.images) && editingProject.images[0]) || null,
-        images: Array.isArray(editingProject.images) ? editingProject.images.filter(Boolean) : [],
+        videoUrl: cleanUrl(editingProject.videoUrl),
+        coverImage: cleanUrl(editingProject.coverImage) || null,
+        images: (Array.isArray(editingProject.images) ? editingProject.images : [])
+          .map((img: string) => cleanUrl(img))
+          .filter(Boolean),
         featuresEn: (Array.isArray(editingProject.featuresEn) ? editingProject.featuresEn : [])
           .map((f: string) => f.trim())
           .filter(Boolean),
@@ -1394,7 +1406,7 @@ export default function DashboardPage() {
                             setEditingProject({
                               ...proj,
                               status: proj.status || "production",
-                              coverImage: proj.coverImage || (Array.isArray(proj.images) ? proj.images[0] : ""),
+                              coverImage: proj.coverImage || "",
                               images: Array.isArray(proj.images) ? proj.images : [],
                               githubPrivate: proj.githubPrivate ?? false,
                               tags: Array.isArray(proj.tags) ? proj.tags.join(", ") : (proj.tags || ""),
