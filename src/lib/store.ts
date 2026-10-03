@@ -455,8 +455,8 @@ export const portfolioStore = {
               coverImage: d.coverImage || local?.coverImage || (Array.isArray(d.images) && d.images[0]) || null,
               images: Array.isArray(d.images) && d.images.length > 0 ? d.images : (local?.images || []),
               githubPrivate: d.githubPrivate ?? local?.githubPrivate ?? false,
-              featuresEn: d.featuresEn || local?.featuresEn || [],
-              featuresAr: d.featuresAr || local?.featuresAr || [],
+              featuresEn: (Array.isArray(d.featuresEn) && d.featuresEn.length > 0) ? d.featuresEn : (local?.featuresEn || []),
+              featuresAr: (Array.isArray(d.featuresAr) && d.featuresAr.length > 0) ? d.featuresAr : (local?.featuresAr || []),
             };
           });
 
