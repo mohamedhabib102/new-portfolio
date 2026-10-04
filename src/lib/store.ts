@@ -645,16 +645,20 @@ export const portfolioStore = {
         avatar: "/avatar.png",
       },
       tags: Array.isArray(blogData.tags) ? blogData.tags : (blogData.tags || "").split(",").map((s: string) => s.trim()).filter(Boolean),
+      categoryEn: blogData.categoryEn || "Next.js & React",
+      categoryAr: blogData.categoryAr || "نكست جي إس ورياكت",
+      readTimeEn: blogData.readTimeEn || "5 min read",
+      readTimeAr: blogData.readTimeAr || "5 دقائق قراءة",
       publishedAt: blogData.publishedAt || new Date().toISOString().slice(0, 7),
-      contentEn: blogData.contentEn || {
-        intro: blogData.introEn || blogData.excerptEn || "",
-        sections: blogData.sectionsEn || [],
-        conclusion: blogData.conclusionEn || "",
+      contentEn: {
+        intro: blogData.introEn !== undefined ? blogData.introEn : (blogData.contentEn?.intro || blogData.excerptEn || ""),
+        sections: blogData.sectionsEn !== undefined ? blogData.sectionsEn : (blogData.contentEn?.sections || []),
+        conclusion: blogData.conclusionEn !== undefined ? blogData.conclusionEn : (blogData.contentEn?.conclusion || ""),
       },
-      contentAr: blogData.contentAr || {
-        intro: blogData.introAr || blogData.excerptAr || "",
-        sections: blogData.sectionsAr || [],
-        conclusion: blogData.conclusionAr || "",
+      contentAr: {
+        intro: blogData.introAr !== undefined ? blogData.introAr : (blogData.contentAr?.intro || blogData.excerptAr || ""),
+        sections: blogData.sectionsAr !== undefined ? blogData.sectionsAr : (blogData.contentAr?.sections || []),
+        conclusion: blogData.conclusionAr !== undefined ? blogData.conclusionAr : (blogData.contentAr?.conclusion || ""),
       },
     };
 

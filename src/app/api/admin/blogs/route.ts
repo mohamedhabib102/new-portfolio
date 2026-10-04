@@ -7,23 +7,31 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const saved = await portfolioStore.saveBlog(body);
 
-    // Synchronously dispatch newsletter emails to all active subscribers
-    try {
-      const subscribers = await portfolioStore.getSubscribers();
-      const uniqueEmails = Array.from(new Set(subscribers.map((s) => s.email).filter(Boolean)));
-      console.log(`[Blog Newsletter] Dispatching to ${uniqueEmails.length} subscribers:`, uniqueEmails);
-      if (uniqueEmails.length > 0) {
-        const mailResult = await sendNewBlogNotification(saved, uniqueEmails);
-        console.log("[Blog Newsletter Result]:", mailResult);
+    const isNew = !body.id;
+    const shouldNotify = body.notifySubscribers === true || (isNew && body.notifySubscribers !== false);
+    let mailResult: any = null;
+
+    if (shouldNotify) {
+      try {
+        const subscribers = await portfolioStore.getSubscribers();
+        const uniqueEmails = Array.from(new Set(subscribers.map((s) => s.email).filter(Boolean)));
+        console.log(`[Blog Newsletter] Dispatching to ${uniqueEmails.length} subscribers:`, uniqueEmails);
+        if (uniqueEmails.length > 0) {
+          mailResult = await sendNewBlogNotification(saved, uniqueEmails);
+          console.log("[Blog Newsletter Result]:", mailResult);
+        }
+      } catch (mailErr) {
+        console.error("[Blog Newsletter Dispatch Error]:", mailErr);
       }
-    } catch (mailErr) {
-      console.error("[Blog Newsletter Dispatch Error]:", mailErr);
     }
 
     return NextResponse.json({
       success: true,
       data: saved,
-      message: "Blog post saved successfully!",
+      mailResult,
+      message: mailResult?.totalSent
+        ? `Blog post saved and notification sent to ${mailResult.totalSent} subscribers!`
+        : "Blog post saved successfully!",
     });
   } catch (error) {
     console.error("Failed to save blog post:", error);

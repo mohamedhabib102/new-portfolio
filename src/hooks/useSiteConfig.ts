@@ -59,12 +59,17 @@ export function useSiteConfig(initialData?: SiteConfig) {
       }
     }
 
-    fetchConfig();
+    // If initialData is already provided via Server-Side Rendering (SSR), skip client fetch
+    if (!initialData) {
+      fetchConfig();
+    } else {
+      setIsLoading(false);
+    }
 
     return () => {
       isMounted = false;
     };
-  }, []);
+  }, [initialData]);
 
   return { config, isLoading };
 }

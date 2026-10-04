@@ -152,9 +152,12 @@ export default function DashboardPage() {
     excerptEn: "",
     excerptAr: "",
     coverImage: "",
-    categoryEn: "Frontend",
-    categoryAr: "واجهات أمامية",
-    tags: "React, Next.js",
+    categoryEn: "Next.js & React",
+    categoryAr: "نكست جي إس ورياكت",
+    tags: "Next.js, React, Performance",
+    readTimeEn: "5 min read",
+    readTimeAr: "5 دقائق قراءة",
+    notifySubscribers: false,
     introEn: "",
     introAr: "",
     conclusionEn: "",
@@ -540,9 +543,37 @@ export default function DashboardPage() {
     e.preventDefault();
     setIsSaving(true);
     try {
-      await apiClient.post("/api/admin/blogs", editingBlog);
+      const formattedTags = typeof editingBlog.tags === "string"
+        ? editingBlog.tags.split(",").map((s: string) => s.trim()).filter(Boolean)
+        : (Array.isArray(editingBlog.tags) ? editingBlog.tags : []);
+
+      const payload = {
+        ...editingBlog,
+        tags: formattedTags,
+        contentEn: {
+          intro: editingBlog.introEn || "",
+          sections: editingBlog.sectionsEn || [],
+          conclusion: editingBlog.conclusionEn || "",
+        },
+        contentAr: {
+          intro: editingBlog.introAr || "",
+          sections: editingBlog.sectionsAr || [],
+          conclusion: editingBlog.conclusionAr || "",
+        },
+      };
+
+      const res = await apiClient.post("/api/admin/blogs", payload);
       setIsBlogModalOpen(false);
-      triggerToast(isRtl ? "تم حفظ المقال بنجاح!" : "Blog post saved successfully!");
+      const emailSentCount = res.data?.mailResult?.totalSent;
+      if (typeof emailSentCount === "number" && emailSentCount > 0) {
+        triggerToast(
+          isRtl
+            ? `تم حفظ المقال وإرسال إشعار إلى ${emailSentCount} مشترك!`
+            : `Blog saved and sent to ${emailSentCount} subscribers!`
+        );
+      } else {
+        triggerToast(isRtl ? "تم حفظ المقال بنجاح!" : "Blog post saved successfully!");
+      }
       loadDashboardData();
     } catch (e) {
       triggerToast(isRtl ? "فشل حفظ المقال" : "Failed to save blog post");
@@ -1457,9 +1488,12 @@ export default function DashboardPage() {
                       excerptEn: "",
                       excerptAr: "",
                       coverImage: "",
-                      categoryEn: "Next.js",
-                      categoryAr: "نكست جي إس",
-                      tags: "Next.js, TypeScript",
+                      categoryEn: "Next.js & React",
+                      categoryAr: "نكست جي إس ورياكت",
+                      tags: "Next.js, React, Performance, Web Architecture",
+                      readTimeEn: "5 min read",
+                      readTimeAr: "5 دقائق قراءة",
+                      notifySubscribers: true,
                       introEn: "",
                       introAr: "",
                       conclusionEn: "",
@@ -1518,6 +1552,11 @@ export default function DashboardPage() {
                           onClick={() => {
                             setEditingBlog({
                               ...b,
+                              categoryEn: b.categoryEn || "Next.js & React",
+                              categoryAr: b.categoryAr || "نكست جي إس ورياكت",
+                              readTimeEn: b.readTimeEn || "5 min read",
+                              readTimeAr: b.readTimeAr || "5 دقائق قراءة",
+                              notifySubscribers: false,
                               tags: Array.isArray(b.tags) ? b.tags.join(", ") : (b.tags || ""),
                               introEn: b.contentEn?.intro || "",
                               introAr: b.contentAr?.intro || "",
@@ -2843,44 +2882,152 @@ export default function DashboardPage() {
                   </div>
                 </div>
 
-                {/* Cover Image & Category */}
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                  <div className="sm:col-span-2 p-3 rounded-2xl bg-white/[0.03] border border-white/10 flex flex-col gap-2">
-                    <div className="flex items-center justify-between">
-                      <label className="text-xs font-medium text-white">{isRtl ? "صورة الغلاف" : "Cover Image"}</label>
-                      <input
-                        type="file"
-                        ref={blogCoverFileRef}
-                        onChange={handleBlogCoverUpload}
-                        accept="image/*"
-                        className="hidden"
-                      />
-                      <button
-                        type="button"
-                        onClick={() => blogCoverFileRef.current?.click()}
-                        className="px-3 py-1 rounded-lg bg-white/10 hover:bg-white/15 text-white text-xs cursor-pointer"
-                      >
-                        {isRtl ? "رفع صورة" : "Upload File"}
-                      </button>
-                    </div>
+                {/* Cover Image */}
+                <div className="p-3.5 rounded-2xl bg-white/[0.03] border border-white/10 flex flex-col gap-2.5">
+                  <div className="flex items-center justify-between">
+                    <label className="text-xs font-medium text-white">{isRtl ? "صورة الغلاف للمقال" : "Cover Image"}</label>
+                    <input
+                      type="file"
+                      ref={blogCoverFileRef}
+                      onChange={handleBlogCoverUpload}
+                      accept="image/*"
+                      className="hidden"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => blogCoverFileRef.current?.click()}
+                      className="px-3 py-1 rounded-lg bg-white/10 hover:bg-white/15 text-white text-xs cursor-pointer transition-colors"
+                    >
+                      {isRtl ? "رفع صورة" : "Upload File"}
+                    </button>
+                  </div>
+                  <input
+                    type="text"
+                    value={editingBlog.coverImage || ""}
+                    onChange={(e) => setEditingBlog({ ...editingBlog, coverImage: e.target.value })}
+                    placeholder="/images/blog.png or https://images.unsplash.com/..."
+                    className="w-full px-3.5 py-2 rounded-xl bg-white/5 border border-white/10 text-white text-xs focus:outline-none focus:border-blue-500"
+                  />
+                </div>
+
+                {/* Categories & Read Time */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+                  <div>
+                    <label className="block text-xs text-neutral-400 mb-1">{isRtl ? "التصنيف (إنجليزي)" : "Category (English)"}</label>
                     <input
                       type="text"
-                      value={editingBlog.coverImage || ""}
-                      onChange={(e) => setEditingBlog({ ...editingBlog, coverImage: e.target.value })}
-                      placeholder="/images/blog.png or Supabase URL"
-                      className="w-full px-3 py-1.5 rounded-xl bg-white/5 border border-white/10 text-white text-xs focus:outline-none focus:border-blue-500"
+                      value={editingBlog.categoryEn || ""}
+                      onChange={(e) => setEditingBlog({ ...editingBlog, categoryEn: e.target.value })}
+                      placeholder="Next.js & Architecture"
+                      className="w-full px-3 py-2 rounded-xl bg-white/5 border border-white/10 text-white text-xs focus:outline-none focus:border-blue-500"
                     />
                   </div>
 
-                  <div className="flex flex-col gap-2">
-                    <label className="text-xs font-medium text-neutral-400">{isRtl ? "التصنيف (إنجليزي)" : "Category (English)"}</label>
+                  <div>
+                    <label className="block text-xs text-neutral-400 mb-1">{isRtl ? "التصنيف (عربي)" : "Category (Arabic)"}</label>
                     <input
                       type="text"
-                      value={editingBlog.categoryEn}
-                      onChange={(e) => setEditingBlog({ ...editingBlog, categoryEn: e.target.value })}
-                      placeholder="Web Animations"
-                      className="w-full px-3.5 py-2 rounded-xl bg-white/5 border border-white/10 text-white text-xs focus:outline-none focus:border-blue-500"
+                      dir="rtl"
+                      value={editingBlog.categoryAr || ""}
+                      onChange={(e) => setEditingBlog({ ...editingBlog, categoryAr: e.target.value })}
+                      placeholder="هندسة الويب و Next.js"
+                      className="w-full px-3 py-2 rounded-xl bg-white/5 border border-white/10 text-white text-xs focus:outline-none focus:border-blue-500"
                     />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs text-neutral-400 mb-1">{isRtl ? "وقت القراءة (إنجليزي)" : "Read Time (English)"}</label>
+                    <input
+                      type="text"
+                      value={editingBlog.readTimeEn || ""}
+                      onChange={(e) => setEditingBlog({ ...editingBlog, readTimeEn: e.target.value })}
+                      placeholder="5 min read"
+                      className="w-full px-3 py-2 rounded-xl bg-white/5 border border-white/10 text-white text-xs focus:outline-none focus:border-blue-500"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs text-neutral-400 mb-1">{isRtl ? "وقت القراءة (عربي)" : "Read Time (Arabic)"}</label>
+                    <input
+                      type="text"
+                      dir="rtl"
+                      value={editingBlog.readTimeAr || ""}
+                      onChange={(e) => setEditingBlog({ ...editingBlog, readTimeAr: e.target.value })}
+                      placeholder="5 دقائق قراءة"
+                      className="w-full px-3 py-2 rounded-xl bg-white/5 border border-white/10 text-white text-xs focus:outline-none focus:border-blue-500"
+                    />
+                  </div>
+                </div>
+
+                {/* Tags / الوسوم */}
+                <div className="p-3.5 rounded-2xl bg-white/[0.02] border border-white/10 flex flex-col gap-2">
+                  <div className="flex items-center justify-between">
+                    <label className="text-xs font-medium text-white">
+                      {isRtl ? "الوسوم والكلمات المفتاحية (Tags)" : "Tags & Keywords"}
+                    </label>
+                    <span className="text-[11px] text-neutral-400">
+                      {isRtl ? "افصل بين الوسوم بفاصلة (,)" : "Separate tags with comma (,)"}
+                    </span>
+                  </div>
+                  <input
+                    type="text"
+                    value={typeof editingBlog.tags === "string" ? editingBlog.tags : (Array.isArray(editingBlog.tags) ? editingBlog.tags.join(", ") : "")}
+                    onChange={(e) => setEditingBlog({ ...editingBlog, tags: e.target.value })}
+                    placeholder="Next.js, React, CSR, SSR, SSG, ISR, SEO, TypeScript, Performance"
+                    className="w-full px-3.5 py-2 rounded-xl bg-white/5 border border-white/10 text-white text-xs focus:outline-none focus:border-blue-500"
+                  />
+                  {/* Tags Live Preview */}
+                  <div className="flex flex-wrap gap-1.5 pt-1">
+                    {(typeof editingBlog.tags === "string" ? editingBlog.tags : (Array.isArray(editingBlog.tags) ? editingBlog.tags.join(", ") : ""))
+                      .split(",")
+                      .map((t: string) => t.trim())
+                      .filter(Boolean)
+                      .map((tag: string, idx: number) => (
+                        <span
+                          key={idx}
+                          className="px-2.5 py-0.5 text-[11px] rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 font-mono"
+                        >
+                          #{tag}
+                        </span>
+                      ))}
+                  </div>
+                </div>
+
+                {/* Introduction Highlight (Blue Box in Blog View) */}
+                <div className="p-4 rounded-2xl bg-blue-950/20 border border-blue-500/30 flex flex-col gap-3">
+                  <div className="flex items-center gap-2">
+                    <span className="w-2.5 h-2.5 rounded-full bg-blue-400 animate-pulse" />
+                    <h4 className="text-xs font-semibold text-blue-300">
+                      {isRtl ? "المقدمة التمهيدية للمقال (المربع الأزرق المميز)" : "Article Intro Highlight (Blue Callout Box)"}
+                    </h4>
+                  </div>
+                  <p className="text-[11px] text-neutral-400">
+                    {isRtl
+                      ? "هذا النص يظهر بشكل مميز كفقرة افتتاحية ذات إطار أزرق في أعلى صفحة المقال لجذب القارئ."
+                      : "This text renders as the highlighted introductory card with a blue left-border at the top of the blog page."}
+                  </p>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                      <label className="block text-[11px] text-neutral-400 mb-1">{isRtl ? "المقدمة التمهيدية (إنجليزي)" : "Intro Highlight (English)"}</label>
+                      <textarea
+                        rows={3}
+                        value={editingBlog.introEn || ""}
+                        onChange={(e) => setEditingBlog({ ...editingBlog, introEn: e.target.value })}
+                        placeholder="A quick welcoming introduction or summary highlighting what the reader will learn..."
+                        className="w-full px-3 py-2 rounded-xl bg-white/5 border border-white/10 text-white text-xs focus:outline-none focus:border-blue-500 resize-none"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-[11px] text-neutral-400 mb-1">{isRtl ? "المقدمة التمهيدية (عربي)" : "Intro Highlight (Arabic)"}</label>
+                      <textarea
+                        rows={3}
+                        dir="rtl"
+                        value={editingBlog.introAr || ""}
+                        onChange={(e) => setEditingBlog({ ...editingBlog, introAr: e.target.value })}
+                        placeholder="ازيك يا صديقي العزيز! لو أنت شغال بـ React أو Next.js فالبوست ده ليك خصيصاً..."
+                        className="w-full px-3 py-2 rounded-xl bg-white/5 border border-white/10 text-white text-xs focus:outline-none focus:border-blue-500 resize-none"
+                      />
+                    </div>
                   </div>
                 </div>
 
@@ -2983,6 +3130,72 @@ export default function DashboardPage() {
                       </div>
                     </div>
                   ))}
+                </div>
+
+                {/* Conclusion / خلاصة القول (Final Thoughts Section in Blog View) */}
+                <div className="p-4 rounded-2xl bg-white/[0.02] border border-white/10 flex flex-col gap-3">
+                  <div className="flex items-center gap-2">
+                    <span className="w-2.5 h-2.5 rounded-full bg-emerald-400" />
+                    <h4 className="text-xs font-semibold text-white">
+                      {isRtl ? "خلاصة القول / الخاتمة (Final Thoughts)" : "Conclusion / Final Thoughts"}
+                    </h4>
+                  </div>
+                  <p className="text-[11px] text-neutral-400">
+                    {isRtl
+                      ? "هذا النص يظهر في نهاية المقال تحت عنوان 'خلاصة القول' كملخص ختامي ونصيحة مركزة للقارئ."
+                      : "This text renders at the bottom of the article under 'Final Thoughts / خلاصة القول' as a high-impact summary."}
+                  </p>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                      <label className="block text-[11px] text-neutral-400 mb-1">{isRtl ? "خلاصة القول (إنجليزي)" : "Final Thoughts (English)"}</label>
+                      <textarea
+                        rows={3}
+                        value={editingBlog.conclusionEn || ""}
+                        onChange={(e) => setEditingBlog({ ...editingBlog, conclusionEn: e.target.value })}
+                        placeholder="In summary, if your app requires heavy client interactivity use CSR, but for SEO use SSR or ISR..."
+                        className="w-full px-3 py-2 rounded-xl bg-white/5 border border-white/10 text-white text-xs focus:outline-none focus:border-blue-500 resize-none"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-[11px] text-neutral-400 mb-1">{isRtl ? "خلاصة القول (عربي)" : "Final Thoughts (Arabic)"}</label>
+                      <textarea
+                        rows={3}
+                        dir="rtl"
+                        value={editingBlog.conclusionAr || ""}
+                        onChange={(e) => setEditingBlog({ ...editingBlog, conclusionAr: e.target.value })}
+                        placeholder="خلاصة القول يا صديقي: إذا كانت الصفحة لوحة تحكم خاصة فالـ CSR هو الحل، أما إذا كانت تحتاج SEO فـ SSR..."
+                        className="w-full px-3 py-2 rounded-xl bg-white/5 border border-white/10 text-white text-xs focus:outline-none focus:border-blue-500 resize-none"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Newsletter Notification Dispatch Toggle */}
+                <div className="p-4 rounded-2xl bg-gradient-to-r from-blue-900/20 to-indigo-900/20 border border-blue-500/30 flex items-center justify-between gap-4">
+                  <div className="flex items-start gap-3">
+                    <input
+                      type="checkbox"
+                      id="notifySubscribersCheckbox"
+                      checked={editingBlog.notifySubscribers === true}
+                      onChange={(e) => setEditingBlog({ ...editingBlog, notifySubscribers: e.target.checked })}
+                      className="w-4 h-4 mt-0.5 rounded text-blue-600 focus:ring-blue-500 bg-white/10 border-white/20 cursor-pointer"
+                    />
+                    <label htmlFor="notifySubscribersCheckbox" className="flex flex-col cursor-pointer select-none">
+                      <span className="text-xs font-semibold text-white">
+                        {isRtl
+                          ? `إرسال إشعار فوري لجميع المشتركين في النشرة البريدية (${subscribers.length} مشترك مسجل)`
+                          : `Send instant email notification to all newsletter subscribers (${subscribers.length} subscribers)`}
+                      </span>
+                      <span className="text-[11px] text-neutral-400 mt-0.5">
+                        {isRtl
+                          ? "سيتم إرسال بريد بتصميم أنيق يحتوي على عنوان المقال، المقتطف ورابط القراءة عبر SMTP فور الحفظ."
+                          : "An automated email with article excerpt, cover, and direct link will be dispatched via SMTP immediately."}
+                      </span>
+                    </label>
+                  </div>
+                  <span className="shrink-0 px-2.5 py-1 text-[11px] rounded-lg bg-blue-500/15 border border-blue-500/30 text-blue-300 font-mono">
+                    {subscribers.length} {isRtl ? "مشترك" : "subs"}
+                  </span>
                 </div>
 
                 <div className="flex items-center justify-end gap-3 pt-4 border-t border-white/10">

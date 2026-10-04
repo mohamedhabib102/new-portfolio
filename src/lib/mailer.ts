@@ -239,6 +239,10 @@ export async function sendNewBlogNotification(blog: MailerBlogPayload, recipient
         subject,
         text: textContent,
         html: htmlContent,
+        headers: {
+          "X-Entity-Ref-ID": `blog-${blog.id || blog.slug}`,
+          "List-Unsubscribe": `<mailto:${process.env.SMTP_USER || "mowafy.dev@gmail.com"}?subject=unsubscribe>`,
+        },
       });
       console.log(`[Nodemailer] Successfully sent blog notification to: ${recipient}, MessageID: ${info.messageId}`);
       return { success: true, recipient };
@@ -340,6 +344,10 @@ export async function sendWelcomeSubscriberEmail(subscriberEmail: string) {
       subject,
       text: textContent,
       html: htmlContent,
+      headers: {
+        "X-Entity-Ref-ID": `subscriber-${Date.now()}`,
+        "List-Unsubscribe": `<mailto:${process.env.SMTP_USER || "mowafy.dev@gmail.com"}?subject=unsubscribe>`,
+      },
     });
 
     console.log(`[Nodemailer] Welcome email sent successfully to ${subscriberEmail}`);

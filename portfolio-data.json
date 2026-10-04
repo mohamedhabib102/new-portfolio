@@ -100,10 +100,10 @@
       "featured": true,
       "order": 1,
       "createdAt": "2026-10-03T08:38:05.806529+00:00",
-      "updatedAt": "2026-10-03T08:38:05.675+00:00",
+      "updatedAt": "2026-10-03T19:12:06.002+00:00",
       "githubPrivate": true,
       "status": "in_development",
-      "coverImage": "/buildflow-cover.jpg",
+      "coverImage": "https://dibrssekkpsbyhvwwzln.supabase.co/storage/v1/object/public/portfolio-media/1791016677407_hero-new.png",
       "images": [
         "https://dibrssekkpsbyhvwwzln.supabase.co/storage/v1/object/public/portfolio-media/1791016677407_hero-new.png"
       ],

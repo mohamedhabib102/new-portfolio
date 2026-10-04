@@ -25,8 +25,9 @@ export const metadata: Metadata = {
   },
 };
 
-// SSG with ISR: Static generation revalidated every 10 days (864,000s) or immediately on new build
-export const revalidate = 864000;
+// Dynamic Server-Side Rendering (SSR): rendered on the server on every request with fresh data
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 export default async function HomePage() {
   const [siteConfig, projects] = await Promise.all([
