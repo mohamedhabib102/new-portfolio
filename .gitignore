@@ -42,5 +42,8 @@ yarn-error.log*
 next-env.d.ts
 
 # sql
+supabase-schema.sql
 /supabase-schema.sql
+backup_emails.sql
 /backup_emails.sql
+*.sql
