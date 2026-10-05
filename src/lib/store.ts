@@ -549,16 +549,18 @@ export const portfolioStore = {
 
     if (supabase) {
       try {
-        const tagsWithHidden = fullProject.isHidden
-          ? (rawTags.includes("__hidden__") ? rawTags : [...rawTags, "__hidden__"])
-          : rawTags.filter((t: string) => t !== "__hidden__");
+        const tagsWithMetadata = [
+          ...rawTags,
+          ...(fullProject.isHidden ? ["__hidden__"] : []),
+          ...(fullProject.company ? [`__company__:${fullProject.company}`] : []),
+        ];
 
+        // Clean payload matching Supabase Project table columns (no direct company column)
         const payload: any = {
           id: fullProject.id,
           slug: fullProject.slug,
           titleEn: fullProject.titleEn,
           titleAr: fullProject.titleAr,
-          company: fullProject.company || null,
           descriptionEn: fullProject.descriptionEn,
           descriptionAr: fullProject.descriptionAr,
           videoUrl: fullProject.videoUrl || "",
@@ -570,7 +572,7 @@ export const portfolioStore = {
           status: fullProject.status || "production",
           featuresEn: fullProject.featuresEn || [],
           featuresAr: fullProject.featuresAr || [],
-          tags: tagsWithHidden,
+          tags: tagsWithMetadata,
           featured: fullProject.featured,
           isHidden: fullProject.isHidden,
           order: fullProject.order,
@@ -597,8 +599,9 @@ export const portfolioStore = {
             status: fullProject.status || "production",
             featuresEn: fullProject.featuresEn || [],
             featuresAr: fullProject.featuresAr || [],
-            tags: tagsWithHidden,
+            tags: tagsWithMetadata,
             featured: fullProject.featured,
+            isHidden: fullProject.isHidden,
             order: fullProject.order,
             updatedAt: new Date().toISOString(),
           };

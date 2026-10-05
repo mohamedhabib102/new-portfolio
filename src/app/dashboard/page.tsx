@@ -505,6 +505,7 @@ export default function DashboardPage() {
 
       const cleanedProject = {
         ...editingProject,
+        isHidden: Boolean(editingProject.isHidden),
         status: editingProject.status || "production",
         videoUrl: cleanUrl(editingProject.videoUrl),
         coverImage: cleanUrl(editingProject.coverImage) || null,
