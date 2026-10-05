@@ -2391,10 +2391,14 @@ export namespace Prisma {
     descriptionEn: string | null
     descriptionAr: string | null
     videoUrl: string | null
+    coverImage: string | null
     liveUrl: string | null
     githubUrl: string | null
     githubPrivate: boolean | null
+    company: string | null
+    status: string | null
     featured: boolean | null
+    isHidden: boolean | null
     order: number | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -2408,10 +2412,14 @@ export namespace Prisma {
     descriptionEn: string | null
     descriptionAr: string | null
     videoUrl: string | null
+    coverImage: string | null
     liveUrl: string | null
     githubUrl: string | null
     githubPrivate: boolean | null
+    company: string | null
+    status: string | null
     featured: boolean | null
+    isHidden: boolean | null
     order: number | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -2425,12 +2433,18 @@ export namespace Prisma {
     descriptionEn: number
     descriptionAr: number
     videoUrl: number
+    coverImage: number
     images: number
     liveUrl: number
     githubUrl: number
     githubPrivate: number
+    company: number
+    status: number
     tags: number
     featured: number
+    isHidden: number
+    featuresEn: number
+    featuresAr: number
     order: number
     createdAt: number
     updatedAt: number
@@ -2454,10 +2468,14 @@ export namespace Prisma {
     descriptionEn?: true
     descriptionAr?: true
     videoUrl?: true
+    coverImage?: true
     liveUrl?: true
     githubUrl?: true
     githubPrivate?: true
+    company?: true
+    status?: true
     featured?: true
+    isHidden?: true
     order?: true
     createdAt?: true
     updatedAt?: true
@@ -2471,10 +2489,14 @@ export namespace Prisma {
     descriptionEn?: true
     descriptionAr?: true
     videoUrl?: true
+    coverImage?: true
     liveUrl?: true
     githubUrl?: true
     githubPrivate?: true
+    company?: true
+    status?: true
     featured?: true
+    isHidden?: true
     order?: true
     createdAt?: true
     updatedAt?: true
@@ -2488,12 +2510,18 @@ export namespace Prisma {
     descriptionEn?: true
     descriptionAr?: true
     videoUrl?: true
+    coverImage?: true
     images?: true
     liveUrl?: true
     githubUrl?: true
     githubPrivate?: true
+    company?: true
+    status?: true
     tags?: true
     featured?: true
+    isHidden?: true
+    featuresEn?: true
+    featuresAr?: true
     order?: true
     createdAt?: true
     updatedAt?: true
@@ -2594,12 +2622,18 @@ export namespace Prisma {
     descriptionEn: string
     descriptionAr: string
     videoUrl: string
+    coverImage: string | null
     images: string[]
     liveUrl: string | null
     githubUrl: string | null
     githubPrivate: boolean
+    company: string | null
+    status: string
     tags: string[]
     featured: boolean
+    isHidden: boolean
+    featuresEn: string[]
+    featuresAr: string[]
     order: number
     createdAt: Date
     updatedAt: Date
@@ -2632,12 +2666,18 @@ export namespace Prisma {
     descriptionEn?: boolean
     descriptionAr?: boolean
     videoUrl?: boolean
+    coverImage?: boolean
     images?: boolean
     liveUrl?: boolean
     githubUrl?: boolean
     githubPrivate?: boolean
+    company?: boolean
+    status?: boolean
     tags?: boolean
     featured?: boolean
+    isHidden?: boolean
+    featuresEn?: boolean
+    featuresAr?: boolean
     order?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -2651,12 +2691,18 @@ export namespace Prisma {
     descriptionEn?: boolean
     descriptionAr?: boolean
     videoUrl?: boolean
+    coverImage?: boolean
     images?: boolean
     liveUrl?: boolean
     githubUrl?: boolean
     githubPrivate?: boolean
+    company?: boolean
+    status?: boolean
     tags?: boolean
     featured?: boolean
+    isHidden?: boolean
+    featuresEn?: boolean
+    featuresAr?: boolean
     order?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -2670,12 +2716,18 @@ export namespace Prisma {
     descriptionEn?: boolean
     descriptionAr?: boolean
     videoUrl?: boolean
+    coverImage?: boolean
     images?: boolean
     liveUrl?: boolean
     githubUrl?: boolean
     githubPrivate?: boolean
+    company?: boolean
+    status?: boolean
     tags?: boolean
     featured?: boolean
+    isHidden?: boolean
+    featuresEn?: boolean
+    featuresAr?: boolean
     order?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -2689,18 +2741,24 @@ export namespace Prisma {
     descriptionEn?: boolean
     descriptionAr?: boolean
     videoUrl?: boolean
+    coverImage?: boolean
     images?: boolean
     liveUrl?: boolean
     githubUrl?: boolean
     githubPrivate?: boolean
+    company?: boolean
+    status?: boolean
     tags?: boolean
     featured?: boolean
+    isHidden?: boolean
+    featuresEn?: boolean
+    featuresAr?: boolean
     order?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type ProjectOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "slug" | "titleEn" | "titleAr" | "descriptionEn" | "descriptionAr" | "videoUrl" | "images" | "liveUrl" | "githubUrl" | "githubPrivate" | "tags" | "featured" | "order" | "createdAt" | "updatedAt", ExtArgs["result"]["project"]>
+  export type ProjectOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "slug" | "titleEn" | "titleAr" | "descriptionEn" | "descriptionAr" | "videoUrl" | "coverImage" | "images" | "liveUrl" | "githubUrl" | "githubPrivate" | "company" | "status" | "tags" | "featured" | "isHidden" | "featuresEn" | "featuresAr" | "order" | "createdAt" | "updatedAt", ExtArgs["result"]["project"]>
 
   export type $ProjectPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Project"
@@ -2713,12 +2771,18 @@ export namespace Prisma {
       descriptionEn: string
       descriptionAr: string
       videoUrl: string
+      coverImage: string | null
       images: string[]
       liveUrl: string | null
       githubUrl: string | null
       githubPrivate: boolean
+      company: string | null
+      status: string
       tags: string[]
       featured: boolean
+      isHidden: boolean
+      featuresEn: string[]
+      featuresAr: string[]
       order: number
       createdAt: Date
       updatedAt: Date
@@ -3152,12 +3216,18 @@ export namespace Prisma {
     readonly descriptionEn: FieldRef<"Project", 'String'>
     readonly descriptionAr: FieldRef<"Project", 'String'>
     readonly videoUrl: FieldRef<"Project", 'String'>
+    readonly coverImage: FieldRef<"Project", 'String'>
     readonly images: FieldRef<"Project", 'String[]'>
     readonly liveUrl: FieldRef<"Project", 'String'>
     readonly githubUrl: FieldRef<"Project", 'String'>
     readonly githubPrivate: FieldRef<"Project", 'Boolean'>
+    readonly company: FieldRef<"Project", 'String'>
+    readonly status: FieldRef<"Project", 'String'>
     readonly tags: FieldRef<"Project", 'String[]'>
     readonly featured: FieldRef<"Project", 'Boolean'>
+    readonly isHidden: FieldRef<"Project", 'Boolean'>
+    readonly featuresEn: FieldRef<"Project", 'String[]'>
+    readonly featuresAr: FieldRef<"Project", 'String[]'>
     readonly order: FieldRef<"Project", 'Int'>
     readonly createdAt: FieldRef<"Project", 'DateTime'>
     readonly updatedAt: FieldRef<"Project", 'DateTime'>
@@ -7865,12 +7935,18 @@ export namespace Prisma {
     descriptionEn: 'descriptionEn',
     descriptionAr: 'descriptionAr',
     videoUrl: 'videoUrl',
+    coverImage: 'coverImage',
     images: 'images',
     liveUrl: 'liveUrl',
     githubUrl: 'githubUrl',
     githubPrivate: 'githubPrivate',
+    company: 'company',
+    status: 'status',
     tags: 'tags',
     featured: 'featured',
+    isHidden: 'isHidden',
+    featuresEn: 'featuresEn',
+    featuresAr: 'featuresAr',
     order: 'order',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
@@ -8152,12 +8228,18 @@ export namespace Prisma {
     descriptionEn?: StringFilter<"Project"> | string
     descriptionAr?: StringFilter<"Project"> | string
     videoUrl?: StringFilter<"Project"> | string
+    coverImage?: StringNullableFilter<"Project"> | string | null
     images?: StringNullableListFilter<"Project">
     liveUrl?: StringNullableFilter<"Project"> | string | null
     githubUrl?: StringNullableFilter<"Project"> | string | null
     githubPrivate?: BoolFilter<"Project"> | boolean
+    company?: StringNullableFilter<"Project"> | string | null
+    status?: StringFilter<"Project"> | string
     tags?: StringNullableListFilter<"Project">
     featured?: BoolFilter<"Project"> | boolean
+    isHidden?: BoolFilter<"Project"> | boolean
+    featuresEn?: StringNullableListFilter<"Project">
+    featuresAr?: StringNullableListFilter<"Project">
     order?: IntFilter<"Project"> | number
     createdAt?: DateTimeFilter<"Project"> | Date | string
     updatedAt?: DateTimeFilter<"Project"> | Date | string
@@ -8171,12 +8253,18 @@ export namespace Prisma {
     descriptionEn?: SortOrder
     descriptionAr?: SortOrder
     videoUrl?: SortOrder
+    coverImage?: SortOrderInput | SortOrder
     images?: SortOrder
     liveUrl?: SortOrderInput | SortOrder
     githubUrl?: SortOrderInput | SortOrder
     githubPrivate?: SortOrder
+    company?: SortOrderInput | SortOrder
+    status?: SortOrder
     tags?: SortOrder
     featured?: SortOrder
+    isHidden?: SortOrder
+    featuresEn?: SortOrder
+    featuresAr?: SortOrder
     order?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -8193,12 +8281,18 @@ export namespace Prisma {
     descriptionEn?: StringFilter<"Project"> | string
     descriptionAr?: StringFilter<"Project"> | string
     videoUrl?: StringFilter<"Project"> | string
+    coverImage?: StringNullableFilter<"Project"> | string | null
     images?: StringNullableListFilter<"Project">
     liveUrl?: StringNullableFilter<"Project"> | string | null
     githubUrl?: StringNullableFilter<"Project"> | string | null
     githubPrivate?: BoolFilter<"Project"> | boolean
+    company?: StringNullableFilter<"Project"> | string | null
+    status?: StringFilter<"Project"> | string
     tags?: StringNullableListFilter<"Project">
     featured?: BoolFilter<"Project"> | boolean
+    isHidden?: BoolFilter<"Project"> | boolean
+    featuresEn?: StringNullableListFilter<"Project">
+    featuresAr?: StringNullableListFilter<"Project">
     order?: IntFilter<"Project"> | number
     createdAt?: DateTimeFilter<"Project"> | Date | string
     updatedAt?: DateTimeFilter<"Project"> | Date | string
@@ -8212,12 +8306,18 @@ export namespace Prisma {
     descriptionEn?: SortOrder
     descriptionAr?: SortOrder
     videoUrl?: SortOrder
+    coverImage?: SortOrderInput | SortOrder
     images?: SortOrder
     liveUrl?: SortOrderInput | SortOrder
     githubUrl?: SortOrderInput | SortOrder
     githubPrivate?: SortOrder
+    company?: SortOrderInput | SortOrder
+    status?: SortOrder
     tags?: SortOrder
     featured?: SortOrder
+    isHidden?: SortOrder
+    featuresEn?: SortOrder
+    featuresAr?: SortOrder
     order?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -8239,12 +8339,18 @@ export namespace Prisma {
     descriptionEn?: StringWithAggregatesFilter<"Project"> | string
     descriptionAr?: StringWithAggregatesFilter<"Project"> | string
     videoUrl?: StringWithAggregatesFilter<"Project"> | string
+    coverImage?: StringNullableWithAggregatesFilter<"Project"> | string | null
     images?: StringNullableListFilter<"Project">
     liveUrl?: StringNullableWithAggregatesFilter<"Project"> | string | null
     githubUrl?: StringNullableWithAggregatesFilter<"Project"> | string | null
     githubPrivate?: BoolWithAggregatesFilter<"Project"> | boolean
+    company?: StringNullableWithAggregatesFilter<"Project"> | string | null
+    status?: StringWithAggregatesFilter<"Project"> | string
     tags?: StringNullableListFilter<"Project">
     featured?: BoolWithAggregatesFilter<"Project"> | boolean
+    isHidden?: BoolWithAggregatesFilter<"Project"> | boolean
+    featuresEn?: StringNullableListFilter<"Project">
+    featuresAr?: StringNullableListFilter<"Project">
     order?: IntWithAggregatesFilter<"Project"> | number
     createdAt?: DateTimeWithAggregatesFilter<"Project"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Project"> | Date | string
@@ -8659,12 +8765,18 @@ export namespace Prisma {
     descriptionEn: string
     descriptionAr: string
     videoUrl: string
+    coverImage?: string | null
     images?: ProjectCreateimagesInput | string[]
     liveUrl?: string | null
     githubUrl?: string | null
     githubPrivate?: boolean
+    company?: string | null
+    status?: string
     tags?: ProjectCreatetagsInput | string[]
     featured?: boolean
+    isHidden?: boolean
+    featuresEn?: ProjectCreatefeaturesEnInput | string[]
+    featuresAr?: ProjectCreatefeaturesArInput | string[]
     order?: number
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -8678,12 +8790,18 @@ export namespace Prisma {
     descriptionEn: string
     descriptionAr: string
     videoUrl: string
+    coverImage?: string | null
     images?: ProjectCreateimagesInput | string[]
     liveUrl?: string | null
     githubUrl?: string | null
     githubPrivate?: boolean
+    company?: string | null
+    status?: string
     tags?: ProjectCreatetagsInput | string[]
     featured?: boolean
+    isHidden?: boolean
+    featuresEn?: ProjectCreatefeaturesEnInput | string[]
+    featuresAr?: ProjectCreatefeaturesArInput | string[]
     order?: number
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -8697,12 +8815,18 @@ export namespace Prisma {
     descriptionEn?: StringFieldUpdateOperationsInput | string
     descriptionAr?: StringFieldUpdateOperationsInput | string
     videoUrl?: StringFieldUpdateOperationsInput | string
+    coverImage?: NullableStringFieldUpdateOperationsInput | string | null
     images?: ProjectUpdateimagesInput | string[]
     liveUrl?: NullableStringFieldUpdateOperationsInput | string | null
     githubUrl?: NullableStringFieldUpdateOperationsInput | string | null
     githubPrivate?: BoolFieldUpdateOperationsInput | boolean
+    company?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
     tags?: ProjectUpdatetagsInput | string[]
     featured?: BoolFieldUpdateOperationsInput | boolean
+    isHidden?: BoolFieldUpdateOperationsInput | boolean
+    featuresEn?: ProjectUpdatefeaturesEnInput | string[]
+    featuresAr?: ProjectUpdatefeaturesArInput | string[]
     order?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -8716,12 +8840,18 @@ export namespace Prisma {
     descriptionEn?: StringFieldUpdateOperationsInput | string
     descriptionAr?: StringFieldUpdateOperationsInput | string
     videoUrl?: StringFieldUpdateOperationsInput | string
+    coverImage?: NullableStringFieldUpdateOperationsInput | string | null
     images?: ProjectUpdateimagesInput | string[]
     liveUrl?: NullableStringFieldUpdateOperationsInput | string | null
     githubUrl?: NullableStringFieldUpdateOperationsInput | string | null
     githubPrivate?: BoolFieldUpdateOperationsInput | boolean
+    company?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
     tags?: ProjectUpdatetagsInput | string[]
     featured?: BoolFieldUpdateOperationsInput | boolean
+    isHidden?: BoolFieldUpdateOperationsInput | boolean
+    featuresEn?: ProjectUpdatefeaturesEnInput | string[]
+    featuresAr?: ProjectUpdatefeaturesArInput | string[]
     order?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -8735,12 +8865,18 @@ export namespace Prisma {
     descriptionEn: string
     descriptionAr: string
     videoUrl: string
+    coverImage?: string | null
     images?: ProjectCreateimagesInput | string[]
     liveUrl?: string | null
     githubUrl?: string | null
     githubPrivate?: boolean
+    company?: string | null
+    status?: string
     tags?: ProjectCreatetagsInput | string[]
     featured?: boolean
+    isHidden?: boolean
+    featuresEn?: ProjectCreatefeaturesEnInput | string[]
+    featuresAr?: ProjectCreatefeaturesArInput | string[]
     order?: number
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -8754,12 +8890,18 @@ export namespace Prisma {
     descriptionEn?: StringFieldUpdateOperationsInput | string
     descriptionAr?: StringFieldUpdateOperationsInput | string
     videoUrl?: StringFieldUpdateOperationsInput | string
+    coverImage?: NullableStringFieldUpdateOperationsInput | string | null
     images?: ProjectUpdateimagesInput | string[]
     liveUrl?: NullableStringFieldUpdateOperationsInput | string | null
     githubUrl?: NullableStringFieldUpdateOperationsInput | string | null
     githubPrivate?: BoolFieldUpdateOperationsInput | boolean
+    company?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
     tags?: ProjectUpdatetagsInput | string[]
     featured?: BoolFieldUpdateOperationsInput | boolean
+    isHidden?: BoolFieldUpdateOperationsInput | boolean
+    featuresEn?: ProjectUpdatefeaturesEnInput | string[]
+    featuresAr?: ProjectUpdatefeaturesArInput | string[]
     order?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -8773,12 +8915,18 @@ export namespace Prisma {
     descriptionEn?: StringFieldUpdateOperationsInput | string
     descriptionAr?: StringFieldUpdateOperationsInput | string
     videoUrl?: StringFieldUpdateOperationsInput | string
+    coverImage?: NullableStringFieldUpdateOperationsInput | string | null
     images?: ProjectUpdateimagesInput | string[]
     liveUrl?: NullableStringFieldUpdateOperationsInput | string | null
     githubUrl?: NullableStringFieldUpdateOperationsInput | string | null
     githubPrivate?: BoolFieldUpdateOperationsInput | boolean
+    company?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
     tags?: ProjectUpdatetagsInput | string[]
     featured?: BoolFieldUpdateOperationsInput | boolean
+    isHidden?: BoolFieldUpdateOperationsInput | boolean
+    featuresEn?: ProjectUpdatefeaturesEnInput | string[]
+    featuresAr?: ProjectUpdatefeaturesArInput | string[]
     order?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -9249,14 +9397,6 @@ export namespace Prisma {
     _max?: NestedDateTimeFilter<$PrismaModel>
   }
 
-  export type StringNullableListFilter<$PrismaModel = never> = {
-    equals?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    has?: string | StringFieldRefInput<$PrismaModel> | null
-    hasEvery?: string[] | ListStringFieldRefInput<$PrismaModel>
-    hasSome?: string[] | ListStringFieldRefInput<$PrismaModel>
-    isEmpty?: boolean
-  }
-
   export type StringNullableFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel> | null
     in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
@@ -9270,6 +9410,14 @@ export namespace Prisma {
     endsWith?: string | StringFieldRefInput<$PrismaModel>
     mode?: QueryMode
     not?: NestedStringNullableFilter<$PrismaModel> | string | null
+  }
+
+  export type StringNullableListFilter<$PrismaModel = never> = {
+    equals?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    has?: string | StringFieldRefInput<$PrismaModel> | null
+    hasEvery?: string[] | ListStringFieldRefInput<$PrismaModel>
+    hasSome?: string[] | ListStringFieldRefInput<$PrismaModel>
+    isEmpty?: boolean
   }
 
   export type BoolFilter<$PrismaModel = never> = {
@@ -9301,12 +9449,18 @@ export namespace Prisma {
     descriptionEn?: SortOrder
     descriptionAr?: SortOrder
     videoUrl?: SortOrder
+    coverImage?: SortOrder
     images?: SortOrder
     liveUrl?: SortOrder
     githubUrl?: SortOrder
     githubPrivate?: SortOrder
+    company?: SortOrder
+    status?: SortOrder
     tags?: SortOrder
     featured?: SortOrder
+    isHidden?: SortOrder
+    featuresEn?: SortOrder
+    featuresAr?: SortOrder
     order?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -9324,10 +9478,14 @@ export namespace Prisma {
     descriptionEn?: SortOrder
     descriptionAr?: SortOrder
     videoUrl?: SortOrder
+    coverImage?: SortOrder
     liveUrl?: SortOrder
     githubUrl?: SortOrder
     githubPrivate?: SortOrder
+    company?: SortOrder
+    status?: SortOrder
     featured?: SortOrder
+    isHidden?: SortOrder
     order?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -9341,10 +9499,14 @@ export namespace Prisma {
     descriptionEn?: SortOrder
     descriptionAr?: SortOrder
     videoUrl?: SortOrder
+    coverImage?: SortOrder
     liveUrl?: SortOrder
     githubUrl?: SortOrder
     githubPrivate?: SortOrder
+    company?: SortOrder
+    status?: SortOrder
     featured?: SortOrder
+    isHidden?: SortOrder
     order?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -9626,13 +9788,21 @@ export namespace Prisma {
     set: string[]
   }
 
-  export type ProjectUpdateimagesInput = {
-    set?: string[]
-    push?: string | string[]
+  export type ProjectCreatefeaturesEnInput = {
+    set: string[]
+  }
+
+  export type ProjectCreatefeaturesArInput = {
+    set: string[]
   }
 
   export type NullableStringFieldUpdateOperationsInput = {
     set?: string | null
+  }
+
+  export type ProjectUpdateimagesInput = {
+    set?: string[]
+    push?: string | string[]
   }
 
   export type BoolFieldUpdateOperationsInput = {
@@ -9640,6 +9810,16 @@ export namespace Prisma {
   }
 
   export type ProjectUpdatetagsInput = {
+    set?: string[]
+    push?: string | string[]
+  }
+
+  export type ProjectUpdatefeaturesEnInput = {
+    set?: string[]
+    push?: string | string[]
+  }
+
+  export type ProjectUpdatefeaturesArInput = {
     set?: string[]
     push?: string | string[]
   }

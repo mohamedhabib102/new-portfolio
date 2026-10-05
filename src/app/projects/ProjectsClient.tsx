@@ -24,7 +24,7 @@ export default function ProjectsClient({ initialProjects = [] }: ProjectsClientP
 
   const [selectedTag, setSelectedTag] = useState<string>("All");
 
-  const projects = initialProjects || [];
+  const projects = (initialProjects || []).filter((p: any) => !p.isHidden);
 
   // Extract all unique tags
   const allTags = useMemo(() => {

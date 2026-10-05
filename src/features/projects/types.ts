@@ -20,6 +20,7 @@ export interface Project {
   githubPrivate?: boolean;
   tags: string[];
   featured: boolean;
+  isHidden?: boolean;
   order: number;
   company?: string | null;
   status?: "production" | "in_development" | string;

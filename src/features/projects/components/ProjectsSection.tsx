@@ -10,7 +10,7 @@ export default function ProjectsSection({ initialProjects = [] }: { initialProje
   const { t, isRtl } = useTranslation();
 
   // Pure Next.js SSG with ISR data (zero client-side fetching delay)
-  const allProjects = initialProjects || [];
+  const allProjects = (initialProjects || []).filter((p: any) => !p.isHidden);
   const homeProjects = allProjects.slice(0, 4);
 
   return (

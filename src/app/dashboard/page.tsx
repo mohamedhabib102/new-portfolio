@@ -38,6 +38,8 @@ import {
   FiTag,
   FiSend,
   FiUsers,
+  FiEye,
+  FiEyeOff,
 } from "react-icons/fi";
 
 export default function DashboardPage() {
@@ -137,6 +139,7 @@ export default function DashboardPage() {
     status: "production", // "production" | "in_development"
     tags: "",
     featured: true,
+    isHidden: false,
     order: 0,
     featuresEn: [""],
     featuresAr: [""],
@@ -535,6 +538,39 @@ export default function DashboardPage() {
       loadDashboardData();
     } catch (e) {
       triggerToast(isRtl ? "فشل حذف المشروع" : "Failed to delete project");
+      loadDashboardData();
+    }
+  };
+
+  const handleToggleProjectVisibility = async (proj: any) => {
+    const nextIsHidden = !proj.isHidden;
+    // Optimistic update for instant UI feedback
+    setProjects((prev) =>
+      prev.map((p) => (p.id === proj.id ? { ...p, isHidden: nextIsHidden } : p))
+    );
+    try {
+      await apiClient.post("/api/admin/projects", {
+        ...proj,
+        isHidden: nextIsHidden,
+      });
+      triggerToast(
+        isRtl
+          ? nextIsHidden
+            ? "تم إخفاء المشروع من البورتفوليو بنجاح!"
+            : "تم إظهار المشروع في البورتفوليو بنجاح!"
+          : nextIsHidden
+          ? "Project hidden from portfolio!"
+          : "Project is now visible in portfolio!"
+      );
+      loadDashboardData();
+    } catch (e) {
+      // Revert optimistic update
+      setProjects((prev) =>
+        prev.map((p) => (p.id === proj.id ? { ...p, isHidden: !nextIsHidden } : p))
+      );
+      triggerToast(
+        isRtl ? "فشل تحديث حالة ظهور المشروع" : "Failed to update project visibility"
+      );
       loadDashboardData();
     }
   };
@@ -1348,6 +1384,7 @@ export default function DashboardPage() {
                       status: "production",
                       tags: "",
                       featured: true,
+                      isHidden: false,
                       order: projects.length + 1,
                       featuresEn: [""],
                       featuresAr: [""],
@@ -1368,7 +1405,9 @@ export default function DashboardPage() {
                 {projects.map((proj) => (
                   <div
                     key={proj.id}
-                    className="p-5 rounded-3xl bg-[#12141c] border border-white/10 flex flex-col justify-between gap-4 shadow-xl relative"
+                    className={`p-5 rounded-3xl bg-[#12141c] border flex flex-col justify-between gap-4 shadow-xl relative transition-all ${
+                      proj.isHidden ? "border-rose-500/30 bg-[#141217]" : "border-white/10"
+                    }`}
                   >
                     <div className="relative w-full aspect-video rounded-2xl overflow-hidden bg-black border border-white/10">
                       {proj.videoUrl ? (
@@ -1395,19 +1434,33 @@ export default function DashboardPage() {
                         </div>
                       )}
 
-                      {/* Top Badges: Status (Under Dev vs Production) & Private Repo */}
+                      {/* Top Badges: Status (Under Dev vs Production) & Visibility & Private Repo */}
                       <div className="absolute top-3 left-3 right-3 flex items-center justify-between gap-2 z-10 pointer-events-none">
-                        {proj.status === "in_development" ? (
-                          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-medium bg-amber-500/90 text-black shadow-md backdrop-blur-md">
-                            <span className="w-1.5 h-1.5 rounded-full bg-black animate-pulse" />
-                            <span>{isRtl ? "تحت التطوير (WIP)" : "In Development"}</span>
-                          </span>
-                        ) : (
-                          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-medium bg-emerald-500/90 text-black shadow-md backdrop-blur-md">
-                            <span className="w-1.5 h-1.5 rounded-full bg-black" />
-                            <span>{isRtl ? "برودكشن / منشور" : "Production"}</span>
-                          </span>
-                        )}
+                        <div className="flex items-center gap-1.5 flex-wrap">
+                          {proj.status === "in_development" ? (
+                            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-medium bg-amber-500/90 text-black shadow-md backdrop-blur-md">
+                              <span className="w-1.5 h-1.5 rounded-full bg-black animate-pulse" />
+                              <span>{isRtl ? "تحت التطوير (WIP)" : "In Development"}</span>
+                            </span>
+                          ) : (
+                            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-medium bg-emerald-500/90 text-black shadow-md backdrop-blur-md">
+                              <span className="w-1.5 h-1.5 rounded-full bg-black" />
+                              <span>{isRtl ? "برودكشن / منشور" : "Production"}</span>
+                            </span>
+                          )}
+
+                          {proj.isHidden ? (
+                            <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-semibold bg-rose-500/90 text-white shadow-md backdrop-blur-md border border-rose-400/30">
+                              <FiEyeOff className="w-3 h-3 text-white" />
+                              <span>{isRtl ? "مخفي من البورتفوليو" : "Hidden"}</span>
+                            </span>
+                          ) : (
+                            <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-semibold bg-blue-600/90 text-white shadow-md backdrop-blur-md border border-blue-400/30">
+                              <FiEye className="w-3 h-3 text-white" />
+                              <span>{isRtl ? "ظاهر في البورتفوليو" : "Visible"}</span>
+                            </span>
+                          )}
+                        </div>
 
                         {proj.githubPrivate && (
                           <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-medium bg-black/75 text-amber-300 border border-amber-500/40 backdrop-blur-md">
@@ -1440,6 +1493,26 @@ export default function DashboardPage() {
                         {Array.isArray(proj.tags) ? proj.tags.join(", ") : proj.tags}
                       </span>
                       <div className="flex items-center gap-2">
+                        {/* Quick Show/Hide Toggle Button */}
+                        <button
+                          onClick={() => handleToggleProjectVisibility(proj)}
+                          className={`p-2 rounded-lg transition-all cursor-pointer ${
+                            proj.isHidden
+                              ? "bg-rose-500/20 hover:bg-rose-500/30 text-rose-300 border border-rose-500/40"
+                              : "bg-white/5 hover:bg-white/10 text-neutral-400 hover:text-white"
+                          }`}
+                          title={
+                            isRtl
+                              ? proj.isHidden
+                                ? "المشروع مخفي حالياً - اضغط لإظهاره في البورتفوليو"
+                                : "المشروع ظاهر حالياً - اضغط لإخفائه من البورتفوليو"
+                              : proj.isHidden
+                              ? "Hidden from portfolio - Click to show"
+                              : "Visible in portfolio - Click to hide"
+                          }
+                        >
+                          {proj.isHidden ? <FiEyeOff className="w-4 h-4 text-rose-400" /> : <FiEye className="w-4 h-4" />}
+                        </button>
                         <button
                           onClick={() => {
                             setEditingProject({
@@ -1449,6 +1522,7 @@ export default function DashboardPage() {
                               coverImage: proj.coverImage || "",
                               images: Array.isArray(proj.images) ? proj.images : [],
                               githubPrivate: proj.githubPrivate ?? false,
+                              isHidden: proj.isHidden ?? false,
                               tags: Array.isArray(proj.tags) ? proj.tags.join(", ") : (proj.tags || ""),
                               featuresEn: Array.isArray(proj.featuresEn) && proj.featuresEn.length > 0 ? proj.featuresEn : [""],
                               featuresAr: Array.isArray(proj.featuresAr) && proj.featuresAr.length > 0 ? proj.featuresAr : [""],
@@ -2700,6 +2774,59 @@ export default function DashboardPage() {
                       className="sr-only peer"
                     />
                     <div className="w-11 h-6 bg-white/10 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-neutral-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-amber-500"></div>
+                  </label>
+                </div>
+
+                {/* Project Visibility (Hide or Show in Portfolio) */}
+                <div className={`p-4 rounded-2xl border transition-all flex items-center justify-between gap-4 ${
+                  editingProject.isHidden
+                    ? "bg-rose-500/10 border-rose-500/30"
+                    : "bg-white/[0.03] border-white/10"
+                }`}>
+                  <div className="flex items-start gap-3">
+                    <div className={`p-2.5 rounded-xl border transition-colors ${
+                      editingProject.isHidden
+                        ? "bg-rose-500/20 border-rose-500/40 text-rose-400"
+                        : "bg-blue-500/10 border-blue-500/20 text-blue-400"
+                    }`}>
+                      {editingProject.isHidden ? <FiEyeOff className="w-5 h-5" /> : <FiEye className="w-5 h-5" />}
+                    </div>
+                    <div>
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <h4 className="text-xs font-semibold text-white">
+                          {isRtl ? "إخفاء المشروع من البورتفوليو" : "Hide Project from Portfolio"}
+                        </h4>
+                        {editingProject.isHidden ? (
+                          <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-rose-500/20 text-rose-300 border border-rose-500/30">
+                            {isRtl ? "مخفي حالياً" : "Currently Hidden"}
+                          </span>
+                        ) : (
+                          <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+                            {isRtl ? "ظاهر للجميع" : "Visible"}
+                          </span>
+                        )}
+                      </div>
+                      <p className="text-[11px] text-neutral-400 mt-1 leading-relaxed max-w-xl">
+                        {isRtl
+                          ? "عند تفعيل هذا الخيار، سيتم إخفاء المشروع تماماً من الصفحة الرئيسية، وصفحة المشاريع، وخريطة الموقع (Sitemap). ولن يتمكن الزوار أو محركات البحث من رؤيته، مع بقائه متاحاً لك في لوحة التحكم لإدارته وإعادته للظهور في أي وقت."
+                          : "When enabled, this project will be completely hidden from the homepage, projects showcase, and public routes. Only accessible in the dashboard."}
+                      </p>
+                    </div>
+                  </div>
+
+                  <label className="relative inline-flex items-center cursor-pointer shrink-0">
+                    <input
+                      type="checkbox"
+                      checked={editingProject.isHidden || false}
+                      onChange={(e) =>
+                        setEditingProject({
+                          ...editingProject,
+                          isHidden: e.target.checked,
+                        })
+                      }
+                      className="sr-only peer"
+                    />
+                    <div className="w-11 h-6 bg-white/10 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-neutral-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-rose-500"></div>
                   </label>
                 </div>
 

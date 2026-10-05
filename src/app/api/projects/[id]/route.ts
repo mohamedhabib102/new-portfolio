@@ -10,7 +10,7 @@ export async function GET(
   try {
     const allProjects = await portfolioStore.getProjects();
     const project = allProjects.find(
-      (p: any) => p.id === id || p.slug === id
+      (p: any) => (p.id === id || p.slug === id) && !p.isHidden
     );
 
     if (!project) {

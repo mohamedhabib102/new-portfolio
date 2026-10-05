@@ -446,11 +446,18 @@ export const portfolioStore = {
         const { data, error } = await supabase.from("Project").select("*").order("order", { ascending: true });
         if (!error && Array.isArray(data) && data.length > 0) {
           const store = readLocalStore();
-          // Merge Supabase projects with any local-only metadata (like githubPrivate or features)
+          // Merge Supabase projects with any local-only metadata (like githubPrivate, isHidden, or features)
           const merged = data.map((d: any) => {
             const local = store.projects.find((p: any) => p.id === d.id || p.slug === d.slug);
             const company = (d.company || local?.company || null) as string | null;
-            const cleanTags = (Array.isArray(d.tags) ? d.tags : []).filter((t: string) => typeof t === "string" && !t.includes("__company__"));
+            const isHiddenFromTags = Array.isArray(d.tags) && d.tags.includes("__hidden__");
+            const isHidden = (d.isHidden !== undefined && d.isHidden !== null)
+              ? Boolean(d.isHidden)
+              : (isHiddenFromTags || Boolean(local?.isHidden) || false);
+
+            const cleanTags = (Array.isArray(d.tags) ? d.tags : []).filter(
+              (t: string) => typeof t === "string" && !t.includes("__company__") && t !== "__hidden__"
+            );
 
             return {
               ...d,
@@ -460,6 +467,7 @@ export const portfolioStore = {
               coverImage: d.coverImage !== undefined ? d.coverImage : (local?.coverImage || null),
               images: Array.isArray(d.images) ? d.images : (local?.images || []),
               githubPrivate: d.githubPrivate ?? local?.githubPrivate ?? false,
+              isHidden,
               featuresEn: (Array.isArray(d.featuresEn) && d.featuresEn.length > 0) ? d.featuresEn : (local?.featuresEn || []),
               featuresAr: (Array.isArray(d.featuresAr) && d.featuresAr.length > 0) ? d.featuresAr : (local?.featuresAr || []),
             };
@@ -469,7 +477,9 @@ export const portfolioStore = {
           const nonSupabase = store.projects.filter(
             (lp: any) => !data.some((sp: any) => sp.id === lp.id || sp.slug === lp.slug)
           );
-          const fullList = [...merged, ...nonSupabase].sort((a: any, b: any) => (a.order ?? 0) - (b.order ?? 0));
+          const fullList = [...merged, ...nonSupabase]
+            .map((p: any) => ({ ...p, isHidden: Boolean(p.isHidden) }))
+            .sort((a: any, b: any) => (a.order ?? 0) - (b.order ?? 0));
 
           store.projects = fullList as any;
           writeLocalStore(store);
@@ -479,7 +489,11 @@ export const portfolioStore = {
         console.warn("[Supabase] getProjects fallback:", err);
       }
     }
-    return readLocalStore().projects;
+    const localStore = readLocalStore();
+    return (localStore.projects || []).map((p: any) => ({
+      ...p,
+      isHidden: Boolean(p.isHidden),
+    }));
   },
 
   saveProject: async (projectData: any) => {
@@ -502,8 +516,10 @@ export const portfolioStore = {
       : [];
 
     const company = projectData.company ? String(projectData.company).trim() : null;
+    const isHidden = Boolean(projectData.isHidden);
+
     const rawTags = (Array.isArray(projectData.tags) ? projectData.tags : (projectData.tags || "").split(",").map((s: string) => s.trim()).filter(Boolean))
-      .filter((t: string) => typeof t === "string" && !t.includes("__company__"));
+      .filter((t: string) => typeof t === "string" && !t.includes("__company__") && t !== "__hidden__");
 
     const fullProject = {
       ...projectData,
@@ -519,6 +535,7 @@ export const portfolioStore = {
       featuresAr: Array.isArray(projectData.featuresAr) ? projectData.featuresAr.map((f: string) => f.trim()).filter(Boolean) : [],
       tags: rawTags,
       featured: projectData.featured ?? true,
+      isHidden: isHidden,
       order: projectData.order ?? 0,
     };
 
@@ -532,6 +549,10 @@ export const portfolioStore = {
 
     if (supabase) {
       try {
+        const tagsWithHidden = fullProject.isHidden
+          ? (rawTags.includes("__hidden__") ? rawTags : [...rawTags, "__hidden__"])
+          : rawTags.filter((t: string) => t !== "__hidden__");
+
         const payload: any = {
           id: fullProject.id,
           slug: fullProject.slug,
@@ -549,8 +570,9 @@ export const portfolioStore = {
           status: fullProject.status || "production",
           featuresEn: fullProject.featuresEn || [],
           featuresAr: fullProject.featuresAr || [],
-          tags: rawTags,
+          tags: tagsWithHidden,
           featured: fullProject.featured,
+          isHidden: fullProject.isHidden,
           order: fullProject.order,
           updatedAt: new Date().toISOString(),
         };
@@ -575,7 +597,7 @@ export const portfolioStore = {
             status: fullProject.status || "production",
             featuresEn: fullProject.featuresEn || [],
             featuresAr: fullProject.featuresAr || [],
-            tags: rawTags,
+            tags: tagsWithHidden,
             featured: fullProject.featured,
             order: fullProject.order,
             updatedAt: new Date().toISOString(),

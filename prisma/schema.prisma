@@ -38,6 +38,7 @@ model Project {
   status        String   @default("production")
   tags          String[]
   featured      Boolean  @default(true)
+  isHidden      Boolean  @default(false)
   featuresEn    String[] @default([])
   featuresAr    String[] @default([])
   order         Int      @default(0)

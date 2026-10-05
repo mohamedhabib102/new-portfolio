@@ -55,6 +55,7 @@ export const revalidate = 0;
 
 export default async function AllProjectsPage() {
   const projects = await portfolioStore.getProjects();
+  const publicProjects = (projects || []).filter((p: any) => !p.isHidden);
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -76,7 +77,7 @@ export default async function AllProjectsPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <ProjectsClient initialProjects={projects} />
+      <ProjectsClient initialProjects={publicProjects} />
     </>
   );
 }

@@ -25,6 +25,7 @@ export async function GET() {
   ];
 
   for (const p of projects || []) {
+    if (p.isHidden) continue;
     const slug = (p.slug || p.id)?.toString().trim();
     if (!slug || seenSlugs.has(slug)) continue;
     seenSlugs.add(slug);

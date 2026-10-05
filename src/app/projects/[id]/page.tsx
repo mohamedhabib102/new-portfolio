@@ -1,5 +1,6 @@
 import React from "react";
 import type { Metadata } from "next";
+import { notFound } from "next/navigation";
 import { portfolioStore } from "@/lib/store";
 import ProjectDetailClient from "./ProjectDetailClient";
 
@@ -18,11 +19,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const projects = await portfolioStore.getProjects();
   const project = projects.find((p: any) => p.id === id || p.slug === id);
 
-  if (!project) {
+  if (!project || project.isHidden) {
     return {
       title: "Project Not Found | Mohamed H. Mowafy",
       description: "The requested project could not be found in Mohamed H. Mowafy's portfolio.",
-      robots: { index: false, follow: true },
+      robots: { index: false, follow: false },
     };
   }
 
@@ -78,6 +79,10 @@ export default async function ProjectDetailPage({ params }: Props) {
   const { id } = await params;
   const projects = await portfolioStore.getProjects();
   const project = projects.find((p: any) => p.id === id || p.slug === id);
+
+  if (!project || project.isHidden) {
+    notFound();
+  }
 
   const jsonLd = project
     ? {

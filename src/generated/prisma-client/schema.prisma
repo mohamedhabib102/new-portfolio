@@ -29,11 +29,18 @@ model Project {
   descriptionEn String   @db.Text
   descriptionAr String   @db.Text
   videoUrl      String
+  coverImage    String?
+  images        String[] @default([])
   liveUrl       String?
   githubUrl     String?
   githubPrivate Boolean  @default(false)
+  company       String?
+  status        String   @default("production")
   tags          String[]
   featured      Boolean  @default(true)
+  isHidden      Boolean  @default(false)
+  featuresEn    String[] @default([])
+  featuresAr    String[] @default([])
   order         Int      @default(0)
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt

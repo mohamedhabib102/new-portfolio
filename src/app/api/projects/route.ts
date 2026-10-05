@@ -166,9 +166,10 @@ export async function GET(request: NextRequest) {
   const featured = searchParams.get("featured") === "true";
 
   const allProjects = await portfolioStore.getProjects();
+  const visibleProjects = allProjects.filter((p: any) => !p.isHidden);
   const filtered = featured
-    ? allProjects.filter((p: any) => p.featured)
-    : allProjects;
+    ? visibleProjects.filter((p: any) => p.featured)
+    : visibleProjects;
 
   return NextResponse.json({
     success: true,
