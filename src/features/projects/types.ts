@@ -21,6 +21,7 @@ export interface Project {
   tags: string[];
   featured: boolean;
   order: number;
+  company?: string | null;
   status?: "production" | "in_development" | string;
   featuresEn?: string[];
   featuresAr?: string[];

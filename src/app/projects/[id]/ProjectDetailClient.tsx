@@ -24,7 +24,8 @@ import {
   FiCheckCircle, 
   FiCopy, 
   FiCheck,
-  FiMaximize2
+  FiMaximize2,
+  FiBriefcase
 } from "react-icons/fi";
 
 interface ProjectDetailClientProps {
@@ -35,9 +36,9 @@ interface ProjectDetailClientProps {
 export default function ProjectDetailClient({ id, initialProject }: ProjectDetailClientProps) {
   const { t, language, isRtl } = useTranslation();
   const { isLoaded } = useLoading();
-  const { data: projectData, isLoading, isError } = useProjectDetail(id);
+  const { data: projectData, isLoading, isError } = useProjectDetail(id, initialProject);
 
-  const project = projectData || initialProject;
+  const project = initialProject || projectData;
 
   // Active media viewer state: 'video' | index (number) for image
   const [activeMedia, setActiveMedia] = useState<"video" | number>("video");
@@ -126,6 +127,13 @@ export default function ProjectDetailClient({ id, initialProject }: ProjectDetai
               <span className="px-3 py-1 text-xs font-medium rounded-full bg-emerald-500/10 text-emerald-700 border border-emerald-500/30 flex items-center gap-1.5">
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
                 <span>{language === "ar" ? "برودكشن / منشور" : "Production"}</span>
+              </span>
+            )}
+
+            {project.company && (
+              <span className="px-3.5 py-1 text-xs font-semibold rounded-full bg-blue-50 text-blue-700 border border-blue-200 flex items-center gap-1.5 shadow-xs">
+                <FiBriefcase className="w-3.5 h-3.5 text-blue-600" />
+                <span>{language === "ar" ? `تم العمل مع: ${project.company}` : `Client / Company: ${project.company}`}</span>
               </span>
             )}
 

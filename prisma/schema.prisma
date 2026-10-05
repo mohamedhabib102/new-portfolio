@@ -34,6 +34,7 @@ model Project {
   liveUrl       String?
   githubUrl     String?
   githubPrivate Boolean  @default(false)
+  company       String?
   status        String   @default("production")
   tags          String[]
   featured      Boolean  @default(true)

@@ -5,7 +5,7 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { Project } from "../types";
 import { useTranslation } from "@/i18n/LanguageContext";
-import { FiArrowRight, FiImage, FiLock } from "react-icons/fi";
+import { FiArrowRight, FiImage, FiLock, FiBriefcase } from "react-icons/fi";
 
 interface ProjectCardProps {
   project: Project;
@@ -65,6 +65,13 @@ export default function ProjectCard({ project, index }: ProjectCardProps) {
               <span className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-black/60 backdrop-blur-md border border-white/20 text-emerald-400 text-[10px] font-mono shadow-sm">
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
                 <span>{language === "ar" ? "برودكشن" : "Production"}</span>
+              </span>
+            )}
+
+            {project.company && (
+              <span className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-blue-600/85 backdrop-blur-md border border-white/20 text-white text-[10px] font-medium shadow-sm">
+                <FiBriefcase className="w-3 h-3 text-white" />
+                <span>{project.company}</span>
               </span>
             )}
 

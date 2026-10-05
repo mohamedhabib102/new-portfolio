@@ -449,8 +449,13 @@ export const portfolioStore = {
           // Merge Supabase projects with any local-only metadata (like githubPrivate or features)
           const merged = data.map((d: any) => {
             const local = store.projects.find((p: any) => p.id === d.id || p.slug === d.slug);
+            const company = (d.company || local?.company || null) as string | null;
+            const cleanTags = (Array.isArray(d.tags) ? d.tags : []).filter((t: string) => typeof t === "string" && !t.includes("__company__"));
+
             return {
               ...d,
+              company,
+              tags: cleanTags,
               status: d.status || local?.status || "production",
               coverImage: d.coverImage !== undefined ? d.coverImage : (local?.coverImage || null),
               images: Array.isArray(d.images) ? d.images : (local?.images || []),
@@ -496,10 +501,15 @@ export const portfolioStore = {
       ? projectData.images.split(",").map((s: string) => s.trim()).filter(Boolean)
       : [];
 
+    const company = projectData.company ? String(projectData.company).trim() : null;
+    const rawTags = (Array.isArray(projectData.tags) ? projectData.tags : (projectData.tags || "").split(",").map((s: string) => s.trim()).filter(Boolean))
+      .filter((t: string) => typeof t === "string" && !t.includes("__company__"));
+
     const fullProject = {
       ...projectData,
       id,
       slug,
+      company: company || null,
       videoUrl: cleanUrl(projectData.videoUrl) || "",
       coverImage: cleanUrl(projectData.coverImage),
       images: rawImages.map(cleanUrl).filter(Boolean),
@@ -507,7 +517,7 @@ export const portfolioStore = {
       status: projectData.status || "production",
       featuresEn: Array.isArray(projectData.featuresEn) ? projectData.featuresEn.map((f: string) => f.trim()).filter(Boolean) : [],
       featuresAr: Array.isArray(projectData.featuresAr) ? projectData.featuresAr.map((f: string) => f.trim()).filter(Boolean) : [],
-      tags: Array.isArray(projectData.tags) ? projectData.tags : (projectData.tags || "").split(",").map((s: string) => s.trim()).filter(Boolean),
+      tags: rawTags,
       featured: projectData.featured ?? true,
       order: projectData.order ?? 0,
     };
@@ -527,6 +537,7 @@ export const portfolioStore = {
           slug: fullProject.slug,
           titleEn: fullProject.titleEn,
           titleAr: fullProject.titleAr,
+          company: fullProject.company || null,
           descriptionEn: fullProject.descriptionEn,
           descriptionAr: fullProject.descriptionAr,
           videoUrl: fullProject.videoUrl || "",
@@ -538,7 +549,7 @@ export const portfolioStore = {
           status: fullProject.status || "production",
           featuresEn: fullProject.featuresEn || [],
           featuresAr: fullProject.featuresAr || [],
-          tags: fullProject.tags,
+          tags: rawTags,
           featured: fullProject.featured,
           order: fullProject.order,
           updatedAt: new Date().toISOString(),
@@ -547,7 +558,7 @@ export const portfolioStore = {
         const { error: upsertErr } = await supabase.from("Project").upsert(payload);
 
         if (upsertErr) {
-          console.warn("[Supabase] Upsert warning, retrying with core columns fallback:", upsertErr.message);
+          console.warn("[Supabase] Upsert warning, retrying with schema-safe fallback:", upsertErr.message);
           const fallbackPayload: any = {
             id: fullProject.id,
             slug: fullProject.slug,
@@ -556,9 +567,15 @@ export const portfolioStore = {
             descriptionEn: fullProject.descriptionEn,
             descriptionAr: fullProject.descriptionAr,
             videoUrl: fullProject.videoUrl || "",
+            coverImage: fullProject.coverImage || null,
+            images: fullProject.images || [],
             liveUrl: fullProject.liveUrl || null,
             githubUrl: fullProject.githubUrl || null,
-            tags: fullProject.tags,
+            githubPrivate: fullProject.githubPrivate,
+            status: fullProject.status || "production",
+            featuresEn: fullProject.featuresEn || [],
+            featuresAr: fullProject.featuresAr || [],
+            tags: rawTags,
             featured: fullProject.featured,
             order: fullProject.order,
             updatedAt: new Date().toISOString(),

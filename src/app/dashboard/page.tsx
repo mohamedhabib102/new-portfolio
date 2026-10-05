@@ -125,6 +125,7 @@ export default function DashboardPage() {
     id: "",
     titleEn: "",
     titleAr: "",
+    company: "",
     descriptionEn: "",
     descriptionAr: "",
     videoUrl: "",
@@ -1335,6 +1336,7 @@ export default function DashboardPage() {
                       id: "",
                       titleEn: "",
                       titleAr: "",
+                      company: "",
                       descriptionEn: "",
                       descriptionAr: "",
                       videoUrl: "",
@@ -1418,8 +1420,14 @@ export default function DashboardPage() {
 
                     <div>
                       <div className="flex items-center justify-between gap-2 mb-1">
-                        <h4 className="text-lg font-medium text-white">
-                          {isRtl ? proj.titleAr : proj.titleEn}
+                        <h4 className="text-lg font-medium text-white flex items-center gap-2 flex-wrap">
+                          <span>{isRtl ? proj.titleAr : proj.titleEn}</span>
+                          {proj.company && (
+                            <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-semibold bg-blue-500/20 text-blue-400 border border-blue-500/30">
+                              <FiBriefcase className="w-2.5 h-2.5" />
+                              <span>{proj.company}</span>
+                            </span>
+                          )}
                         </h4>
                       </div>
                       <p className="text-xs text-neutral-400 line-clamp-2">
@@ -1436,6 +1444,7 @@ export default function DashboardPage() {
                           onClick={() => {
                             setEditingProject({
                               ...proj,
+                              company: proj.company || "",
                               status: proj.status || "production",
                               coverImage: proj.coverImage || "",
                               images: Array.isArray(proj.images) ? proj.images : [],
@@ -2299,6 +2308,26 @@ export default function DashboardPage() {
                       className="w-full px-3.5 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-xs focus:outline-none focus:border-blue-500"
                     />
                   </div>
+                </div>
+
+                {/* Company / Agency Field */}
+                <div className="p-4 rounded-2xl bg-white/[0.03] border border-white/10 flex flex-col gap-2.5">
+                  <div className="flex items-center justify-between">
+                    <label className="text-xs font-semibold text-white flex items-center gap-2">
+                      <FiBriefcase className="w-4 h-4 text-blue-400" />
+                      <span>{isRtl ? "اسم الشركة / جهة العمل (Company / Agency)" : "Company / Client Organization"}</span>
+                    </label>
+                    <span className="text-[10px] text-neutral-400">
+                      {isRtl ? "إذا تم تنفيذه خلال فترة عملك مع شركة (مثل Serv5)" : "Specify if worked with a company/agency (e.g. Serv5)"}
+                    </span>
+                  </div>
+                  <input
+                    type="text"
+                    value={editingProject.company || ""}
+                    onChange={(e) => setEditingProject({ ...editingProject, company: e.target.value })}
+                    placeholder={isRtl ? "مثال: Serv5 (اتركه فارغاً إذا كان مشروعاً شخصياً)" : "e.g. Serv5 (leave empty for personal projects)"}
+                    className="w-full px-3.5 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-xs focus:outline-none focus:border-blue-500"
+                  />
                 </div>
 
                 {/* Project Lifecycle Status: Production vs Under Development */}

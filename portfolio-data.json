@@ -59,6 +59,7 @@
       "createdAt": "2026-09-04T19:03:36.84857+00:00",
       "updatedAt": "2026-09-04T19:44:20.916+00:00",
       "githubPrivate": false,
+      "company": "Serv5",
       "status": "production",
       "coverImage": null,
       "images": [],
@@ -120,7 +121,8 @@
         "معاينة متجاوبة لكافة الأجهزة: تبديل فوري بين أوضاع سطح المكتب، التابلت، وشاشات الهواتف الذكية",
         "تصدير كود نظيف ونشر سحابي: توليد كود نظيف عالي الأداء مع إمكانية نشر الموقع بنقرة زر",
         "بنية مكونات برمجية قابلة لإعادة الاستخدام: مكتبة بلوكات وعناصر معيارية لتسريع وتيرة بناء المواقع"
-      ]
+      ],
+      "company": null
     },
     {
       "id": "proj-aqarat-online",
@@ -147,6 +149,7 @@
       "createdAt": "2026-09-04T19:03:37.423162+00:00",
       "updatedAt": "2026-09-04T19:44:21.949+00:00",
       "githubPrivate": false,
+      "company": "Serv5",
       "status": "production",
       "coverImage": null,
       "images": [],
@@ -189,6 +192,7 @@
       "createdAt": "2026-09-04T17:01:13.127516+00:00",
       "updatedAt": "2026-09-04T19:44:24.153+00:00",
       "githubPrivate": false,
+      "company": null,
       "status": "production",
       "coverImage": null,
       "images": [],
@@ -231,6 +235,7 @@
       "createdAt": "2026-09-04T17:04:45.381158+00:00",
       "updatedAt": "2026-09-04T19:44:25.056+00:00",
       "githubPrivate": false,
+      "company": null,
       "status": "production",
       "coverImage": null,
       "images": [],

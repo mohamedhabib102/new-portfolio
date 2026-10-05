@@ -13,11 +13,12 @@ export function useProjects(featuredOnly: boolean = false) {
   });
 }
 
-export function useProjectDetail(idOrSlug: string) {
+export function useProjectDetail(idOrSlug: string, initialData?: Project | null) {
   return useQuery<Project | null>({
     queryKey: [...PROJECTS_QUERY_KEY, "detail", idOrSlug],
     queryFn: () => projectsApi.getProjectById(idOrSlug),
-    enabled: !!idOrSlug,
-    staleTime: 0,
+    enabled: !initialData && !!idOrSlug,
+    initialData: initialData || undefined,
+    staleTime: 60 * 1000,
   });
 }
