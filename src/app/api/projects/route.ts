@@ -38,63 +38,63 @@ export const initialProjects: Project[] = [
   {
     id: "proj-serv5-optimization",
     slug: "serv5-platform-optimization",
-    titleEn: "Serv5 Corporate Platform & Performance Revamp",
-    titleAr: "منصة Serv5 - تحسين الأداء وإعادة الهيكلة الشاملة",
+    titleEn: "Serv5 Platform - Frontend Development & Modernization",
+    titleAr: "منصة Serv5 - تطوير وتحسين الواجهات الأمامية",
     company: "Serv5",
-    descriptionEn: "Developed and contributed to during my tenure with Serv5. My role focused on frontend performance engineering, UI optimization, and modern web architecture. Key contributions included optimizing Core Web Vitals and load times, engineering an intuitive rich typography engine for content and blogs, refining responsive layouts across all device form factors, and integrating seamless micro-interactions using Next.js and Framer Motion.",
-    descriptionAr: "تم تطويره والمساهمة البرمجية فيه خلال فترة عملي مع شركة Serv5؛ حيث ركز دوري كـ Front-End Developer على رفع كفاءة وأداء الواجهات الرقمية وتطوير حلول متقدمة لتجربة المستخدم. شمل العمل تحسين سرعة استجابة الصفحات وتطبيق أفضل ممارسات Core Web Vitals، وإعادة هيكلة وتطوير نظام تنسيقات المدونات والمقالات التفاعلية بتنسيق احترافي شبيه بمحررات النصوص، مع ضبط التصميم المتجاوب بدقة متناهية لكافة الشاشات، واستخدام مكون Next.js Image لمعالجة الصور وحركات Framer Motion الانسيابية.",
+    descriptionEn: "Contributed to during my tenure with Serv5, focusing on front-end development, modernizing user interface components, fine-tuning article reading layouts, and optimizing rendering performance to deliver a polished digital presence and responsive user experience.",
+    descriptionAr: "مشروع تمت المساهمة فيه خلال فترة العمل مع شركة Serv5؛ حيث انصب التركيز على تطوير وتحسين الواجهات الأمامية (Front-End)، وتحديث عناصر تجربة المستخدم وضبط وتنسيق صفحات المقالات، مع تطبيق أفضل ممارسات تحسين الأداء وتسريع التصفح لتقديم مظهر رقمي متناسق وسريع الاستجابة.",
     videoUrl: "/serv5.mp4",
     liveUrl: "https://serv5.com.eg/",
     githubUrl: null,
     githubPrivate: true,
     status: "production",
-    tags: ["Next.js", "Tailwind CSS", "JavaScript", "Framer Motion", "Performance Optimization", "Next Image", "Responsive Design", "Rich Text Blogs"],
+    tags: ["Next.js", "Tailwind CSS", "JavaScript", "Performance Optimization", "Responsive Design", "UI Modernization"],
     featured: true,
     order: 2,
     featuresEn: [
-      "Eliminated heavy loading bottlenecks and optimized scripts for instantaneous page delivery",
-      "Overhauled blog typography with rich Word-style formatting for headings, lead paragraphs, styled quotes, and links",
-      "Fixed broken responsive design across all viewports from smartphones to 4K displays",
-      "Implemented Next.js built-in Image optimization with automatic WebP conversion and zero CLS",
-      "Engineered fluid UI animations, micro-interactions, and scroll effects with Framer Motion and modern JS"
+      "Implemented modern front-end optimization techniques to enhance responsiveness and load speed",
+      "Refined and unified UI design components for a cohesive, professional appearance",
+      "Structured and refined article layouts for optimal readability and professional content presentation",
+      "Optimized asset loading and media handling to ensure efficient resource utilization",
+      "Integrated subtle micro-interactions and transitions to enrich user engagement seamlessly"
     ],
     featuresAr: [
-      "معالجة مشاكل الأداء والتحميل الثقيل ورفع كفاءة سرعة استجابة الموقع ومؤشرات Core Web Vitals",
-      "تنسيق نظام المدونات والمقالات بتنسيقات غنية للعناوين والأوصاف والروابط على غرار محررات النصوص مثل Word",
-      "إصلاح وضبط التصميم المتجاوب (Responsive Design) لكافة الشاشات والهواتف والأجهزة اللوحية بدقة متناهية",
-      "استخدام مكون Next.js Image المدمج لمعالجة الصور تلقائياً ومنع تذبذب وانزياح الواجهة (CLS)",
-      "إضافة حركات وتفاعلات بصرية سلسة باستخدام Framer Motion وجافاسكريبت الحديثة"
+      "تطبيق معايير حديثة لتحسين سرعة تحميل الصفحات ورفع كفاءة استجابة الواجهات الرقمية",
+      "تحديث وتنسيق عناصر التصميم لضمان مظهر بصري متناسق واحترافي عبر المنصة",
+      "ضبط وتنسيق قوالب صفحات المقالات لتوفير تجربة قراءة وعرض محتوى سلسة واحترافية",
+      "تحسين إدارة الوسائط الرقمية واستدعاء الموارد لتسريع التفاعل وتقليل استهلاك البيانات",
+      "دمج تأثيرات حركية خفيفة وانتقالات ناعمة لتعزيز حيوية التفاعل دون التأثير على السرعة"
     ]
   },
   {
     id: "proj-aqarat-online",
     slug: "aqarat-online-platform",
-    titleEn: "Aqarat Online - Multi-Role Real Estate Ecosystem",
-    titleAr: "منصة عقارات أونلاين - منصة عقارية متكاملة متعددة الأدوار",
+    titleEn: "Aqarat Online - Modern Web Interface",
+    titleAr: "منصة عقارات أونلاين - واجهة مستخدم تفاعلية",
     company: "Serv5",
-    descriptionEn: "Developed during my tenure with Serv5, where I engineered the complete frontend architecture from the ground up using Vue.js along with custom UI/UX design. The platform is a comprehensive real estate solution featuring role-based workflows for buyers, property owners, brokers, real estate developers, and administrators, equipped with advanced property discovery and streamlined unit listings.",
-    descriptionAr: "تم العمل على هذا المشروع وتطويره خلال فترة عملي مع شركة Serv5؛ حيث توليت بناء وهندسة الواجهة الأمامية للمنصة بالكامل من الصفر (Frontend from scratch) بالاعتماد على Vue.js وتصميم تجربة المستخدم التفاعلية. تتميز المنصة بنظام متكامل لإدارة العقارات يدعم أدواراً وصلاحيات متعددة (المشتري، المالك، الوسيط العقاري، المطورين العقاريين، ولوحة التحكم الإدارية)، مع واجهات مرنة ومتقدمة لإدراج وتصفح المشاريع والوحدات العقارية بدقة وسلاسة.",
+    descriptionEn: "Developed during my tenure with Serv5, where I engineered the front-end interface and crafted the interactive user experience from scratch using Vue.js. The focus was on delivering intuitive navigation, seamless interactions, and a clean, responsive layout across all devices.",
+    descriptionAr: "مشروع تم تنفيذه خلال فترة العمل مع شركة Serv5، حيث توليت تطوير وهندسة واجهة المستخدم (Front-End) وتصميم تجربة الاستخدام التفاعلية بالاعتماد على Vue.js وأحدث تقنيات الويب الحديثة، مع التركيز على تقديم تجربة تصفح مرنة وسلسة وتصميم عصري متجاوب مع مختلف الشاشات.",
     videoUrl: "/aqaratonline.mp4",
     liveUrl: "http://aqaratonline.net/",
     githubUrl: null,
     githubPrivate: true,
     status: "production",
-    tags: ["Vue.js", "UI/UX Design", "Figma", "Tailwind CSS", "JavaScript", "Real Estate Platform", "Multi-Role RBAC", "Super-Admin Dashboard"],
+    tags: ["Vue.js", "JavaScript", "Tailwind CSS", "UI/UX Design", "Responsive Design", "Frontend Architecture"],
     featured: true,
     order: 3,
     featuresEn: [
-      "Full Lifecycle Execution: Custom Figma UI/UX architecture translated into a modular Vue.js frontend",
-      "Multi-Role Permission Architecture: Dedicated portals for Buyers, Owners, Brokers, Companies, and Super-Admin",
-      "Compound & Unit Purchasing: Real estate firms can list compounds with unit-level inventory and specs",
-      "Super-Admin Governance: Granular control over all platform static & dynamic page contents and listings",
-      "Advanced Property Discovery: Interactive filters for location, budget, property types, and amenities"
+      "Engineered a scalable front-end architecture using Vue.js with modular, reusable components",
+      "Designed intuitive and accessible user interfaces focused on clean user experience (UI/UX)",
+      "Developed interactive, responsive components for seamless content discovery and browsing",
+      "Ensured high responsiveness and visual consistency across desktop, tablet, and mobile devices",
+      "Maintained clean, maintainable code following modern front-end best practices"
     ],
     featuresAr: [
-      "تنفيذ كامل من الصفر: تصميم واجهات وتجربة المستخدم UI/UX في Figma وتحويلها لكود متكامل بـ Vue.js",
-      "نظام أدوار متعدد وصلاحيات: بوابات مخصصة لكل من المشتري، المالك، السمسار، المطورين، والسوبر أدمن",
-      "إدارة مشاريع الكومباوند والوحدات: رفع مشاريع عقارية كبرى مع تمكين المشترين من حجز وشراء الوحدات فردياً",
-      "لوحة تحكم Super-Admin متطورة: إدارة شاملة لكافة محتويات الصفحات والخدمات وإعدادات المنصة بالكامل",
-      "محرك بحث وفلترة عقارية متقدم: تصفية دقيقة بحسب المنطقة، نوع العقار، الأسعار، والمواصفات"
+      "بناء وتأسيس بنية الواجهة الأمامية بالاعتماد على Vue.js وهيكلية المكونات المعيارية القابلة لإعادة الاستخدام",
+      "تصميم وتنفيذ واجهات تفاعلية تركز على سهولة الاستخدام وانسيابية تجربة المستخدم (UI/UX)",
+      "تطوير عناصر بحث وتصفح ذكية لعرض المحتوى وتسهيل وصول المستخدمين للمعلومات بسلاسة",
+      "تحقيق أعلى معايير التوافق والتجاوب التام عبر جميع الشاشات والأجهزة الذكية",
+      "كتابة كود نظيف وعالي الجودة وفق أفضل الممارسات المعمارية للواجهات الأمامية"
     ]
   },
   {

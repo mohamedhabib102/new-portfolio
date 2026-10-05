@@ -118,15 +118,10 @@ export default function ProjectDetailClient({ id, initialProject }: ProjectDetai
         >
           {/* Tags & Status Badge */}
           <div className="flex flex-wrap items-center gap-2 mb-4">
-            {project.status === "in_development" ? (
+            {project.status === "in_development" && (
               <span className="px-3.5 py-1 text-xs font-semibold rounded-full bg-amber-500/15 text-amber-700 border border-amber-500/30 flex items-center gap-1.5 shadow-xs">
                 <span className="w-2 h-2 rounded-full bg-amber-500 animate-pulse" />
                 <span>{language === "ar" ? "قيد التطوير المستمر (In Development)" : "Under Active Development"}</span>
-              </span>
-            ) : (
-              <span className="px-3 py-1 text-xs font-medium rounded-full bg-emerald-500/10 text-emerald-700 border border-emerald-500/30 flex items-center gap-1.5">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
-                <span>{language === "ar" ? "برودكشن / منشور" : "Production"}</span>
               </span>
             )}
 
