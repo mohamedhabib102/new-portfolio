@@ -35,6 +35,57 @@
   ],
   "projects": [
     {
+      "id": "proj-rizotech-edtech",
+      "slug": "rizotech-agricultural-edtech",
+      "titleEn": "RizoTech - Agricultural EdTech & Learning Platform",
+      "titleAr": "منصة ريزوتيك (RizoTech) - المنصة التعليمية المتخصصة في العلوم الزراعية",
+      "descriptionEn": "A comprehensive vertical EdTech platform dedicated to agricultural sciences, smart farming, and agribusiness education. Engineered to bridge the gap between academic theory and practical field execution, RizoTech features a multi-tiered Role-Based Access Control (RBAC) architecture serving three distinct personas: Agricultural Experts & Instructors (course authoring, syllabus structuring, lecture uploads, pricing controls, and student progress tracking), Learners & Agronomists (curriculum discovery, seamless course enrollment, video playback, and localized payment processing via Vodafone Cash and mobile wallets, with an adaptable gateway architecture ready for automated merchant integrations), and Super Administrators (full platform governance, instructor credential vetting, course review workflows, and platform analytics). Built with Next.js App Router, TypeScript, and Tailwind CSS, powered by TanStack React Query for responsive server-state caching, Zustand for lean client state management, and Framer Motion for polished interactive transitions.",
+      "descriptionAr": "منصة تعليمية متخصصة ورائدة (EdTech) في مجال العلوم والتقنيات الزراعية الحديثة وسوق العمل الزراعي. صُممت المنصة لسد الفجوة بين المعرفة الأكاديمية والتطبيق الميداني العملي عبر بنية برمجية متطورة متعددة الأدوار (Role-Based Access Control) تخدم 3 فئات رئيسية: الخبراء والمهندسون الزراعيون (استوديو متكامل لإعداد الكورسات، رفع المحاضرات، إدارة المناهج، تحديد الأسعار، ومتابعة تقدم المتدربين)، الطلاب والباحثون الزراعيون (استكشاف الدورات، الالتحاق السلس، والدفع الإلكتروني المباشر عبر فودافون كاش والمحافظ الرقمية مع بنية معمارية مهيأة للربط المستقبلي مع بوابات الدفع البنكية)، ولوحة تحكم مركزية للإدارة (Admin) للتحكم الكامل في المنصة، اعتماد الدورات، والتحقق من حسابات المدربين والتقارير المالية. تم بناء المشروع بأعلى معايير الأداء والسرعة باستخدام Next.js و TypeScript و Tailwind CSS، مع TanStack Query للمزامنة اللحظية والـ Caching، و Zustand لإدارة الحالة العامة، و Framer Motion لتقديم تجربة مستخدم تفاعلية وجذابة.",
+      "videoUrl": "/rizotech.mp4",
+      "coverImage": "https://dibrssekkpsbyhvwwzln.supabase.co/storage/v1/object/public/portfolio-media/rizotech-cover.jpg",
+      "images": [
+        "https://dibrssekkpsbyhvwwzln.supabase.co/storage/v1/object/public/portfolio-media/rizotech-cover.jpg"
+      ],
+      "liveUrl": "https://www.rizotech.online/",
+      "githubUrl": null,
+      "githubPrivate": true,
+      "company": "RizoTech",
+      "status": "production",
+      "tags": [
+        "Next.js",
+        "TypeScript",
+        "Tailwind CSS",
+        "TanStack Query",
+        "Zustand",
+        "Framer Motion",
+        "EdTech Platform",
+        "Vodafone Cash",
+        "RBAC Multi-Role",
+        "Responsive UI"
+      ],
+      "featured": true,
+      "order": 1,
+      "isHidden": false,
+      "featuresEn": [
+        "Multi-Role Architecture (RBAC): Dedicated dashboards and permissions tailored for Agricultural Experts, Students, and Super Administrators",
+        "Comprehensive Course Studio: Instructor portal for syllabus structuring, video lecture management, curriculum resources, and pricing controls",
+        "Localized Mobile Wallet Payments: Integrated checkout workflow supporting Vodafone Cash with architectural readiness for multi-gateway expansion",
+        "Server-State Synchronization: Engineered with TanStack React Query for intelligent caching, background refetching, and instant optimistic updates",
+        "Global Client State with Zustand: Lightweight, reactive state management orchestrating user authentication, shopping carts, and enrollment stages",
+        "Production-Grade UI/UX: Polished design system built with Tailwind CSS and fluid micro-interactions powered by Framer Motion"
+      ],
+      "featuresAr": [
+        "هيكلية برمجية متعددة الأدوار (RBAC): بوابات وصلاحيات مخصصة لكل من الخبراء الزراعيين، المتدربين، وإدارة المنصة العليا",
+        "استوديو تعليمي متكامل للمحاضرين: لوحة تحكم مخصصة لبناء المناهج، رفع الدروس، تنظيم الوحدات التعليمية وتحديد خطط الأسعار",
+        "دفع إلكتروني محلي بالمحافظ الرقمية: تجربة شراء سهلة تدعم فودافون كاش مع بنية معمارية جاهزة للتوسع مع بوابات دفع إلكترونية متعددة",
+        "مزامنة بيانات فائقة السرعة بـ TanStack Query: كاشينج ذكي للبيانات واستدعاء تلقائي في الخلفية مع استجابة فورية (Optimistic Updates)",
+        "إدارة حالة عامة رشيقة عبر Zustand: متجر حالة خفيف لإدارة تسجيل الدخول، سلة المشتريات، وتدفق عمليات الالتحاق بالكورسات",
+        "واجهات عصرية وتجربة مستخدم تفاعلية: تصميم متجاوب فائق الدقة بـ Tailwind CSS مع حركات وانتقالات انسيابية بـ Framer Motion"
+      ],
+      "createdAt": "2026-10-06T20:49:56.051Z",
+      "updatedAt": "2026-10-06T20:49:56.061Z"
+    },
+    {
       "id": "proj-serv5-optimization",
       "slug": "serv5-platform-optimization",
       "titleEn": "Serv5 Platform - Frontend Development & Modernization",
