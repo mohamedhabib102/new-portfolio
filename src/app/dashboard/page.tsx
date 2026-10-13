@@ -590,12 +590,26 @@ export default function DashboardPage() {
         tags: formattedTags,
         contentEn: {
           intro: editingBlog.introEn || "",
-          sections: editingBlog.sectionsEn || [],
+          sections: (editingBlog.sectionsEn || []).map((s: any) => ({
+            heading: s.heading || "",
+            body: s.body || "",
+            codeSnippet: s.code || s.codeSnippet || "",
+            code: s.code || s.codeSnippet || "",
+            image: s.image || s.imageUrl || "",
+            imageUrl: s.image || s.imageUrl || "",
+          })),
           conclusion: editingBlog.conclusionEn || "",
         },
         contentAr: {
           intro: editingBlog.introAr || "",
-          sections: editingBlog.sectionsAr || [],
+          sections: (editingBlog.sectionsAr || []).map((s: any) => ({
+            heading: s.heading || "",
+            body: s.body || "",
+            codeSnippet: s.code || s.codeSnippet || "",
+            code: s.code || s.codeSnippet || "",
+            image: s.image || s.imageUrl || "",
+            imageUrl: s.image || s.imageUrl || "",
+          })),
           conclusion: editingBlog.conclusionAr || "",
         },
       };
@@ -703,8 +717,8 @@ export default function DashboardPage() {
   const addBlogSection = () => {
     setEditingBlog((prev: any) => ({
       ...prev,
-      sectionsEn: [...(prev.sectionsEn || []), { heading: "", body: "", code: "" }],
-      sectionsAr: [...(prev.sectionsAr || []), { heading: "", body: "", code: "" }],
+      sectionsEn: [...(prev.sectionsEn || []), { heading: "", body: "", code: "", image: "" }],
+      sectionsAr: [...(prev.sectionsAr || []), { heading: "", body: "", code: "", image: "" }],
     }));
   };
 
@@ -1582,8 +1596,8 @@ export default function DashboardPage() {
                       introAr: "",
                       conclusionEn: "",
                       conclusionAr: "",
-                      sectionsEn: [{ heading: "", body: "", code: "" }],
-                      sectionsAr: [{ heading: "", body: "", code: "" }],
+                      sectionsEn: [{ heading: "", body: "", code: "", image: "" }],
+                      sectionsAr: [{ heading: "", body: "", code: "", image: "" }],
                     });
                     setIsBlogModalOpen(true);
                   }}
@@ -1647,11 +1661,11 @@ export default function DashboardPage() {
                               conclusionEn: b.contentEn?.conclusion || "",
                               conclusionAr: b.contentAr?.conclusion || "",
                               sectionsEn: b.contentEn?.sections && b.contentEn.sections.length > 0 
-                                ? b.contentEn.sections 
-                                : [{ heading: "", body: "", code: "" }],
+                                ? b.contentEn.sections.map((s: any) => ({ heading: s.heading || "", body: s.body || "", code: s.code || s.codeSnippet || "", image: s.image || s.imageUrl || "" }))
+                                : [{ heading: "", body: "", code: "", image: "" }],
                               sectionsAr: b.contentAr?.sections && b.contentAr.sections.length > 0 
-                                ? b.contentAr.sections 
-                                : [{ heading: "", body: "", code: "" }],
+                                ? b.contentAr.sections.map((s: any) => ({ heading: s.heading || "", body: s.body || "", code: s.code || s.codeSnippet || "", image: s.image || s.imageUrl || "" }))
+                                : [{ heading: "", body: "", code: "", image: "" }],
                             });
                             setIsBlogModalOpen(true);
                           }}
@@ -3284,6 +3298,72 @@ export default function DashboardPage() {
                           placeholder="// Paste JavaScript, TypeScript or CSS code snippet here..."
                           className="w-full px-3 py-2 rounded-xl bg-black/60 border border-white/15 text-cyan-300 text-xs font-mono resize-none"
                         />
+                      </div>
+
+                      {/* Section Image / Diagram (صورة القسم أو الرسم التوضيحي) */}
+                      <div className="p-3.5 rounded-xl bg-purple-950/15 border border-purple-500/25 flex flex-col gap-2.5">
+                        <div className="flex items-center justify-between">
+                          <label className="text-[11px] font-medium text-purple-300 flex items-center gap-1.5">
+                            <span className="w-2 h-2 rounded-full bg-purple-400" />
+                            {isRtl ? "صورة توضيحية أو رسم بياني للقسم (Section Image / Diagram)" : "Section Image / Visual Diagram"}
+                          </label>
+                          <label className="px-2.5 py-1 rounded-lg bg-purple-600 hover:bg-purple-500 text-white text-[11px] font-medium cursor-pointer transition-colors shadow-sm inline-flex items-center gap-1">
+                            <span>{isRtl ? "رفع صورة للقسم" : "Upload Image"}</span>
+                            <input
+                              type="file"
+                              accept="image/*"
+                              className="hidden"
+                              onChange={async (e) => {
+                                const file = e.target.files?.[0];
+                                if (!file) return;
+                                const url = await uploadFile(file);
+                                if (url) {
+                                  const newEn = [...editingBlog.sectionsEn];
+                                  const newAr = [...(editingBlog.sectionsAr || [])];
+                                  newEn[idx] = { ...newEn[idx], image: url };
+                                  if (newAr[idx]) newAr[idx] = { ...newAr[idx], image: url };
+                                  setEditingBlog({ ...editingBlog, sectionsEn: newEn, sectionsAr: newAr });
+                                }
+                              }}
+                            />
+                          </label>
+                        </div>
+                        <input
+                          type="text"
+                          value={sec.image || ""}
+                          onChange={(e) => {
+                            const val = e.target.value;
+                            const newEn = [...editingBlog.sectionsEn];
+                            const newAr = [...(editingBlog.sectionsAr || [])];
+                            newEn[idx] = { ...newEn[idx], image: val };
+                            if (newAr[idx]) newAr[idx] = { ...newAr[idx], image: val };
+                            setEditingBlog({ ...editingBlog, sectionsEn: newEn, sectionsAr: newAr });
+                          }}
+                          placeholder="/uploads/... or https://images.unsplash.com/..."
+                          className="w-full px-3 py-2 rounded-xl bg-white/5 border border-white/10 text-white text-xs focus:outline-none focus:border-purple-500"
+                        />
+                        {sec.image && (
+                          <div className="relative w-full max-h-48 rounded-xl overflow-hidden border border-white/15 bg-black/60 p-1 flex items-center justify-center">
+                            <img
+                              src={sec.image}
+                              alt="Section preview"
+                              className="max-h-44 object-contain rounded-lg"
+                            />
+                            <button
+                              type="button"
+                              onClick={() => {
+                                const newEn = [...editingBlog.sectionsEn];
+                                const newAr = [...(editingBlog.sectionsAr || [])];
+                                newEn[idx] = { ...newEn[idx], image: "" };
+                                if (newAr[idx]) newAr[idx] = { ...newAr[idx], image: "" };
+                                setEditingBlog({ ...editingBlog, sectionsEn: newEn, sectionsAr: newAr });
+                              }}
+                              className="absolute top-2.5 right-2.5 px-2.5 py-1 rounded-lg bg-red-600/90 hover:bg-red-600 text-white text-[11px] font-medium shadow-md transition-colors cursor-pointer"
+                            >
+                              {isRtl ? "حذف الصورة" : "Remove"}
+                            </button>
+                          </div>
+                        )}
                       </div>
                     </div>
                   ))}

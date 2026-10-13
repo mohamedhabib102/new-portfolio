@@ -5,6 +5,16 @@ export interface BlogAuthor {
   avatar: string;
 }
 
+export interface BlogSection {
+  heading: string;
+  body: string;
+  codeSnippet?: string;
+  code?: string;
+  image?: string;
+  imageUrl?: string;
+  imageAlt?: string;
+}
+
 export interface BlogPost {
   id: string;
   slug: string;
@@ -14,12 +24,12 @@ export interface BlogPost {
   excerptAr: string;
   contentEn: {
     intro: string;
-    sections: { heading: string; body: string; codeSnippet?: string }[];
+    sections: BlogSection[];
     conclusion: string;
   };
   contentAr: {
     intro: string;
-    sections: { heading: string; body: string; codeSnippet?: string }[];
+    sections: BlogSection[];
     conclusion: string;
   };
   coverImage: string;

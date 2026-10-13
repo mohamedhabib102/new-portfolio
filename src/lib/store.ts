@@ -694,12 +694,26 @@ export const portfolioStore = {
       publishedAt: blogData.publishedAt || new Date().toISOString().slice(0, 7),
       contentEn: {
         intro: blogData.introEn !== undefined ? blogData.introEn : (blogData.contentEn?.intro || blogData.excerptEn || ""),
-        sections: blogData.sectionsEn !== undefined ? blogData.sectionsEn : (blogData.contentEn?.sections || []),
+        sections: (blogData.sectionsEn !== undefined ? blogData.sectionsEn : (blogData.contentEn?.sections || [])).map((s: any) => ({
+          heading: s.heading || "",
+          body: s.body || "",
+          codeSnippet: s.code || s.codeSnippet || "",
+          code: s.code || s.codeSnippet || "",
+          image: s.image || s.imageUrl || "",
+          imageUrl: s.image || s.imageUrl || "",
+        })),
         conclusion: blogData.conclusionEn !== undefined ? blogData.conclusionEn : (blogData.contentEn?.conclusion || ""),
       },
       contentAr: {
         intro: blogData.introAr !== undefined ? blogData.introAr : (blogData.contentAr?.intro || blogData.excerptAr || ""),
-        sections: blogData.sectionsAr !== undefined ? blogData.sectionsAr : (blogData.contentAr?.sections || []),
+        sections: (blogData.sectionsAr !== undefined ? blogData.sectionsAr : (blogData.contentAr?.sections || [])).map((s: any) => ({
+          heading: s.heading || "",
+          body: s.body || "",
+          codeSnippet: s.code || s.codeSnippet || "",
+          code: s.code || s.codeSnippet || "",
+          image: s.image || s.imageUrl || "",
+          imageUrl: s.image || s.imageUrl || "",
+        })),
         conclusion: blogData.conclusionAr !== undefined ? blogData.conclusionAr : (blogData.contentAr?.conclusion || ""),
       },
     };

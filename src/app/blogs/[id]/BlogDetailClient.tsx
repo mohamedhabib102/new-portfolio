@@ -235,6 +235,22 @@ export default function BlogDetailClient({ id, initialBlog }: BlogDetailClientPr
                   {sec.body}
                 </p>
 
+                {/* Section Image / Visual Diagram */}
+                {(sec.image || sec.imageUrl) && (
+                  <div className="relative mt-3 rounded-2xl overflow-hidden border border-white/10 bg-[#0f1118] p-2 shadow-2xl ms-0 sm:ms-10">
+                    <div className="relative w-full rounded-xl overflow-hidden bg-white/[0.02] flex items-center justify-center">
+                      <Image
+                        src={sec.image || sec.imageUrl}
+                        alt={sec.imageAlt || sec.heading || "Section Diagram"}
+                        width={1200}
+                        height={700}
+                        unoptimized
+                        className="w-full h-auto object-contain max-h-[550px] rounded-xl hover:scale-[1.01] transition-transform duration-300"
+                      />
+                    </div>
+                  </div>
+                )}
+
                 {codeBlock && (
                   <div className="relative mt-2 rounded-2xl bg-[#0f1118] border border-white/15 overflow-hidden shadow-2xl ms-0 sm:ms-10" dir="ltr">
                     {/* Terminal Top Bar */}
