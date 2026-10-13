@@ -599,6 +599,7 @@ export default function DashboardPage() {
             imageUrl: s.image || s.imageUrl || "",
           })),
           conclusion: editingBlog.conclusionEn || "",
+          discussionQuestion: editingBlog.discussionQuestionEn || "",
         },
         contentAr: {
           intro: editingBlog.introAr || "",
@@ -611,6 +612,7 @@ export default function DashboardPage() {
             imageUrl: s.image || s.imageUrl || "",
           })),
           conclusion: editingBlog.conclusionAr || "",
+          discussionQuestion: editingBlog.discussionQuestionAr || "",
         },
       };
 

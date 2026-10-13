@@ -26,11 +26,13 @@ export interface BlogPost {
     intro: string;
     sections: BlogSection[];
     conclusion: string;
+    discussionQuestion?: string;
   };
   contentAr: {
     intro: string;
     sections: BlogSection[];
     conclusion: string;
+    discussionQuestion?: string;
   };
   coverImage: string;
   categoryEn: string;

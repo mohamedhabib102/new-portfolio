@@ -703,6 +703,9 @@ export const portfolioStore = {
           imageUrl: s.image || s.imageUrl || "",
         })),
         conclusion: blogData.conclusionEn !== undefined ? blogData.conclusionEn : (blogData.contentEn?.conclusion || ""),
+        discussionQuestion: blogData.discussionQuestionEn !== undefined 
+          ? blogData.discussionQuestionEn 
+          : (blogData.contentEn?.discussionQuestion || ""),
       },
       contentAr: {
         intro: blogData.introAr !== undefined ? blogData.introAr : (blogData.contentAr?.intro || blogData.excerptAr || ""),
@@ -715,6 +718,9 @@ export const portfolioStore = {
           imageUrl: s.image || s.imageUrl || "",
         })),
         conclusion: blogData.conclusionAr !== undefined ? blogData.conclusionAr : (blogData.contentAr?.conclusion || ""),
+        discussionQuestion: blogData.discussionQuestionAr !== undefined 
+          ? blogData.discussionQuestionAr 
+          : (blogData.contentAr?.discussionQuestion || ""),
       },
     };
 
