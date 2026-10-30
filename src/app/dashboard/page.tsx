@@ -40,6 +40,8 @@ import {
   FiUsers,
   FiEye,
   FiEyeOff,
+  FiArrowUp,
+  FiArrowDown,
 } from "react-icons/fi";
 
 export default function DashboardPage() {
@@ -103,6 +105,7 @@ export default function DashboardPage() {
     descEn: "",
     descAr: "",
     skills: "React, Next.js, TypeScript",
+    order: 0,
   });
 
   // Skills Modal State
@@ -161,6 +164,7 @@ export default function DashboardPage() {
     tags: "Next.js, React, Performance",
     readTimeEn: "5 min read",
     readTimeAr: "5 دقائق قراءة",
+    likes: 0,
     notifySubscribers: false,
     introEn: "",
     introAr: "",
@@ -383,6 +387,28 @@ export default function DashboardPage() {
       loadDashboardData();
     } catch (e) {
       triggerToast(isRtl ? "فشل حذف الخبرة" : "Failed to delete experience");
+      loadDashboardData();
+    }
+  };
+
+  const handleMoveExperience = async (index: number, direction: "up" | "down") => {
+    const targetIndex = direction === "up" ? index - 1 : index + 1;
+    if (targetIndex < 0 || targetIndex >= experiences.length) return;
+
+    const newExps = [...experiences];
+    const temp = newExps[index];
+    newExps[index] = newExps[targetIndex];
+    newExps[targetIndex] = temp;
+
+    setExperiences(newExps);
+
+    try {
+      const orderedIds = newExps.map((e) => e.id);
+      await apiClient.post("/api/admin/experiences", { orderedIds });
+      triggerToast(isRtl ? "تم تحديث ترتيب الخبرات بنجاح!" : "Experiences reordered successfully!");
+    } catch (error) {
+      console.error("Failed to reorder experiences:", error);
+      triggerToast(isRtl ? "فشل حفظ ترتيب الخبرات" : "Failed to save experiences order");
       loadDashboardData();
     }
   };
@@ -1304,6 +1330,7 @@ export default function DashboardPage() {
                       descEn: "",
                       descAr: "",
                       skills: "Next.js, React, TypeScript",
+                      order: experiences.length,
                     });
                     setIsExpModalOpen(true);
                   }}
@@ -1315,17 +1342,20 @@ export default function DashboardPage() {
               </div>
 
               <div className="flex flex-col gap-4">
-                {experiences.map((exp) => (
+                {experiences.map((exp, index) => (
                   <div
                     key={exp.id}
                     className="p-6 rounded-3xl bg-[#12141c] border border-white/10 flex flex-col sm:flex-row items-start justify-between gap-4 shadow-xl"
                   >
-                    <div className="flex flex-col gap-2">
+                    <div className="flex flex-col gap-2 flex-1">
                       <div className="flex items-center gap-3">
                         <span className="px-3 py-1 rounded-full text-xs bg-blue-500/20 text-blue-400 font-medium">
                           {exp.period}
                         </span>
                         <span className="text-sm font-semibold text-white">{exp.company}</span>
+                        <span className="text-[11px] px-2 py-0.5 rounded bg-white/5 text-neutral-400 font-mono">
+                          #{index + 1}
+                        </span>
                       </div>
                       <h4 className="text-lg font-medium text-white">
                         {isRtl ? exp.roleAr : exp.roleEn}
@@ -1342,7 +1372,28 @@ export default function DashboardPage() {
                       </div>
                     </div>
 
-                    <div className="flex items-center gap-2 shrink-0">
+                    <div className="flex items-center gap-1.5 shrink-0 self-end sm:self-center">
+                      {/* Move Up / Down Buttons */}
+                      <button
+                        type="button"
+                        disabled={index === 0}
+                        onClick={() => handleMoveExperience(index, "up")}
+                        className="p-2.5 rounded-xl bg-white/5 hover:bg-white/10 disabled:opacity-20 disabled:hover:bg-white/5 text-neutral-300 transition-colors cursor-pointer disabled:cursor-not-allowed"
+                        title={isRtl ? "نقل لأعلى" : "Move Up"}
+                      >
+                        <FiArrowUp className="w-4 h-4" />
+                      </button>
+                      <button
+                        type="button"
+                        disabled={index === experiences.length - 1}
+                        onClick={() => handleMoveExperience(index, "down")}
+                        className="p-2.5 rounded-xl bg-white/5 hover:bg-white/10 disabled:opacity-20 disabled:hover:bg-white/5 text-neutral-300 transition-colors cursor-pointer disabled:cursor-not-allowed"
+                        title={isRtl ? "نقل لأسفل" : "Move Down"}
+                      >
+                        <FiArrowDown className="w-4 h-4" />
+                      </button>
+
+                      {/* Edit Button */}
                       <button
                         onClick={() => {
                           setEditingExp({
@@ -1356,6 +1407,8 @@ export default function DashboardPage() {
                       >
                         <FiEdit className="w-4 h-4" />
                       </button>
+
+                      {/* Delete Button */}
                       <button
                         onClick={() => handleDeleteExperience(exp.id)}
                         className="p-2.5 rounded-xl bg-red-500/10 hover:bg-red-500/20 text-red-400 transition-colors cursor-pointer"
@@ -1593,6 +1646,7 @@ export default function DashboardPage() {
                       tags: "Next.js, React, Performance, Web Architecture",
                       readTimeEn: "5 min read",
                       readTimeAr: "5 دقائق قراءة",
+                      likes: 0,
                       notifySubscribers: true,
                       introEn: "",
                       introAr: "",
@@ -2317,6 +2371,17 @@ export default function DashboardPage() {
                     value={editingExp.skills}
                     onChange={(e) => setEditingExp({ ...editingExp, skills: e.target.value })}
                     placeholder="Next.js, React, GSAP, TypeScript, Tailwind CSS"
+                    className="w-full px-3.5 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-xs focus:outline-none focus:border-blue-500"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs text-neutral-400 mb-1">{isRtl ? "ترتيب الظهور (الرقم الأصغر يظهر أولاً)" : "Display Order (smaller appears first)"}</label>
+                  <input
+                    type="number"
+                    value={editingExp.order !== undefined ? editingExp.order : 0}
+                    onChange={(e) => setEditingExp({ ...editingExp, order: parseInt(e.target.value) || 0 })}
+                    placeholder="0"
                     className="w-full px-3.5 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-xs focus:outline-none focus:border-blue-500"
                   />
                 </div>

@@ -69,6 +69,20 @@ model Blog {
   updatedAt   DateTime @updatedAt
 }
 
+model Experience {
+  id        String   @id @default(cuid())
+  period    String
+  roleEn    String
+  roleAr    String
+  company   String
+  descEn    String   @db.Text
+  descAr    String   @db.Text
+  skills    String[] @default([])
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
 model SkillCategory {
   id        String   @id @default(cuid())
   titleEn   String

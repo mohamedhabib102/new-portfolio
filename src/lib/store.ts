@@ -33,6 +33,7 @@ export interface ExperienceData {
   descEn: string;
   descAr: string;
   skills: string[];
+  order?: number;
 }
 
 export interface SkillItemData {
@@ -358,9 +359,9 @@ export const portfolioStore = {
   getExperiences: async (): Promise<ExperienceData[]> => {
     if (supabase) {
       try {
-        const { data, error } = await supabase.from("Experience").select("*").order("createdAt", { ascending: false });
+        const { data, error } = await supabase.from("Experience").select("*").order("order", { ascending: true });
         if (!error && Array.isArray(data)) {
-          const formatted: ExperienceData[] = data.map((d) => ({
+          const formatted: ExperienceData[] = data.map((d, idx) => ({
             id: d.id,
             period: d.period,
             roleEn: d.roleEn,
@@ -369,7 +370,8 @@ export const portfolioStore = {
             descEn: d.descEn,
             descAr: d.descAr,
             skills: Array.isArray(d.skills) ? d.skills : [],
-          }));
+            order: typeof d.order === "number" ? d.order : idx,
+          })).sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
           const store = readLocalStore();
           store.experiences = formatted;
           writeLocalStore(store);
@@ -379,7 +381,8 @@ export const portfolioStore = {
         console.warn("[Supabase] getExperiences fallback:", err);
       }
     }
-    return readLocalStore().experiences;
+    const local = readLocalStore().experiences || [];
+    return [...local].sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
   },
 
   saveExperience: async (expData: any): Promise<ExperienceData> => {
@@ -389,18 +392,26 @@ export const portfolioStore = {
       ? expData.skills
       : (expData.skills || "").split(",").map((s: string) => s.trim()).filter(Boolean);
 
+    const existingIdx = store.experiences.findIndex((e) => e.id === id);
+    const calculatedOrder = typeof expData.order === "number"
+      ? expData.order
+      : (existingIdx >= 0 && typeof store.experiences[existingIdx].order === "number"
+          ? store.experiences[existingIdx].order
+          : store.experiences.length);
+
     const fullExp: ExperienceData = {
       ...expData,
       id,
       skills,
+      order: calculatedOrder,
     };
 
-    const existingIdx = store.experiences.findIndex((e) => e.id === id);
     if (existingIdx >= 0) {
       store.experiences[existingIdx] = fullExp;
     } else {
       store.experiences.push(fullExp);
     }
+    store.experiences.sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
     writeLocalStore(store);
 
     if (supabase) {
@@ -414,6 +425,7 @@ export const portfolioStore = {
           descEn: fullExp.descEn,
           descAr: fullExp.descAr,
           skills: fullExp.skills,
+          order: fullExp.order,
           updatedAt: new Date().toISOString(),
         });
       } catch (err) {
@@ -422,6 +434,44 @@ export const portfolioStore = {
     }
 
     return fullExp;
+  },
+
+  reorderExperiences: async (orderedIds: string[]): Promise<ExperienceData[]> => {
+    const store = readLocalStore();
+    const updatedExperiences: ExperienceData[] = [];
+
+    orderedIds.forEach((id, index) => {
+      const exp = store.experiences.find((e) => e.id === id);
+      if (exp) {
+        exp.order = index;
+        updatedExperiences.push({ ...exp, order: index });
+      }
+    });
+
+    // Also include any experiences that weren't in orderedIds at the end
+    store.experiences.forEach((exp) => {
+      if (!orderedIds.includes(exp.id)) {
+        exp.order = updatedExperiences.length;
+        updatedExperiences.push({ ...exp, order: updatedExperiences.length });
+      }
+    });
+
+    store.experiences = updatedExperiences.sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+    writeLocalStore(store);
+
+    if (supabase) {
+      const client = supabase;
+      try {
+        const updates = store.experiences.map((exp) =>
+          client.from("Experience").update({ order: exp.order, updatedAt: new Date().toISOString() }).eq("id", exp.id)
+        );
+        await Promise.all(updates);
+      } catch (err) {
+        console.warn("[Supabase] reorderExperiences error:", err);
+      }
+    }
+
+    return store.experiences;
   },
 
   deleteExperience: async (id: string): Promise<boolean> => {
@@ -675,11 +725,16 @@ export const portfolioStore = {
     const id = blogData.id || `blog-${Date.now()}`;
     const slug = blogData.slug || (blogData.titleEn ? blogData.titleEn.toLowerCase().replace(/[^a-z0-9]+/g, "-") : `blog-${Date.now()}`);
 
+    const existingIdx = store.blogs.findIndex((b) => b.id === id);
+    const existingLikes = existingIdx >= 0 && typeof store.blogs[existingIdx].likes === "number"
+      ? store.blogs[existingIdx].likes
+      : 0;
+
     const fullBlog = {
       ...blogData,
       id,
       slug,
-      likes: typeof blogData.likes === "number" ? blogData.likes : 0,
+      likes: typeof blogData.likes === "number" ? blogData.likes : existingLikes,
       author: {
         name: "Mohamed H. Mowafy",
         roleEn: "Front-End Developer",
@@ -724,7 +779,6 @@ export const portfolioStore = {
       },
     };
 
-    const existingIdx = store.blogs.findIndex((b) => b.id === id);
     if (existingIdx >= 0) {
       store.blogs[existingIdx] = fullBlog;
     } else {

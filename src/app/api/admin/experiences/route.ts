@@ -4,6 +4,17 @@ import { portfolioStore } from "@/lib/store";
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
+
+    // Check if reordering batch
+    if (body && Array.isArray(body.orderedIds)) {
+      const updated = await portfolioStore.reorderExperiences(body.orderedIds);
+      return NextResponse.json({
+        success: true,
+        data: updated,
+        message: "Experiences reordered successfully!",
+      });
+    }
+
     const saved = await portfolioStore.saveExperience(body);
     return NextResponse.json({
       success: true,
